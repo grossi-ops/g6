@@ -5,7 +5,6 @@
 > "Your education is yours. No one can take it away from you."  
 > — Pablo Nogueira Grossi, Newark NJ · *The Seed*
 
-**Buy access:** [brodanova6.gumroad.com/l/soundworks](https://brodanova6.gumroad.com/l/soundworks)  
 **IMPA Portal:** [totogt.github.io/AXLE/impa-portal.html](https://totogt.github.io/AXLE/impa-portal.html)  
 **Public site:** [totogt.github.io/3M](https://totogt.github.io/3M/)
 
