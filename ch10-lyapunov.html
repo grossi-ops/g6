@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 10 — Lyapunov | Book 3: The Mini-Beast</title>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --dark: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --text: #e8e4d8;
+    --text-dim: #9994a0;
+    --k-color: #e05a3a;
+    --c-color: #4a9eff;
+    --f-color: #50c878;
+    --u-color: #c084fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--dark); color: var(--text); font-family: 'Georgia', serif; font-size: 18px; line-height: 1.75; }
+
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.96); border-bottom: 1px solid var(--gold-dim); padding: 0.6rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; }
+  .nav-logo { font-family: 'Georgia', serif; font-size: 0.85rem; letter-spacing: 0.18em; color: var(--gold); text-decoration: none; }
+  .nav-links { display: flex; gap: 1.5rem; font-size: 0.8rem; }
+  .nav-links a { color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--gold); }
+
+  .chapter-hero { background: linear-gradient(160deg, #0c0a12 0%, #130f1e 60%, #0c0a12 100%); border-bottom: 1px solid #1e1a2e; padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
+  .hero-letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 22rem; font-weight: 900; color: rgba(192,132,252,0.04); user-select: none; pointer-events: none; font-family: 'Georgia', serif; line-height: 1; }
+  .chapter-tag { font-size: 0.72rem; letter-spacing: 0.25em; color: var(--u-color); text-transform: uppercase; margin-bottom: 1rem; }
+  .chapter-title { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; letter-spacing: 0.04em; color: var(--text); margin-bottom: 1rem; }
+  .chapter-subtitle { font-size: 1.1rem; color: var(--text-dim); max-width: 600px; margin: 0 auto 2rem; font-style: italic; }
+  .operator-chain { font-family: 'Courier New', monospace; font-size: 1.05rem; letter-spacing: 0.12em; color: var(--text-dim); margin-bottom: 0.5rem; }
+  .operator-chain .active { color: var(--u-color); text-decoration: underline; text-underline-offset: 4px; font-weight: bold; }
+  .chapter-meta { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; font-size: 0.78rem; letter-spacing: 0.12em; color: var(--text-dim); }
+  .meta-badge { background: rgba(192,132,252,0.1); border: 1px solid rgba(192,132,252,0.3); padding: 0.3rem 0.9rem; border-radius: 2px; color: var(--u-color); }
+
+  .content-wrap { max-width: 780px; margin: 0 auto; padding: 3rem 2rem 4rem; }
+  h2 { font-size: 1.4rem; font-weight: 400; color: var(--gold); margin: 3rem 0 1rem; letter-spacing: 0.06em; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin: 2rem 0 0.7rem; }
+  p { margin-bottom: 1.2rem; }
+  .gold-rule { border: none; border-top: 1px solid var(--gold-dim); margin: 2.5rem 0; opacity: 0.4; }
+
+  .theorem-box { background: rgba(192,132,252,0.05); border-left: 3px solid var(--u-color); padding: 1.5rem 1.8rem; margin: 2rem 0; border-radius: 0 4px 4px 0; }
+  .theorem-label { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--u-color); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .theorem-body { font-style: italic; color: var(--text); }
+  .theorem-proof { margin-top: 1rem; font-size: 0.9rem; color: var(--text-dim); font-style: normal; }
+
+  .insight-box { background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.2); padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 4px; }
+  .insight-label { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem; }
+
+  .math-block { background: var(--surface2); border: 1px solid #1e1a2e; padding: 1.2rem 1.5rem; margin: 1.5rem 0; font-family: 'Courier New', monospace; font-size: 0.95rem; color: var(--u-color); border-radius: 4px; overflow-x: auto; }
+
+  .op-tag { display: inline-block; font-family: 'Courier New', monospace; font-size: 0.75rem; letter-spacing: 0.08em; padding: 0.15rem 0.5rem; border-radius: 2px; vertical-align: middle; }
+  .op-k { background: rgba(224,90,58,0.15); color: var(--k-color); border: 1px solid rgba(224,90,58,0.3); }
+  .op-c { background: rgba(74,158,255,0.15); color: var(--c-color); border: 1px solid rgba(74,158,255,0.3); }
+  .op-f { background: rgba(80,200,120,0.15); color: var(--f-color); border: 1px solid rgba(80,200,120,0.3); }
+  .op-u { background: rgba(192,132,252,0.15); color: var(--u-color); border: 1px solid rgba(192,132,252,0.3); }
+
+  .stability-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+  .stability-card { background: var(--surface2); border: 1px solid #1e1a2e; border-radius: 4px; padding: 1rem 1.2rem; text-align: center; }
+  .stability-card.stable { border-color: rgba(80,200,120,0.4); }
+  .stability-card.critical { border-color: rgba(201,168,76,0.4); }
+  .stability-card.chaos { border-color: rgba(224,90,58,0.4); }
+  .stability-lambda { font-family: 'Courier New', monospace; font-size: 1.4rem; font-weight: bold; margin-bottom: 0.4rem; }
+  .stability-card.stable .stability-lambda { color: var(--f-color); }
+  .stability-card.critical .stability-lambda { color: var(--gold); }
+  .stability-card.chaos .stability-lambda { color: var(--k-color); }
+  .stability-name { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.5rem; }
+  .stability-desc { font-size: 0.8rem; color: var(--text-dim); line-height: 1.5; }
+
+  .review-card { background: var(--surface2); border: 1px solid #1e1a2e; border-radius: 4px; padding: 1.2rem 1.5rem; margin: 1rem 0; }
+  .review-tag { font-size: 0.68rem; letter-spacing: 0.2em; color: var(--u-color); text-transform: uppercase; margin-bottom: 0.5rem; font-family: 'Courier New', monospace; }
+  .review-text { font-size: 0.88rem; color: var(--text-dim); font-style: italic; line-height: 1.6; }
+
+  .falsify-box { background: rgba(80,200,120,0.04); border-left: 3px solid var(--f-color); padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 0 4px 4px 0; }
+  .falsify-label { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--f-color); text-transform: uppercase; margin-bottom: 0.4rem; }
+
+  .sim-section { background: var(--surface2); border: 1px solid #1e1a2e; border-radius: 6px; margin: 3rem 0; overflow: hidden; }
+  .sim-header { padding: 1rem 1.5rem; border-bottom: 1px solid #1e1a2e; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .sim-title { font-size: 0.78rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; flex: 1; }
+  .sim-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .sim-btn { background: rgba(192,132,252,0.12); border: 1px solid rgba(192,132,252,0.3); color: var(--u-color); padding: 0.35rem 0.8rem; font-size: 0.75rem; letter-spacing: 0.08em; cursor: pointer; border-radius: 2px; font-family: 'Courier New', monospace; transition: all 0.2s; }
+  .sim-btn:hover { background: rgba(192,132,252,0.25); }
+  .sim-btn.green { background: rgba(80,200,120,0.12); border-color: rgba(80,200,120,0.35); color: var(--f-color); }
+  .sim-btn.red { background: rgba(224,90,58,0.12); border-color: rgba(224,90,58,0.35); color: var(--k-color); }
+  .sim-btn.gold { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.35); color: var(--gold); }
+  canvas { display: block; width: 100%; background: #080810; }
+  .sim-status { padding: 0.8rem 1.5rem; font-family: 'Courier New', monospace; font-size: 0.78rem; display: flex; gap: 2rem; flex-wrap: wrap; border-top: 1px solid #1e1a2e; }
+  .status-item { color: var(--text-dim); }
+  .status-val { color: var(--u-color); font-weight: bold; }
+  .status-val.stable { color: var(--f-color); }
+  .status-val.chaos { color: var(--k-color); }
+
+  .portal-section { background: linear-gradient(160deg, #0c0a12 0%, #130f1e 100%); border: 1px solid rgba(192,132,252,0.2); border-radius: 6px; margin: 3rem 0; overflow: hidden; }
+  .portal-header { background: rgba(192,132,252,0.06); border-bottom: 1px solid rgba(192,132,252,0.15); padding: 1.2rem 1.8rem; }
+  .portal-level { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--u-color); text-transform: uppercase; margin-bottom: 0.3rem; }
+  .portal-heading { font-size: 1.15rem; color: var(--text); font-weight: 400; }
+  .portal-desc { font-size: 0.88rem; color: var(--text-dim); margin-top: 0.4rem; }
+  .prompt-card { padding: 1.5rem 1.8rem; border-bottom: 1px solid rgba(192,132,252,0.08); }
+  .prompt-card:last-child { border-bottom: none; }
+  .prompt-num { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--u-color); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .prompt-title { font-size: 1rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .prompt-text { background: var(--surface2); border: 1px solid #1e1a2e; border-radius: 4px; padding: 1rem 1.2rem; font-family: 'Courier New', monospace; font-size: 0.82rem; color: var(--text); line-height: 1.6; margin: 0.7rem 0; }
+  .copy-btn { background: rgba(192,132,252,0.1); border: 1px solid rgba(192,132,252,0.25); color: var(--u-color); padding: 0.3rem 0.7rem; font-size: 0.72rem; letter-spacing: 0.08em; cursor: pointer; border-radius: 2px; font-family: 'Courier New', monospace; transition: all 0.2s; }
+  .copy-btn:hover { background: rgba(192,132,252,0.22); }
+  .copy-btn.copied { color: var(--f-color); border-color: rgba(80,200,120,0.35); }
+  .portal-footer { padding: 1rem 1.8rem; border-top: 1px solid rgba(192,132,252,0.1); font-size: 0.78rem; color: var(--text-dim); text-align: center; }
+  .portal-footer a { color: var(--u-color); text-decoration: none; }
+
+  .chapter-nav { display: flex; justify-content: space-between; align-items: center; padding: 2rem; border-top: 1px solid #1e1a2e; max-width: 780px; margin: 0 auto; }
+  .chapter-nav a { color: var(--gold); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.08em; border: 1px solid rgba(201,168,76,0.25); padding: 0.5rem 1rem; border-radius: 2px; transition: all 0.2s; }
+  .chapter-nav a:hover { background: rgba(201,168,76,0.08); }
+
+  footer { text-align: center; padding: 2rem; font-size: 0.72rem; letter-spacing: 0.12em; color: var(--text-dim); border-top: 1px solid #1a1a24; }
+  footer .fleur-footer { color: var(--gold-dim); margin: 0 0.5rem; }
+
+  @media (max-width: 600px) { .hero-letter { font-size: 10rem; } .stability-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="impa-portal.html" class="nav-logo">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <div class="nav-links">
+    <a href="chapters-diagram.html">All Chapters</a>
+    <a href="course-16weeks.html">Course</a>
+    <a href="Sportal.html">Portal</a>
+    <a href="trilogy-sale.html">Get the Book</a>
+  </div>
+</nav>
+
+<section class="chapter-hero">
+  <div class="hero-letter">λ</div>
+  <div class="chapter-tag">Chapter 10 · Week 13 · CEFR D1</div>
+  <h1 class="chapter-title">Lyapunov — Stability Under Perturbation</h1>
+  <p class="chapter-subtitle">A system is stable if small disturbances stay small. A paper is stable if a reviewer's critique does not collapse the argument.</p>
+  <div class="operator-chain">G = <span class="active">U</span> ∘ F ∘ K ∘ C</div>
+  <div class="chapter-meta">
+    <span class="meta-badge">Operator: U · Unfolding</span>
+    <span style="color:var(--text-dim)">Week 13</span>
+    <span style="color:var(--text-dim)">CEFR D1</span>
+    <span style="color:var(--text-dim)">Lyapunov · Revision · Peer Review</span>
+  </div>
+</section>
+
+<div class="content-wrap">
+
+<div class="stability-grid">
+  <div class="stability-card stable">
+    <div class="stability-lambda">λ &lt; 0</div>
+    <div class="stability-name">Stable</div>
+    <div class="stability-desc">Perturbations decay. Nearby trajectories converge. The system returns to its orbit after disturbance.</div>
+  </div>
+  <div class="stability-card critical">
+    <div class="stability-lambda">λ = 0</div>
+    <div class="stability-name">Critical</div>
+    <div class="stability-desc">The boundary. Neither growing nor decaying. A small push in either direction decides the fate.</div>
+  </div>
+  <div class="stability-card chaos">
+    <div class="stability-lambda">λ &gt; 0</div>
+    <div class="stability-name">Chaotic</div>
+    <div class="stability-desc">Perturbations grow exponentially. Nearby trajectories diverge. Prediction horizon collapses.</div>
+  </div>
+</div>
+
+<h2>What Stability Means</h2>
+
+<p>Take two starting points that are almost identical — separated by a distance of ε, which is very small. Let both evolve forward in time under the same rules. If the distance between them shrinks, the system is stable: perturbations decay, and the initial difference doesn't matter in the long run. If the distance grows, the system is unstable: the two trajectories separate, and the small initial difference becomes large. If the growth is exponential, the system is chaotic.</p>
+
+<p>The Lyapunov exponent λ (lambda) measures the average rate of this separation. It is not a property of one trajectory — it is a property of the system itself, measuring how sensitively the future depends on the present. A negative λ means the future is robust: roughly where you started determines roughly where you end up. A positive λ means the future is fragile: an unmeasurably small difference in starting conditions produces a completely different outcome.</p>
+
+<p>This is <span class="op-tag op-u">U</span> — the unfolding operator — encountering its test. The fold (F) produced the paper. The threshold crossing (K) committed you to a claim. The compression (C) gave you the literature. Now U must unfold: the paper goes into the world and encounters perturbation. The question Lyapunov asks is: does the argument survive?</p>
+
+<h2>Three Lyapunov Readings</h2>
+
+<h3>1. The Heart — Healthy Chaos</h3>
+
+<p>A healthy human heart has a Lyapunov exponent that is slightly positive. This sounds alarming — the heart is chaotic? — but it is the correct sign for a healthy organ. A perfectly periodic heartbeat (λ = 0) is actually a warning sign: it appears in patients close to cardiac arrest. The slight positive λ means the heart is responsive — it can adapt its rate moment to moment to changing demands. The chaos is not disorder. It is sensitivity maintained at the edge of stability, exactly where a complex responsive system needs to operate.</p>
+
+<div class="math-block">
+HRV (Heart Rate Variability) Lyapunov analysis:
+
+Healthy adult:     λ₁ ≈ +0.05 to +0.15   (slight chaos — responsive)
+Cardiac risk:      λ₁ ≈ 0                 (too rigid — critical)
+Cardiac arrest:    λ₁ ≪ 0                 (fixed point — no longer adaptive)
+
+The U operator requires λ > 0:
+  a living system must remain sensitive to perturbation.
+  A paper that cannot be critiqued is not alive.
+</div>
+
+<h3>2. The Weather — The Horizon of Prediction</h3>
+
+<p>Edward Lorenz discovered in 1963 that atmospheric dynamics have a positive Lyapunov exponent of approximately 0.9 day⁻¹. This means that an initial uncertainty in atmospheric measurement doubles roughly every day. After 10 days, the uncertainty has grown by a factor of 2¹⁰ = 1024. This is why reliable weather prediction beyond about two weeks is physically impossible — not a limitation of computing power, but a mathematical fact about the system itself.</p>
+
+<p>The predictability horizon T* satisfies: T* ≈ (1/λ) × ln(Δ_max / Δ₀), where Δ₀ is the initial uncertainty and Δ_max is the acceptable forecast error. For the atmosphere, with any realistic measurement precision, T* is approximately 14 days. No more data will change this. The system's λ sets the ceiling.</p>
+
+<h3>3. The Argument — Lyapunov Stability Under Peer Review</h3>
+
+<p>A paper's argument has a Lyapunov structure. A reviewer introduces a perturbation — a challenge to a claim, a question about methodology, a counterexample. If the argument collapses under this perturbation (the core claim fails, the evidence no longer supports the conclusion, the methods section cannot be defended), then the paper has a positive effective λ: small challenges produce large failures. If the argument survives — absorbs the challenge, remains coherent, requires only local revision — the paper has a negative effective λ: the perturbation decays, and the argument returns to its orbit.</p>
+
+<div class="theorem-box">
+  <div class="theorem-label">Theorem 10.1 — Argument Stability</div>
+  <div class="theorem-body">Let A be an argument consisting of claim C, evidence set E = {e₁, …, eₙ}, and warrant W connecting E to C. Define a reviewer perturbation as the removal of any single eᵢ or the challenge of W. The argument A is Lyapunov stable under peer review if and only if: (1) C remains supported by E \ {eᵢ} for any single i, and (2) W remains defensible under standard objections in the field. An argument that fails condition (1) is over-reliant on a single piece of evidence. An argument that fails condition (2) has an implicit warrant — a hidden assumption that has not been tested.</div>
+  <div class="theorem-proof"><strong>Application:</strong> Before submitting, remove each piece of evidence from your argument one at a time. Does the claim survive? If removing any single source causes the claim to collapse, that source is a single point of failure — a positive Lyapunov contribution. Fix it before a reviewer finds it. □</div>
+</div>
+
+<div class="insight-box">
+  <div class="insight-label">Insight — The Reviewer as Perturbation</div>
+  <p>A peer reviewer is not an enemy. They are a Lyapunov test — a controlled perturbation applied to your argument to measure its stability. A review that says "the methodology is unclear" is telling you that the Methods section has a positive local λ: small ambiguities in how you describe your methods produce large uncertainty in how the results should be interpreted. A review that says "the claim in the introduction is not supported by the discussion" is identifying a trajectory that has diverged — the paper started in one place and arrived somewhere else. Both are gifts. They identify exactly where λ &gt; 0. The revision process is the work of making λ &lt; 0.</p>
+</div>
+
+<h2>Reading Reviewer Language</h2>
+
+<div class="review-card">
+  <div class="review-tag">High λ signal — structural instability</div>
+  <div class="review-text">"The central claim is not supported by the evidence presented." / "The methodology does not justify the conclusions." / "The authors have not addressed the alternative explanation that…"</div>
+</div>
+
+<div class="review-card" style="margin-top:0.5rem">
+  <div class="review-tag">Low λ signal — local perturbation only</div>
+  <div class="review-text">"The writing in section 3 is unclear." / "References 12 and 17 are missing from the bibliography." / "The figure caption for Figure 2 does not match the text."</div>
+</div>
+
+<div class="review-card" style="margin-top:0.5rem">
+  <div class="review-tag">Critical λ = 0 signal — the hard case</div>
+  <div class="review-text">"The paper is interesting but the scope is unclear." / "The contribution relative to prior work is not evident." / "It is not clear what the paper is claiming."</div>
+</div>
+
+<p style="margin-top:1.5rem">The first type requires structural revision — the argument itself must change. The second type requires local editing — the argument is sound, the presentation is not. The third type is the most dangerous: it means the paper is at λ = 0, the critical boundary, where a small push in any direction could destabilize the whole. This review requires you to commit more clearly — to cross K again, more sharply, and let the argument's λ go definitively negative.</p>
+
+<hr class="gold-rule">
+
+<h2>What Would Break the Model</h2>
+
+<div class="falsify-box">
+  <div class="falsify-label">Falsifiability Condition</div>
+  <p>If a study demonstrated that arguments with higher structural redundancy (multiple independent lines of evidence for the same claim) do not survive peer review at higher rates than arguments relying on a single line of evidence — then Theorem 10.1 is false and Lyapunov stability is not a useful model for argument robustness. The prediction is testable: papers with redundant evidence structures should have lower major revision rates.</p>
+  <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--text-dim)">Current evidence: Empirical studies of retraction and major revision rates in high-impact journals show that methodological single points of failure (one experiment, one dataset, one measurement instrument) are the primary driver of post-publication correction. The structural prediction holds qualitatively. Formal testing via the Lyapunov framing has not been published — an open problem.</p>
+</div>
+
+<h2>Exercises</h2>
+
+<p><strong>10.1</strong> — Take your Week 12 paper and remove each piece of evidence one at a time. Does the claim survive the removal of any single source? If not, identify the single point of failure and write one sentence describing what additional evidence would make the argument Lyapunov stable.</p>
+
+<p><strong>10.2</strong> — A reviewer writes: "The authors claim X, but have not considered Y." Classify this perturbation: is it high-λ (structural), low-λ (local), or critical-λ (scope/commitment)? Write a 150-word "Response to Reviewer" paragraph in the standard academic format: acknowledge the concern, state what change you will make, and explain why the change addresses the critique without collapsing the argument.</p>
+
+<p><strong>10.3</strong> — The weather prediction horizon is T* ≈ (1/λ) × ln(Δ_max/Δ₀). If your argument has three independent pieces of evidence (each reducing uncertainty by half), estimate the qualitative "revision horizon" — how many rounds of review would it take before the argument either stabilizes or must be abandoned? What would cause each outcome?</p>
+
+<p><strong>10.4</strong> — Write a self-review of your Week 12 paper as if you were a D1-level researcher in your field reading it for the first time. Give exactly three critiques in formal reviewer language. For each: classify the λ level (structural / local / critical), state the specific change needed, and confirm that the change does not introduce a new instability elsewhere.</p>
+
+</div>
+
+<!-- SIMULATION -->
+<div class="content-wrap" style="padding-top:0">
+<div class="sim-section">
+  <div class="sim-header">
+    <div class="sim-title">Live Simulation — Lyapunov Trajectory Divergence</div>
+    <div class="sim-controls">
+      <button class="sim-btn green" onclick="setRegime('stable')">λ &lt; 0 · Stable</button>
+      <button class="sim-btn gold" onclick="setRegime('critical')">λ = 0 · Critical</button>
+      <button class="sim-btn red" onclick="setRegime('chaos')">λ &gt; 0 · Chaotic</button>
+      <button class="sim-btn" onclick="simPerturb()">Perturb</button>
+      <button class="sim-btn" onclick="simReset()">Reset</button>
+    </div>
+  </div>
+  <canvas id="simCanvas" height="300"></canvas>
+  <div class="sim-status">
+    <div class="status-item">λ: <span class="status-val" id="statLambda">−0.30</span></div>
+    <div class="status-item">Separation: <span class="status-val" id="statSep">0.010</span></div>
+    <div class="status-item">Regime: <span class="status-val" id="statRegime">Stable</span></div>
+    <div class="status-item">Perturbations: <span class="status-val" id="statPerturb">0</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+let regime = 'stable';
+let lambda = -0.30;
+let t = 0;
+let perturbCount = 0;
+let animId;
+
+// Two trajectories: x1 (reference) and x2 (perturbed)
+let x1 = 0.5, x2 = 0.51; // initial separation ε = 0.01
+let hist1 = [], hist2 = [], histSep = [];
+const HISTORY = 500;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = 300;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// Dynamics: logistic-family map with tunable λ
+function mapStep(x, lam) {
+  // Use a parameterized map: r controls effective Lyapunov exponent
+  // r < 3 → stable, r ≈ 3 → critical, r > 3.57 → chaos
+  const rMap = { stable: 2.5, critical: 3.0, chaos: 3.85 };
+  const r = rMap[regime];
+  return r * x * (1 - x);
+}
+
+function step() {
+  t += 1;
+  x1 = mapStep(x1);
+  x2 = mapStep(x2);
+
+  // Clamp
+  x1 = Math.max(0.001, Math.min(0.999, x1));
+  x2 = Math.max(0.001, Math.min(0.999, x2));
+
+  const sep = Math.abs(x1 - x2);
+  hist1.push(x1);
+  hist2.push(x2);
+  histSep.push(sep);
+
+  if (hist1.length > HISTORY) { hist1.shift(); hist2.shift(); histSep.shift(); }
+
+  return sep;
+}
+
+function draw(sep) {
+  const W = canvas.width, H = canvas.height;
+  const laneH = H / 2;
+  ctx.fillStyle = '#080810';
+  ctx.fillRect(0, 0, W, H);
+
+  // Lane divider
+  ctx.strokeStyle = 'rgba(30,26,46,0.8)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, laneH); ctx.lineTo(W, laneH); ctx.stroke();
+
+  ctx.font = '10px monospace'; ctx.fillStyle = 'rgba(153,148,160,0.6)';
+  ctx.fillText('Trajectory 1 (reference)', 8, 16);
+  ctx.fillText('Trajectory 2 (perturbed) + separation |x₁−x₂|', 8, laneH + 16);
+
+  const s = W / HISTORY;
+
+  // Draw trajectory 1
+  if (hist1.length > 1) {
+    ctx.strokeStyle = 'rgba(192,132,252,0.8)'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < hist1.length; i++) {
+      const x = (i / HISTORY) * W;
+      const y = laneH * 0.9 - hist1[i] * laneH * 0.8;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Draw trajectory 2
+  if (hist2.length > 1) {
+    const col = regime === 'stable' ? 'rgba(80,200,120,0.7)' : regime === 'critical' ? 'rgba(201,168,76,0.7)' : 'rgba(224,90,58,0.7)';
+    ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    for (let i = 0; i < hist2.length; i++) {
+      const x = (i / HISTORY) * W;
+      const y = laneH * 0.9 - hist2[i] * laneH * 0.8;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Draw separation in lower lane
+  if (histSep.length > 1) {
+    const maxSep = Math.max(...histSep, 0.01);
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    for (let i = 0; i < histSep.length; i++) {
+      const x = (i / HISTORY) * W;
+      const normSep = histSep[i] / maxSep;
+      const y = laneH + laneH * 0.9 - normSep * laneH * 0.8;
+      const col = histSep[i] < 0.01 ? '#50c878' : histSep[i] < 0.1 ? '#c9a84c' : '#e05a3a';
+      ctx.strokeStyle = col;
+      if (i === 0) { ctx.moveTo(x, y); continue; }
+      const prevNorm = histSep[i-1] / maxSep;
+      const prevY = laneH + laneH * 0.9 - prevNorm * laneH * 0.8;
+      const prevCol = histSep[i-1] < 0.01 ? '#50c878' : histSep[i-1] < 0.1 ? '#c9a84c' : '#e05a3a';
+      if (col !== prevCol) { ctx.stroke(); ctx.beginPath(); ctx.strokeStyle = col; ctx.moveTo(x, y); }
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Regime label
+  const regimeLabels = { stable: 'λ < 0 — stable: perturbations decay', critical: 'λ = 0 — critical: neither decaying nor growing', chaos: 'λ > 0 — chaotic: perturbations grow exponentially' };
+  const regimeCols = { stable: '#50c878', critical: '#c9a84c', chaos: '#e05a3a' };
+  ctx.fillStyle = regimeCols[regime]; ctx.font = '10px monospace';
+  ctx.fillText(regimeLabels[regime], 8, H - 10);
+
+  // Status update
+  const lambdaVals = { stable: '−0.30', critical: '0.00', chaos: '+0.37' };
+  const regimeNames = { stable: 'Stable', critical: 'Critical', chaos: 'Chaotic' };
+  document.getElementById('statLambda').textContent = lambdaVals[regime];
+  document.getElementById('statSep').textContent = sep.toFixed(4);
+  document.getElementById('statRegime').textContent = regimeNames[regime];
+  document.getElementById('statRegime').className = 'status-val ' + (regime === 'stable' ? 'stable' : regime === 'chaos' ? 'chaos' : '');
+  document.getElementById('statPerturb').textContent = perturbCount;
+}
+
+function loop() {
+  const sep = step();
+  draw(sep);
+  animId = requestAnimationFrame(loop);
+}
+
+function setRegime(r) {
+  regime = r;
+  x1 = 0.5; x2 = 0.51;
+  hist1 = []; hist2 = []; histSep = [];
+  t = 0; perturbCount = 0;
+}
+
+function simPerturb() {
+  // Add a small perturbation to trajectory 2
+  x2 += (Math.random() - 0.5) * 0.02;
+  x2 = Math.max(0.001, Math.min(0.999, x2));
+  perturbCount++;
+}
+
+function simReset() {
+  x1 = 0.5; x2 = 0.51;
+  hist1 = []; hist2 = []; histSep = [];
+  t = 0; perturbCount = 0;
+}
+
+loop();
+</script>
+
+<script>
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+<div class="content-wrap" style="padding-top:0">
+<div class="portal-section">
+  <div class="portal-header">
+    <div class="portal-level">Student Portal · Level D1 · Operator: U · Week 13</div>
+    <div class="portal-heading">Revision and Peer Review — The Stability Test</div>
+    <div class="portal-desc">Your paper has been written. Now it meets perturbation. Use Prompt 5.3 to generate a formal peer review, then Prompt 6.1 to verify your revisions actually fixed what was broken.</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 5.3 · Course Week 13</div>
+    <div class="prompt-title">Reviewer Simulation</div>
+    <div class="prompt-text" id="p1text">Act as a peer reviewer for the journal [name a journal in your field — e.g. PLOS ONE, Language Learning, Physical Review Letters]. Here is my paper: [paste your abstract and introduction, approximately 400 words]. Give me exactly 3 critiques formatted as a real reviewer would write them — numbered, direct, using standard peer review language (the authors claim / the evidence does not support / I recommend). For each critique, classify it as: (A) structural — the core argument is unstable, (B) local — the presentation needs revision, or (C) critical — the scope or commitment is unclear. Then tell me what specific single change would address each critique. Do not soften the critiques — a Lyapunov-stable paper survives honest perturbation.</div>
+    <button class="copy-btn" onclick="copyPrompt('p1text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 6.1 · Course Week 13</div>
+    <div class="prompt-title">Revision Verification</div>
+    <div class="prompt-text" id="p2text">Here is the original critique from Prompt 5.3: [paste the 3 critiques]. Here is my revised section addressing those critiques: [paste the revised abstract, introduction, or relevant section]. For each of the 3 critiques: (1) has the revision fully addressed it — yes, partially, or no? (2) If partially or no, what specifically still needs to change? (3) Has the revision introduced any new problem — a new ambiguity, a new unsupported claim, or a new inconsistency? A Lyapunov-stable revision makes λ more negative without creating new positive contributions elsewhere. Flag any new instabilities you find.</div>
+    <button class="copy-btn" onclick="copyPrompt('p2text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Extension Prompt · Chapter 10</div>
+    <div class="prompt-title">Single Point of Failure Test</div>
+    <div class="prompt-text" id="p3text">I want to test whether my argument is Lyapunov stable — whether it survives the removal of any single piece of evidence. Here is my paper's central claim: [state your claim in one sentence]. Here are the pieces of evidence I use to support it: (1) [evidence 1], (2) [evidence 2], (3) [evidence 3]. For each piece of evidence: (1) if I removed only this piece, does the claim still hold? (2) what is the weakest link — the single piece whose removal most destabilizes the argument? (3) what one additional piece of evidence would make the argument Lyapunov stable against the removal of the weakest link? This is the single-point-of-failure audit. Be direct — if the argument fails without any single source, that is the finding.</div>
+    <button class="copy-btn" onclick="copyPrompt('p3text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="portal-footer">
+    All 21 prompts across levels A1 → D2 available at <a href="Sportal.html">sportal.html</a>
+  </div>
+</div>
+</div>
+
+<div class="chapter-nav">
+  <a href="ch9-phi.html">← Chapter 9: φ · The Subcritical Approach</a>
+  <a href="ch11-spectral.html">Chapter 11: Spectral Radius →</a>
+</div>
+
+<footer>
+  <span class="fleur-footer">⚜</span>
+  Book 3: The Mini-Beast &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Chapter 10 of 17
+  <span class="fleur-footer">⚜</span>
+</footer>
+
+</body>
+</html>

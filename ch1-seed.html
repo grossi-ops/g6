@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 · The Unfolding — The Mini-Beast · Principia Orthogona</title>
+<meta name="description" content="Chapter 1: The Unfolding. We perceive expansion first. The tree, the canopy, the flower — then we ask how. Working backward from U to C reveals the compression that made it possible. Book 3 · The Mini-Beast · Principia Orthogona.">
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --mid:   #3a4f7a;
+    --rule:  #8a7340;
+    --text:  #1c1c1c;
+    --light: #e8e2d4;
+    --green: #2d5a27;
+    --sage:  #e8f0e0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+
+  /* ── Navigation ── */
+  nav {
+    background: var(--navy);
+    padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { color: var(--gold); font-weight: bold; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; font-family: sans-serif; }
+  .nav-back { color: #ccc; text-decoration: none; font-size: 0.82rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-chap { color: var(--gold); font-size: 0.82rem; font-family: sans-serif; }
+
+  /* ── Chapter Hero ── */
+  .ch-hero {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--green) 100%);
+    color: white; padding: 5rem 2rem 4rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .ch-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 60% 40%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  }
+  .ch-eyebrow {
+    font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.22em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem;
+  }
+  .ch-number {
+    font-family: sans-serif; font-size: 5rem; font-weight: 900;
+    color: rgba(201,168,76,0.18); line-height: 1; margin-bottom: -1.5rem;
+    position: relative;
+  }
+  .ch-title {
+    font-size: clamp(2rem, 5vw, 3.2rem); color: white;
+    position: relative; z-index: 1; margin-bottom: 0.5rem;
+  }
+  .ch-subtitle {
+    color: rgba(255,255,255,0.7); font-style: italic; font-size: 1.05rem;
+    margin-bottom: 1.5rem; position: relative; z-index: 1;
+  }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+  .ch-operator {
+    font-family: 'Courier New', monospace; font-size: 1.1rem;
+    color: var(--gold); letter-spacing: 0.15em; position: relative; z-index: 1;
+  }
+  .ch-operator .active-op { color: white; font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ── Chapter body ── */
+  .ch-body { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+  .ch-body p { font-size: 1.05rem; line-height: 1.82; margin-bottom: 1.4rem; color: var(--text); }
+  .ch-body h2 { font-size: 1.35rem; color: var(--navy); margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--light); padding-bottom: 0.4rem; }
+  .ch-body h3 { font-size: 1.1rem; color: var(--mid); margin: 2rem 0 0.6rem; }
+
+  /* ── Pull quote ── */
+  .pull-quote {
+    border-left: 4px solid var(--gold);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+    background: var(--smoke); font-style: italic;
+    font-size: 1.08rem; line-height: 1.75; color: var(--navy);
+  }
+
+  /* ── Math block ── */
+  .math-block {
+    background: var(--navy); color: white;
+    padding: 1.5rem 2rem; margin: 2rem 0; border-radius: 4px;
+    font-family: 'Courier New', monospace; font-size: 0.92rem;
+    line-height: 2; border-left: 4px solid var(--gold);
+  }
+  .math-block .math-label {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem;
+  }
+  .math-block .eq { color: var(--gold); font-size: 1.05rem; }
+
+  /* ── Theorem box ── */
+  .theorem-box {
+    border: 1.5px solid var(--gold); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    background: #fdf9f0; position: relative;
+  }
+  .theorem-box::before {
+    content: 'Theorem'; position: absolute; top: -0.65rem; left: 1.2rem;
+    background: #fdf9f0; padding: 0 0.5rem;
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--rule);
+  }
+  .theorem-box .th-name { font-weight: bold; color: var(--navy); margin-bottom: 0.5rem; font-size: 0.95rem; }
+  .theorem-box .th-body { font-size: 0.92rem; line-height: 1.7; color: var(--text); }
+
+  /* ── Insight box ── */
+  .insight-box {
+    background: var(--sage); border-left: 4px solid var(--green);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .insight-box .ins-label {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--green); margin-bottom: 0.4rem;
+  }
+  .insight-box p { font-size: 0.93rem; line-height: 1.7; margin-bottom: 0; color: var(--text); }
+
+  /* ── Falsify box ── */
+  .falsify-box {
+    background: #f9f0f0; border-left: 4px solid #c0392b;
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .falsify-box .fa-label {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: #c0392b; margin-bottom: 0.4rem;
+  }
+  .falsify-box p { font-size: 0.93rem; line-height: 1.7; margin-bottom: 0; color: var(--text); }
+
+  /* ── Canvas / Simulation ── */
+  .sim-wrapper {
+    background: var(--navy); padding: 2rem; margin: 2.5rem 0; border-radius: 4px;
+  }
+  .sim-label {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.8rem;
+    text-align: center;
+  }
+  .sim-title { color: white; text-align: center; font-size: 1.1rem; margin-bottom: 1.2rem; }
+  canvas#sim1 { display: block; margin: 0 auto; border-radius: 2px; }
+  .sim-controls {
+    display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap;
+  }
+  .sim-btn {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 0.4rem 1.2rem; font-family: sans-serif; font-size: 0.75rem;
+    letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sim-btn:hover { background: var(--gold); color: var(--navy); }
+  .sim-info { color: rgba(255,255,255,0.6); font-size: 0.78rem; text-align: center; margin-top: 0.8rem; font-family: sans-serif; }
+
+  /* ── Chapter navigation ── */
+  .ch-nav {
+    background: var(--smoke); border-top: 1px solid var(--light);
+    padding: 2rem; display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .ch-nav a {
+    color: var(--navy); text-decoration: none; font-family: sans-serif;
+    font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .ch-nav a:hover { color: var(--gold); }
+  .ch-nav-center { font-family: sans-serif; font-size: 0.75rem; color: #999; text-align: center; }
+
+  /* ── Portal section ── */
+  .portal-section {
+    background: var(--navy); padding: 3rem 2rem; margin-top: 0;
+  }
+  .portal-inner { max-width: 720px; margin: 0 auto; }
+  .portal-eyebrow {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;
+    text-align: center;
+  }
+  .portal-heading { color: white; font-size: 1.6rem; text-align: center; margin-bottom: 0.5rem; }
+  .portal-sub { color: rgba(255,255,255,0.55); font-style: italic; text-align: center; margin-bottom: 2rem; font-size: 0.92rem; }
+  .prompt-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.25);
+    padding: 1.5rem 1.8rem; margin-bottom: 1.2rem; border-radius: 2px;
+  }
+  .prompt-card:last-of-type { margin-bottom: 0; }
+  .prompt-number {
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem;
+  }
+  .prompt-title { color: white; font-size: 1rem; margin-bottom: 0.8rem; }
+  .prompt-text {
+    color: rgba(255,255,255,0.75); font-size: 0.88rem; line-height: 1.7;
+    font-family: sans-serif; margin-bottom: 1rem;
+    border-left: 2px solid rgba(201,168,76,0.3); padding-left: 1rem;
+  }
+  .copy-btn {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold);
+    padding: 0.35rem 1rem; font-family: sans-serif; font-size: 0.65rem;
+    letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: var(--gold); color: var(--navy); }
+  .copy-btn.copied { background: var(--gold); color: var(--navy); }
+
+  /* ── Level badge ── */
+  .level-badge {
+    display: inline-block; background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4); color: var(--gold);
+    font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.18em;
+    text-transform: uppercase; padding: 0.2rem 0.8rem; margin-bottom: 1.5rem;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy); color: rgba(255,255,255,0.45);
+    padding: 2rem; text-align: center; font-family: sans-serif; font-size: 0.75rem;
+    line-height: 1.8;
+  }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← The Mini-Beast</a>
+  <span class="nav-logo">PRINCIPIA ORTHOGONA · BOOK 3</span>
+  <span class="nav-chap">Ch. 1 of 17</span>
+</nav>
+
+<!-- Chapter Hero -->
+<div class="ch-hero">
+  <div class="ch-eyebrow">Book 3 · The Mini-Beast · Biological Instantiations</div>
+  <div class="ch-number">1</div>
+  <h1 class="ch-title">The Unfolding</h1>
+  <div class="ch-subtitle">We perceive expansion first. Then we ask how.</div>
+  <div class="gold-rule"></div>
+  <div class="ch-operator"><span class="active-op">U</span> ∘ F ∘ K ∘ C · Reading backward</div>
+</div>
+
+<!-- Chapter Body -->
+<div class="ch-body">
+
+  <p>You are standing outside. There is a tree.</p>
+
+  <p>It is large. Its canopy spreads eight meters in every direction. It flowers in cream-white clusters that become the cashew apple — red, then gold — then the kidney-shaped nut hanging below the fruit like an afterthought. Everything about it is outward. Expanding. Present.</p>
+
+  <div class="pull-quote">
+    This is where you actually are. Not at the seed. At the tree. The unfolding is what you perceive first. The compression happened before you arrived — underground, invisible, already finished. This chapter starts where you are.
+  </div>
+
+  <p>The cajueiro (<em>Anacardium occidentale</em>) grows in the Caatinga — the Brazilian semi-arid interior, one of the most water-stressed biomes on Earth. When you see it flowering, when you see the canopy, you are seeing the output of an operator sequence that ran in silence, without witnesses, long before the first leaf appeared above soil.</p>
+
+  <p>The sequence is written <strong>G = U ∘ F ∘ K ∘ C</strong>. We will read it from left to right — which means reading it <em>backward in time</em>. Because the unfolding (U) is what you see. The compression (C) is what made it possible.</p>
+
+  <h2>U — What You See</h2>
+
+  <p>The cajueiro in full flower is a system in Unfold. New configuration space is being occupied. The canopy is not just growing larger — it is differentiating: some branches specialize in fruit production, others in shade generation, others in root communication via mycorrhizal networks. The system is exploring. This is U: the expansion into a richer geometry than what existed before.</p>
+
+  <p>Every living thing you have ever looked at was in some phase of U when you looked at it. The leaf. The reef. The child learning to walk. You perceive the unfolding because the unfolding is visible. The rest of the sequence is not.</p>
+
+  <div class="math-block">
+    <div class="math-label">The dm³ Operator Chain — Reading Backward from What You See</div>
+    <div class="eq">G = U ∘ F ∘ K ∘ C</div>
+    <br>
+    U : Y → Z   · <span style="color:rgba(255,255,255,0.6)">Unfold — what you see. Expansion, differentiation, flowering.</span>
+    <br>
+    F : X″ → Y  · <span style="color:rgba(255,255,255,0.6)">Fold — the threshold crossing. A before and an after.</span>
+    <br>
+    K : X′ → X″ · <span style="color:rgba(255,255,255,0.6)">Curvature test — is the structure stable enough to cross?</span>
+    <br>
+    C : X → X′  · <span style="color:rgba(255,255,255,0.6)">Compression — invisible. Already done. Underground.</span>
+  </div>
+
+  <h2>F — The Crossing You Didn't See</h2>
+
+  <p>Before the cajueiro could unfold, it had to cross a threshold. In the operator language, this is F: the Fold. The system reaches a point where the geometry of the old configuration cannot contain what has been built up, and something tips. For the cajueiro, F is the moment the root makes contact with the aquifer and lateral growth becomes possible. Before F: one-dimensional search. After F: three-dimensional expansion. The topology changes.</p>
+
+  <p>You did not see this happen. It was underground, in the dark, weeks or months before the first shoot appeared above the soil line. But F is real and measurable: the growth rate of the root system changes discontinuously at contact. That discontinuity is the fold.</p>
+
+  <h2>K — The Test Before the Crossing</h2>
+
+  <p>The fold does not happen automatically. Before F can fire, the system must pass K: the curvature test. Is the structure stable enough to reorganize? Is there enough stored energy? Is the root tip intact? K is the threshold condition — the gate. For the cajueiro, K is the question the root system is continuously asking as it descends: <em>Is this enough water? Is this enough? Is this enough?</em> The answer is no, and no, and no — until it is yes. K passes. F fires.</p>
+
+  <div class="insight-box">
+    <div class="ins-label">Operator Insight</div>
+    <p>K is not a decision. The plant does not decide to cross the threshold. K is a structural test built into the geometry of the system. When the moisture gradient exceeds the threshold value, lateral root primordia that were dormant become active. The threshold does not require a mind. It requires a structure sensitive enough to detect it.</p>
+  </div>
+
+  <h2>C — What Had to Happen First</h2>
+
+  <p>Now we are at the beginning. Before K. Before F. Before anything you could observe from the outside.</p>
+
+  <p>The cajueiro seed is 2–3 cm long. The apical meristem — the root tip that will eventually find the aquifer — is 10 to 50 cells wide, roughly 0.3–1 mm in radius. At no point in the downward growth phase does the cajueiro invest in lateral branching. Every calorie is directed axially toward the moisture gradient minimum. The three-dimensional root system collapses to a one-dimensional search trajectory.</p>
+
+  <p>This is C. Compression. The system reduces its configuration space to the smallest possible shape that can still do the one necessary thing: find the invariant.</p>
+
+  <div class="pull-quote">
+    The seed compresses not because it is small, but because compression is the only strategy that preserves the option of becoming large. A seed that branches early, that spends its stored energy in all directions, finds nothing. The cajueiro finds water by becoming, temporarily, almost nothing.
+  </div>
+
+  <h3>Cassava Knows This Too</h3>
+  <p><em>Manihot esculenta</em> — cassava — responds to drought by shutting down 73% of its leaf surface area. Stomata close. Photosynthesis drops. From outside, it looks like dying. Inside, it is translocating starches into the tuber, concentrating the energy reserve, waiting. When rain returns — sometimes months later — cassava rebounds within 14 days. It compressed. The unfolding was still there, waiting, encoded in the tuber. C preserved the possibility of U.</p>
+
+  <h3>The Crystal Did It Too</h3>
+  <p>At the molecular scale, cellulose — the primary structural polymer of plant cell walls — is compressed into a crystalline form (cellulose I) with hydrogen-bonding density of approximately 6 bonds per cellobiose unit. Maximum compression of the polymer chain gives it tensile strength comparable to steel at one-fifth the weight. The plant did not invent a new material. It discovered that the most compressed arrangement of the chain is also the strongest. C is not weakness. C is the origin of structural possibility.</p>
+
+  <div class="theorem-box">
+    <div class="th-name">Theorem 1.1 — Compression Precedes Expansion</div>
+    <div class="th-body">
+      For any living system G = U ∘ F ∘ K ∘ C operating under resource constraint R, the maximum information about the viable configuration space is encoded in the compression trajectory C(x₀). The system that compresses most precisely gains earliest contact with the structural invariant I* that determines whether F and U are accessible.
+      <br><br>
+      Formally: dim(C(X)) &lt; dim(X), and the Hausdorff distance d(C(x₀), I*) is minimized by the trajectory that reduces energy expenditure during the search phase.
+    </div>
+  </div>
+
+  <h2>The Reading Direction of This Book</h2>
+
+  <p>This is why Chapter 1 starts with the unfolding. Not because U is more important than C — it is not. But because you arrive at the tree already standing. You arrive at any living system in the middle of its U. Your job as a student of this framework is to learn to read backward: to see the tree and ask what fold made it, what threshold the fold required, what compression the threshold demanded.</p>
+
+  <p>By the time you reach Chapter 7, that backward read will be automatic. You will look at any system — a population of immune cells, a circadian oscillator, a market volatility surface — and you will see the compression it was before it became what it is now.</p>
+
+  <div class="falsify-box">
+    <div class="fa-label">Falsifiability Condition</div>
+    <p>If a living system achieves stable structural expansion (U) without a prior compression phase (C) — without any phase in which dimensionality was reduced, energy expenditure was restricted, and a single trajectory was followed toward a structural invariant — then the operator sequence G = U ∘ F ∘ K ∘ C is falsified for that system. The cajueiro, cassava, and cellulose crystal are existence proofs of C, not proofs of universality. Chapter 6 returns with three testable predictions and one protocol.</p>
+  </div>
+
+</div>
+
+<!-- Live Simulation -->
+<div style="padding: 0 2rem;">
+  <div class="sim-wrapper">
+    <div class="sim-label">Live Simulation · Chapter 1</div>
+    <div class="sim-title">Root Growth Under Constraint — Compression to Invariant</div>
+    <canvas id="sim1" width="680" height="320"></canvas>
+    <div class="sim-controls">
+      <button class="sim-btn" onclick="resetSim()">Reset</button>
+      <button class="sim-btn" onclick="toggleSim()">Pause / Resume</button>
+      <button class="sim-btn" onclick="addStress()">Add Stress</button>
+    </div>
+    <div class="sim-info" id="sim-info">You see the tree first — already unfolded (U). Press Reset to watch the full sequence run forward from C. The compression is what had to happen before any of this was visible.</div>
+  </div>
+</div>
+
+<!-- Chapter Navigation -->
+<div class="ch-nav">
+  <a href="index.html">← Book 3 Index</a>
+  <div class="ch-nav-center">Chapter 1 of 17 · The Mini-Beast</div>
+  <a href="ch2-allostatic.html">Chapter 2 · Allostatic Operator →</a>
+</div>
+
+<!-- ============================================================
+     STUDENT PORTAL — Level A1 · Embedded Prompts
+     ============================================================ -->
+<div class="portal-section">
+  <div class="portal-inner">
+
+    <div style="text-align:center; margin-bottom: 2rem;">
+      <div class="level-badge">Student Portal · Level A1 · Operator: C</div>
+    </div>
+    <div class="portal-eyebrow">Principia Orthogona · Student Portal</div>
+    <h2 class="portal-heading">Level A1 — First Contact</h2>
+    <div class="portal-sub">You arrived at the tree. Now you ask what made it. These prompts take you from the visible unfolding backward to the seed.</div>
+    <div style="text-align:center; font-family:sans-serif; font-size:0.78rem; color:rgba(255,255,255,0.4); margin-bottom:2rem; letter-spacing:0.1em;"><span style="color:var(--gold)">U</span> ∘ F ∘ K ∘ C · Reading backward from what you see</div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A1.1 — Seed Contact</div>
+      <div class="prompt-title">Read the cajueiro</div>
+      <div class="prompt-text">I am beginning the Principia Orthogona series. I am at level A1. Read this passage to me and then ask me one question about what persists when something grows: "Nature does not seek perfection. It seeks the next stable configuration. A seed falls into poor soil — sandy, dry, resistant. Most seeds die there. The cajueiro does not."</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="I am beginning the Principia Orthogona series. I am at level A1. Read this passage to me and then ask me one question about what persists when something grows: &quot;Nature does not seek perfection. It seeks the next stable configuration. A seed falls into poor soil — sandy, dry, resistant. Most seeds die there. The cajueiro does not.&quot;">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A1.2 — Operator Introduction</div>
+      <div class="prompt-title">What is C → K → F → U?</div>
+      <div class="prompt-text">Explain the operator sequence C → K → F → U to me as if I am a child who has never seen algebra. Use one concrete example from nature. Then tell me: where am I in this sequence right now, as a beginner?</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="Explain the operator sequence C → K → F → U to me as if I am a child who has never seen algebra. Use one concrete example from nature. Then tell me: where am I in this sequence right now, as a beginner?">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A1.3 — First Pattern</div>
+      <div class="prompt-title">Find the same shape twice</div>
+      <div class="prompt-text">Show me two things from completely different domains that have the same underlying pattern. Do not explain the math yet. Just show me the two things. Then ask me: "What do you think is the same about these?"</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="Show me two things from completely different domains that have the same underlying pattern. Do not explain the math yet. Just show me the two things. Then ask me: &quot;What do you think is the same about these?&quot;">COPY PROMPT</button>
+    </div>
+
+    <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08); text-align:center;">
+      <div style="font-family:sans-serif; font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.1em; margin-bottom: 0.8rem;">CONTINUE YOUR JOURNEY</div>
+      <a href="sportal.html" style="display:inline-block; border:1px solid var(--gold); color:var(--gold); padding:0.5rem 1.8rem; font-family:sans-serif; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">All Levels A1 → D2 →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>Principia Orthogona · Book 3 · The Mini-Beast</div>
+  <div>G6 LLC · Newark, NJ · 2026 · ISBN 979-8-9954416-6-3</div>
+  <div style="margin-top: 0.5rem;">
+    <a href="index.html">Book Index</a> ·
+    <a href="sportal.html">Student Portal</a> ·
+    <a href="https://totogt.github.io/AXLE/" target="_blank">AXLE</a>
+  </div>
+</footer>
+
+<script>
+/* ── Copy Prompt ── */
+function copyPrompt(btn) {
+  const text = btn.dataset.prompt || btn.closest('.prompt-card').querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIED ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+/* ── Root Growth Simulation ── */
+const canvas = document.getElementById('sim1');
+const ctx = canvas.getContext('2d');
+
+// Responsive width
+function resizeCanvas() {
+  const maxW = Math.min(680, window.innerWidth - 80);
+  canvas.width = maxW;
+  canvas.height = Math.round(maxW * 320 / 680);
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); initSim(); });
+
+let running = true;
+let animId = null;
+let stressLevel = 0;
+
+// State
+let root, laterals, branches, aquifer, particles, tick;
+
+function initSim() {
+  const W = canvas.width, H = canvas.height;
+  aquifer = H * 0.78;
+  stressLevel = 0;
+  tick = 0;
+
+  // Soil particles (background texture)
+  particles = [];
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * W,
+      y: H * 0.12 + Math.random() * H * 0.85,
+      r: 1 + Math.random() * 2.5,
+      opacity: 0.08 + Math.random() * 0.12,
+    });
+  }
+
+  // Root — starts from surface center
+  root = {
+    x: W / 2,
+    y: H * 0.15,
+    segments: [{ x: W / 2, y: H * 0.15 }],
+    growing: true,
+    contactMade: false,
+  };
+
+  laterals = []; // lateral roots (post-threshold)
+  branches = []; // above-ground branches (post-unfold)
+}
+
+function resetSim() {
+  if (animId) cancelAnimationFrame(animId);
+  running = true;
+  initSim();
+  animate();
+  document.getElementById('sim-info').textContent = 'The root tip compresses axially, following the moisture gradient. Watch for the branching threshold.';
+}
+
+function toggleSim() {
+  running = !running;
+  if (running) animate();
+}
+
+function addStress() {
+  stressLevel = Math.min(stressLevel + 1, 3);
+  const msgs = [
+    'Drought stress +1: root narrows further, lateral growth suppressed.',
+    'Drought stress +2: cassava-mode — above-ground shutdown begins.',
+    'Maximum stress: full compression. The system is waiting.',
+  ];
+  document.getElementById('sim-info').textContent = msgs[stressLevel - 1];
+}
+
+function animate() {
+  if (!running) return;
+  update();
+  draw();
+  animId = requestAnimationFrame(animate);
+}
+
+function update() {
+  const W = canvas.width, H = canvas.height;
+  tick++;
+
+  // Root tip grows downward (compression phase)
+  if (root.growing) {
+    const last = root.segments[root.segments.length - 1];
+    const speed = Math.max(0.4, 1.2 - stressLevel * 0.25);
+    const wiggle = (Math.random() - 0.5) * 0.8;
+    const ny = last.y + speed;
+    const nx = last.x + wiggle;
+    root.segments.push({ x: nx, y: ny });
+
+    // Contact with aquifer
+    if (ny >= aquifer && !root.contactMade) {
+      root.contactMade = true;
+      root.growing = false;
+      document.getElementById('sim-info').textContent = 'Aquifer contact — K threshold passed. F initiates. Lateral roots unlocking…';
+
+      // Spawn lateral roots
+      const contactSeg = root.segments[root.segments.length - 1];
+      for (let i = 0; i < 4; i++) {
+        const angle = (Math.PI * 0.2) + (i * Math.PI * 0.2);
+        laterals.push({
+          x: contactSeg.x, y: contactSeg.y,
+          angle: i < 2 ? angle : Math.PI - angle,
+          segments: [{ x: contactSeg.x, y: contactSeg.y }],
+          length: 0,
+          maxLen: 40 + Math.random() * 40,
+        });
+      }
+    }
+  }
+
+  // Lateral root growth (post-K)
+  for (const lat of laterals) {
+    if (lat.length < lat.maxLen) {
+      const last = lat.segments[lat.segments.length - 1];
+      const speed = 0.6;
+      lat.segments.push({
+        x: last.x + Math.cos(lat.angle) * speed + (Math.random() - 0.5) * 0.4,
+        y: last.y + Math.sin(lat.angle) * speed * 0.3,
+      });
+      lat.length += speed;
+
+      // Trigger above-ground branches if laterals are well-established
+      if (lat.length > 20 && branches.length < 3 && Math.random() < 0.01) {
+        const baseY = root.segments[0].y;
+        const baseX = root.segments[0].x;
+        const bAngle = -Math.PI / 2 + (Math.random() - 0.5) * 1.2;
+        branches.push({
+          x: baseX, y: baseY,
+          angle: bAngle,
+          segments: [{ x: baseX, y: baseY }],
+          length: 0,
+          maxLen: 30 + Math.random() * 30,
+        });
+        if (branches.length === 1) {
+          document.getElementById('sim-info').textContent = 'U phase: above-ground expansion begins. The cajueiro flowers.';
+        }
+      }
+    }
+  }
+
+  // Branch growth (above ground — Unfold phase)
+  for (const br of branches) {
+    if (br.length < br.maxLen) {
+      const last = br.segments[br.segments.length - 1];
+      br.segments.push({
+        x: last.x + Math.cos(br.angle) * 0.7 + (Math.random() - 0.5) * 0.6,
+        y: last.y + Math.sin(br.angle) * 0.7,
+      });
+      br.length += 0.7;
+    }
+  }
+}
+
+function draw() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  // Sky
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, H * 0.15);
+  skyGrad.addColorStop(0, '#1a2744');
+  skyGrad.addColorStop(1, '#2a3f6a');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, H * 0.15);
+
+  // Soil
+  const soilGrad = ctx.createLinearGradient(0, H * 0.13, 0, H);
+  soilGrad.addColorStop(0, '#5c4033');
+  soilGrad.addColorStop(0.5, '#4a3028');
+  soilGrad.addColorStop(1, '#3a2820');
+  ctx.fillStyle = soilGrad;
+  ctx.fillRect(0, H * 0.13, W, H);
+
+  // Soil texture particles
+  for (const p of particles) {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200,160,100,${p.opacity})`;
+    ctx.fill();
+  }
+
+  // Aquifer line
+  ctx.save();
+  ctx.setLineDash([6, 4]);
+  ctx.strokeStyle = 'rgba(100,160,220,0.35)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, aquifer);
+  ctx.lineTo(W, aquifer);
+  ctx.stroke();
+  ctx.restore();
+
+  // Aquifer label
+  ctx.fillStyle = 'rgba(100,160,220,0.5)';
+  ctx.font = `${Math.round(canvas.height * 0.04)}px sans-serif`;
+  ctx.fillText('aquifer', 8, aquifer - 5);
+
+  // Main root (compression — axial, dark brown)
+  if (root.segments.length > 1) {
+    const rootWidth = Math.max(0.8, 2.2 - stressLevel * 0.4);
+    ctx.beginPath();
+    ctx.moveTo(root.segments[0].x, root.segments[0].y);
+    for (const s of root.segments) ctx.lineTo(s.x, s.y);
+    ctx.strokeStyle = root.contactMade ? '#c9a84c' : '#8B5E3C';
+    ctx.lineWidth = rootWidth;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Root tip glow
+    if (root.growing) {
+      const tip = root.segments[root.segments.length - 1];
+      const grd = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 6);
+      grd.addColorStop(0, 'rgba(139,94,60,0.7)');
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath();
+      ctx.arc(tip.x, tip.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  // Lateral roots (post-K, gold-tinted)
+  for (const lat of laterals) {
+    if (lat.segments.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(lat.segments[0].x, lat.segments[0].y);
+      for (const s of lat.segments) ctx.lineTo(s.x, s.y);
+      ctx.strokeStyle = 'rgba(201,168,76,0.7)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+  }
+
+  // Above-ground branches (U phase, green)
+  for (const br of branches) {
+    if (br.segments.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(br.segments[0].x, br.segments[0].y);
+      for (const s of br.segments) ctx.lineTo(s.x, s.y);
+      ctx.strokeStyle = '#5aaa4a';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+  }
+
+  // Soil surface line
+  ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(0, H * 0.14);
+  ctx.lineTo(W, H * 0.14);
+  ctx.stroke();
+
+  // Operator labels
+  const fs = Math.max(9, Math.round(canvas.height * 0.042));
+  ctx.font = `${fs}px sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.fillText('C', 10, H * 0.5);
+  if (root.contactMade) {
+    ctx.fillStyle = 'rgba(201,168,76,0.7)';
+    ctx.fillText('K ✓', 10, aquifer - 8);
+  }
+  if (laterals.length > 0) {
+    ctx.fillStyle = 'rgba(201,168,76,0.6)';
+    ctx.fillText('F', 10, aquifer + 16);
+  }
+  if (branches.length > 0) {
+    ctx.fillStyle = 'rgba(90,170,74,0.8)';
+    ctx.fillText('U', 10, H * 0.08);
+  }
+}
+
+/* ── Init ── */
+initSim();
+animate();
+</script>
+</body>
+</html>

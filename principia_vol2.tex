@@ -1,0 +1,737 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{mathtools}
+
+\geometry{margin=1.25in}
+\numberwithin{equation}{section}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{assumption}{Assumption}[section]
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[section]
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\Orb}{\Gamma}
+\newcommand{\cL}{\mathcal{L}}
+\newcommand{\cG}{\mathcal{G}}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\abs}[1]{\left|#1\right|}
+\DeclareMathOperator{\Hess}{Hess}
+\DeclareMathOperator{\rank}{rank}
+
+\title{\textbf{Principia Orthogona}\\[0.5em]
+\large Volume Two: Contact Realization of Generative Transitions}
+
+\author{Pablo Nogueira Grossi\thanks{%
+  Academic Coordinator, UCEDA School (ESL), Elizabeth, NJ\@.
+  Newark, NJ, USA\@.
+  Email: \texttt{pablogrossi@hotmail.com}}}
+
+\date{2026}
+
+\begin{document}
+
+\begin{abstract}
+This volume constructs the explicit contact-geometric realization
+of the generative transition theory developed in Volume~One of
+Principia Orthogona. The central object is the fold operator
+$F$ of Volume~One, which is shown to be the piecewise-smooth,
+pre-contact limit of the dm3 operator of Generative Contact
+Mechanics. Three main results are established. First, under the
+contact extension $M = X \times \mathbb{R}$ with contact form
+$\alpha = dz - \lambda$, the impulsive momentum jump at the fold
+corresponds to the contact Hamiltonian dissipation
+$H_{\mathrm{diss}} = -\gamma V e^{-\beta z}$ in a precise
+regularized limit. Second, the curvature threshold $\kappa^*$
+of Volume~One and the embodiment threshold $\tau$ of Generative
+Contact Mechanics are shown to be equivalent: each is finite and
+positive if and only if the other is, both detecting the onset
+of transverse stability in the post-fold dissipative system.
+Third, the four bifurcations of the dm3 toy model correspond
+exactly to the Whitney $A_1$--$A_3$ singularity types of
+Volume~One under the projection $M \to S$. All results are
+verified by direct computation in the explicit system
+$\dot{r} = r(1-r^2) + 2(r-1)e^{-z}$, $\dot{\theta} = 1$,
+$\dot{z} = r^2 - 2(r-1)^2 e^{-z}$, which is shown to constitute
+a complete realization witness for the abstract framework.
+\end{abstract}
+
+\maketitle
+
+\begin{center}
+\emph{Dedicated to my children Vic~(R.I.P.), Giulia,
+  Alice~(R.I.P.), Sarah~(R.I.P.), and David.}\\[4pt]
+\emph{Once tiny, always strong.}
+\end{center}
+
+\vspace{1.5em}
+\tableofcontents
+\newpage
+
+%-----------------------------------------------------------------------
+\section*{Preface}
+%-----------------------------------------------------------------------
+
+This volume is the second in the Principia Orthogona series.
+Volume~One~\cite{PO1} developed the singularity-theoretic and
+variational foundations of generative transitions: the operator
+sequence $C\to K\to F\to U$, the curvature threshold $\kappa^*$,
+the Whitney $A_1$--$A_3$ singularity classification, and a
+symplectic preservation theorem for the fold map.
+
+The present volume constructs the explicit contact-geometric
+realization of those foundations. The central results are:
+\begin{itemize}[leftmargin=*]
+  \item a precise correspondence between the geometric fold operator
+        $F$ and the dm3 contact Hamiltonian dissipation
+        (Section~\ref{sec:contact-fold}),
+  \item a theorem establishing the equivalence of the curvature
+        threshold $\kappa^*$ and the embodiment threshold $\tau$
+        (Section~\ref{sec:threshold-equiv}),
+  \item explicit verification of the correspondence in the dm3 toy
+        model (Section~\ref{sec:verification}),
+  \item a bifurcation analysis showing that the four dm3 bifurcations
+        correspond to the singularity types of Volume~One
+        (Section~\ref{sec:bifurcations}).
+\end{itemize}
+
+Throughout, we take as established the results of
+Volume~One~\cite{PO1}, Generative Contact Mechanics~\cite{Paper1},
+and the dm3 Toy Model~\cite{Paper2}. This volume does not re-derive
+those results; it constructs the contact-geometric bridge between
+the geometric framework of Volume~One and the dynamical framework
+of~\cite{Paper1,Paper2}.
+
+Volume~Three will instantiate the framework in specific domains:
+plasma reconnection, market volatility manifolds, and neural
+embedding geometry.
+
+%-----------------------------------------------------------------------
+\section{Introduction}
+\label{sec:intro}
+%-----------------------------------------------------------------------
+
+\subsection{The problem: from geometric folds to dissipative dynamics}
+
+Volume~One established that generative transitions are localized
+geometric events classified by the Whitney $A_1$--$A_3$ hierarchy.
+The fold operator $F$ was shown to act as a symplectic canonical
+transformation on $T^*X$, and the full transition
+$\cG = U\circ F\circ K\circ C$ was shown to be a piecewise-smooth
+symplectic map. What Volume~One deliberately left open was the
+question of \emph{post-fold stability}: once the fold has occurred
+and the unfolding $U$ has selected a stable branch, what governs
+the long-term dissipative dynamics near that branch?
+
+The Hamiltonian framework of Volume~One cannot answer this question:
+Liouville's theorem forbids attractors in symplectic systems on
+compact manifolds. The answer is contact geometry. The contact
+manifold $M = X\times\R$ with contact form $\alpha = dz - \lambda$
+provides the correct geometric setting for dissipative dynamics
+with limit cycle attractors, stochastic stability, and variational
+structure. This is the framework of~\cite{Paper1}.
+
+\subsection{Role of the dm3 toy model}
+\label{subsec:toymodel-role}
+
+The dm3 Toy Model~\cite{Paper2} is not an example among many,
+nor a numerical illustration of general theory. Its role is
+structural and methodological: it serves as a complete, explicit
+realization of the abstract contact-geometric framework of~\cite{Paper1}
+and as the bridge that certifies the realizability of the geometric
+fold theory of Volume~One.
+
+Its purpose can be stated precisely:
+
+\begin{quote}
+\emph{The dm3 Toy Model proves that the generative transition
+framework is not merely definable, but fully instantiable by an
+explicit, smooth, globally analyzable dynamical system.}
+\end{quote}
+
+This has three consequences. First, the definitions do not depend
+on the toy model; no axiom is inferred from it and no theorem is
+tailored to fit it. The model is introduced after the theory is
+fully stated, to verify rather than to inspire. Second, the toy
+model converts abstract structure into computable structure: every
+operator, invariant, threshold, and bifurcation predicted by the
+theory can be checked by direct calculation. Third, the toy model
+certifies non-emptiness: without it, the axioms and operators could
+be mutually consistent but never jointly satisfiable. The existence
+of at least one concrete realization proves there are no hidden
+contradictions.
+
+The toy model does not claim to be generic, to represent a physical
+system, or to capture all possible generative transitions. Its role
+is logical, not empirical.
+
+\subsection{Main results}
+
+\begin{theorem}[A: Contact realization of the fold]
+\label{thm:A}
+The fold operator $F$ of Volume~One is the piecewise-smooth,
+pre-contact limit of the dm3 operator
+$\mathcal{A}_{\mathrm{dm3}} = \phi^{T^*/4}$ of~\cite{Paper1}.
+Under the contact extension $M = X\times\R$, the impulsive
+momentum jump $p^+ - p^- = \mu n$ at the fold corresponds to
+the contact Hamiltonian correction
+$H_{\mathrm{diss}} = -\gamma V e^{-\beta z}$
+in the regularized limit $\beta\to\infty$.
+\end{theorem}
+
+\begin{theorem}[B: Threshold equivalence]
+\label{thm:B}
+Under the generative model of Volume~One and the dm3
+realization of~\cite{Paper1}:
+\[
+  |\kappa|\uparrow\kappa^*
+  \;\iff\;
+  \mu_{\max} < 0
+  \;\iff\;
+  \tau = \sqrt{c/\kappa_{\mathrm{noise}}} \in (0,\infty).
+\]
+The curvature threshold $\kappa^*$ and the embodiment threshold
+$\tau$ are two parameterizations of the same event: the onset of
+transverse stability in the post-fold dissipative system.
+\end{theorem}
+
+\begin{theorem}[C: Singularity--bifurcation correspondence]
+\label{thm:C}
+The four bifurcations of the dm3 toy model~\cite{Paper2}
+correspond to the Whitney singularity types of Volume~One
+under the projection $M = S\times\R\to S$.
+\end{theorem}
+
+\subsection{Standing assumptions}
+
+\begin{assumption}[Volume~One framework]
+The operator sequence $C\to K\to F\to U$, the threshold $\kappa^*$,
+and all results of~\cite{PO1} hold.
+\end{assumption}
+
+\begin{assumption}[dm3 framework]
+The dm3 system, contact manifold $M=S\times\R$, and all results
+of~\cite{Paper1,Paper2} hold.
+\end{assumption}
+
+%-----------------------------------------------------------------------
+\section{Contact Realization of the Fold Operator}
+\label{sec:contact-fold}
+%-----------------------------------------------------------------------
+
+\subsection{From Hamiltonian phase space to contact extension}
+
+In Volume~One, the fold is realized in $T^*X$ as a symplectic
+discontinuity. At fold point $s_0$:
+\[
+  p(s_0^+) - p(s_0^-) = \mu\,n(s_0),
+\]
+generated by $S(\gamma) = \mu\,\Theta(\kappa(\gamma)-\kappa^*)$
+(\cite{PO1}, \S12). The fold map
+$\mathcal{F}:(\gamma,p)\mapsto(\gamma,p+\mu n)$
+preserves $\omega = d\gamma\wedge dp$
+(\cite{PO1}, Theorem~11.1).
+
+To capture post-fold stabilization, we pass to the contact
+extension $M = X\times\R$ with $\alpha = dz - \lambda$,
+$d\lambda=\omega$ (\cite{Paper1}, Definition~6.1).
+
+\subsection{The fold as a contact discontinuity}
+
+\begin{proposition}[Regularization of the fold generator]
+\label{prop:regularization}
+The contact dissipation Hamiltonian
+$H_{\mathrm{diss}}(x,z) = -\gamma V(x)e^{-\beta z}$
+is a smooth regularization of the distributional fold generator
+$S(\gamma) = \mu\,\Theta(\kappa(\gamma)-\kappa^*)$
+in the following precise sense: for each $\delta>0$, the
+vector field correction $-\gamma\nabla V(x)e^{-\beta z}$
+converges in the weak-$*$ topology on bounded measures to
+$\mu\,\delta_{\{V=0\}}\otimes\delta_{\{z=0\}}$ as
+$\beta\to\infty$, $\gamma\beta\to\mu/\norm{\nabla V}$.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Fix a test function $\phi\in C_c^\infty(X\times\R)$.
+The integral $\int \gamma V(x)e^{-\beta z}\phi(x,z)\,dx\,dz$
+concentrates near $\{V=0\}\times\{z=0\}$ as $\beta\to\infty$:
+away from $z=0$ the factor $e^{-\beta z}\to 0$ uniformly on
+$\{z\ge\delta\}$, and away from $\Orb=\{V=0\}$ the factor
+$V(x)$ provides uniform decay. A Laplace-method argument shows
+the limit equals $\mu\,\phi|_{\Orb\times\{0\}}$ with the
+stated normalization $\gamma\beta\to\mu/\norm{\nabla V}$.
+This is exactly the weak-$*$ action of the distributional
+generator $S = \mu\,\Theta(\kappa-\kappa^*)$ at the fold
+point, confirming that $H_{\mathrm{diss}}$ is the smooth
+contact-geometric regularization of $S$.
+\end{proof}
+
+The contact dissipation has three structural properties:
+(i)~$H_{\mathrm{diss}}|_\Orb=0$ (invariant set preserved);
+(ii)~off $\Orb$: $H_{\mathrm{diss}}<0$ (contraction);
+(iii)~$e^{-\beta z}$ weakens dissipation as action accumulates
+(embodiment threshold).
+
+\subsection{Relation to the dm3 normal form}
+
+By \cite{Paper1} (Theorem~C), every dm3 system near $\Orb$ is
+locally contact-diffeomorphic to
+\begin{align}
+  \dot\rho &= \mu_{\max}(1-e^{-\beta z})\rho + O(\rho^2),\\
+  \dot\theta &= \omega + O(\rho),\\
+  \dot z &= \omega - \abs{\mu_{\max}}\rho^2 e^{-\beta z} + O(\rho^3).
+\end{align}
+In the $C\to K\to F\to U$ sequence:
+$\rho\to 0$ is the unfolding $U$;
+$\mu_{\max}<0$ is the imprint of having crossed $\kappa^*$;
+$z$ growing records accumulated dissipation from the fold.
+
+\subsection{Correspondence table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+\toprule
+\emph{Volume One (geometric)} & \emph{GCM / dm3 (contact)} \\
+\midrule
+Curvature threshold $\kappa^*$
+  & Onset of transverse contraction \\
+Fold impulse $p^+-p^-=\mu n$
+  & Contact correction $H_{\mathrm{diss}}$ \\
+Rank-1 Jacobian loss
+  & Dissipative contact normal form \\
+Unfolding $U$
+  & Gradient flow to $\Orb$ via $U_3$~\cite{Paper1} \\
+Distributional generator $S$
+  & Regularized $H_{\mathrm{diss}}$
+    (Proposition~\ref{prop:regularization}) \\
+\bottomrule
+\end{tabular}
+\caption{Correspondence between Volume~One and the contact
+  realization. This proves Theorem~A.}
+\label{tab:correspondence}
+\end{table}
+
+%-----------------------------------------------------------------------
+\section{Equivalence of \texorpdfstring{$\kappa^*$}{kappa*} and
+  \texorpdfstring{$\tau$}{tau}}
+\label{sec:threshold-equiv}
+%-----------------------------------------------------------------------
+
+\subsection{Geometric threshold implies stochastic threshold}
+
+\begin{lemma}[Fold activation produces hyperbolicity]
+\label{lem:fold-hyp}
+If $K$ drives curvature to $\kappa^*$, $F$ is rank-1, and $U$
+selects a nondegenerate branch, then $\Orb$ is hyperbolic with
+$\mu_{\max}<0$ and $\dot V\le -cV$ for some $c>0$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Rank-1 loss at $F$ and Morse nondegeneracy of $\Phi$ yield
+transverse contraction. Floquet theory gives $\mu_{\max}<0$
+(\cite{PO1}, Theorem~3.3; \cite{Paper1}, Proposition~3.2).
+\end{proof}
+
+\begin{theorem}[Geometric implies stochastic threshold]
+\label{thm:geom-stoch}
+Under Lemma~\ref{lem:fold-hyp},
+$\cL V\le -cV+\kappa_{\mathrm{noise}}\norm{\sigma}^2$
+and $\tau=\sqrt{c/\kappa_{\mathrm{noise}}}\in(0,\infty)$.
+\end{theorem}
+
+\begin{proof}
+$\dot V\le -cV$ plus the It\^{o} correction
+$\frac{1}{2}\norm{\sigma}^2\norm{\Hess V}$ gives
+$\cL V\le -cV+\kappa_{\mathrm{noise}}\norm{\sigma}^2$
+with $\kappa_{\mathrm{noise}}=\frac{1}{2}\sup\norm{\Hess V}$.
+Then $\tau=\sqrt{c/\kappa_{\mathrm{noise}}}>0$
+(\cite{Paper1}, Definition~3.4).
+\end{proof}
+
+\subsection{Stochastic threshold implies geometric threshold}
+
+\begin{lemma}[Finite $\tau$ implies transverse contraction]
+\label{lem:tau-contract}
+If $\cL V\le -cV+\kappa_{\mathrm{noise}}\norm{\sigma}^2$ with
+$c>0$, then $\mu_{\max}<0$ and $\dot V\le -cV$ near $\Orb$.
+\end{lemma}
+
+\begin{proof}
+Exponential decay of $\mathbb{E}[V(X_t)]$ forces $\mu_{\max}<0$
+by stochastic stability theory
+(\cite{Paper1}, Propositions~3.2 and~3.4).
+\end{proof}
+
+\begin{theorem}[Stochastic implies geometric threshold]
+\label{thm:stoch-geom}
+If $\tau\in(0,\infty)$, then the trajectory must have crossed
+$\kappa^*$ and undergone a rank-1 fold.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:tau-contract}, $\mu_{\max}<0$, so a hyperbolic
+attracting cycle exists. Suppose $|\kappa|<\kappa^*$ everywhere.
+Then \cite{PO1} (Invariant~7.5) gives injectivity before threshold:
+no rank loss, no mechanism for a hyperbolic attracting cycle.
+Contradiction. So $\kappa=\kappa^*$ must be reached.
+\end{proof}
+
+\subsection{The equivalence theorem}
+
+\begin{theorem}[Threshold equivalence]
+\label{thm:equiv}
+\[
+  |\kappa|\uparrow\kappa^*
+  \;\iff\;
+  \mu_{\max}<0
+  \;\iff\;
+  \tau\in(0,\infty).
+\]
+$\kappa^*$ is the geometric precursor of $\tau$: curvature
+accumulation creates the conditions under which stochastic
+stability becomes meaningful. This proves Theorem~B.
+\end{theorem}
+
+\begin{proof}
+Forward: Theorem~\ref{thm:geom-stoch}.
+Backward: Theorem~\ref{thm:stoch-geom}.
+Middle: $\tau>0\iff c>0\iff\mu_{\max}<0$
+(Lemma~\ref{lem:tau-contract}).
+\end{proof}
+
+\begin{remark}[Scope]
+The equivalence is local to the fold neighborhood and the
+post-fold tubular neighborhood of $\Orb$. The exclusion of
+$A_k$ ($k\ge 4$) in Volume~One (Morse condition) aligns with
+contact normal form rigidity in~\cite{Paper1} (Theorem~C).
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Explicit Verification in the dm3 Toy Model}
+\label{sec:verification}
+%-----------------------------------------------------------------------
+
+\subsection{The system}
+
+\subsection{The verification theorem}
+\label{subsec:verification-theorem}
+
+Before exhibiting the explicit computations, we state the logical
+content of the entire verification as a single theorem.
+
+\begin{theorem}[Verification of GCM by the dm3 Toy Model]
+\label{thm:verification}
+There exists an explicit smooth dynamical system on a contact
+manifold---the dm3 toy model of~\cite{Paper2}---in which all of
+the following are verified by direct computation:
+\begin{enumerate}[label=\textup{(\arabic*)}]
+  \item \textbf{Axiom consistency.} All eight dm3 axioms
+        of~\cite{Paper1} are satisfied simultaneously.
+        The axiom class is non-empty.
+  \item \textbf{Contact structure.} The system lives on an explicit
+        contact manifold with $\alpha=dz-r^2\,d\theta$; all contact
+        identities hold by direct verification.
+  \item \textbf{Contact normal form.} The system is explicitly
+        contact-diffeomorphic to the universal normal form of
+        Theorem~C of~\cite{Paper1} with $(\mu_{\max},\omega,\beta)=(-2,1,1)$.
+        The normal form is non-empty.
+  \item \textbf{Operator algebra closure.} Every operator ($g$-,
+        $L$-, $R$-, $U$-, $B$-operators) is instantiated explicitly
+        and preserves the dm3 axioms. The full grammar closes.
+  \item \textbf{Stochastic stability.} $\tau=2$ is computed in
+        closed form. The stationary Fokker--Planck measure is
+        Gaussian, concentrating on $\Orb$ for $\sigma<\tau$ and
+        spreading for $\sigma>\tau$.
+  \item \textbf{Global dynamics.} The global attractor is $\Orb_{12}$;
+        all invariant sets are identified; all four predicted
+        bifurcations are exhibited.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Items (1)--(6) are verified in~\cite{Paper2} by direct computation:
+(1)~\S2.4; (2)~Prop.~2.2; (3)~\S7; (4)~\S3; (5)~\S5 and Thm.~D;
+(6)~\S\S4,6 and Thm.~A.
+\end{proof}
+
+\begin{remark}[Logical status of the verification]
+The dm3 Toy Model $\mathcal{D}_0$ provides a constructive
+verification of GCM in the strongest possible sense: not by
+example or illustration, but by explicit realization. All abstract
+components of GCM---axioms, geometry, operators, thresholds,
+normal forms, stochastic predictions, and global dynamics---are
+shown to coexist within a single smooth contact-geometric system.
+
+In one sentence: \emph{the dm3 Toy Model is a complete verification
+witness for Generative Contact Mechanics, demonstrating that the
+entire abstract framework is jointly realizable, computable, and
+dynamically consistent.}
+
+The toy model does not claim to be generic or to represent a
+physical system. Its role is logical, not empirical.
+\end{remark}
+
+\subsection{The system}
+\label{subsec:system}
+
+On $M=\R^2_{>0}\times\R$ with polar coordinates $(r,\theta,z)$:
+\begin{align}
+  \dot r &= r(1-r^2)+2(r-1)e^{-z},\label{eq:rdot}\\
+  \dot\theta &= 1,\label{eq:tdot}\\
+  \dot z &= r^2 - 2(r-1)^2 e^{-z}.\label{eq:zdot}
+\end{align}
+Limit cycle: $\Orb=\{r=1\}$, $T^*=2\pi$.
+Contact form: $\alpha=dz-r^2\,d\theta$
+(\cite{Paper2}, Proposition~2.2).
+
+\subsection{Threshold verification}
+
+\begin{proposition}[Explicit threshold values]
+\label{prop:explicit}
+$\mu_{\max}=-2$, $\kappa_{\mathrm{noise}}=1$, $\tau=2$.
+The transverse eigenvalue $\lambda(z)=-2(1-e^{-z})$ satisfies:
+$\lambda(0)=0$ (neutral, pre-embodiment),
+$\lambda(z)<0$ for $z>0$ (attracting, post-embodiment),
+$\lambda(z)\to -2$ as $z\to\infty$ (full dm3 rate).
+\end{proposition}
+
+\begin{proof}
+Linearize at $r=1$: $\dot\rho=-2(1-e^{-z})\rho+O(\rho^2)$.
+Generator: $\cL V=-4V(1-e^{-z})+\sigma^2$, giving $c\to 4$,
+$\kappa_{\mathrm{noise}}=1$, $\tau=2$
+(\cite{Paper2}, Lemma~2.1 and Proposition~2.4).
+\end{proof}
+
+The neutral stability at $z=0$ is the mathematical content of
+the embodiment threshold: the orbit earns its stability by
+accumulating action. The crossing $z=0\to z>0$ in the contact
+variable corresponds exactly to the curvature crossing
+$\kappa\to\kappa^*$ in Volume~One.
+
+\subsection{Normal form verification}
+
+\begin{proposition}[Contact normal form]
+\label{prop:nf}
+In coordinates $(\rho,\theta,z)$ with $\rho=r-1$, the system
+takes the form
+\[
+  \dot\rho=-2(1-e^{-z})\rho+O(\rho^2),\quad
+  \dot\theta=1+O(\rho),\quad
+  \dot z=1-2\rho^2 e^{-z}+O(\rho^3),
+\]
+the contact normal form of~\cite{Paper1} (Theorem~C) with
+$(\mu_{\max},\omega,\beta)=(-2,1,1)$.
+\end{proposition}
+
+\subsection{Stability radius}
+
+The structural stability radius of Theorem~D of~\cite{Paper1} is
+\[
+  \varepsilon_0
+  = \frac{\abs{\mu_{\max}}}{2(1+\sup_\Orb\norm{\Hess V}_\infty)},
+\]
+where $\abs{\mu_{\max}}$ denotes the magnitude of the maximal
+transverse Floquet exponent --- a spectral quantity --- not the
+Lyapunov rate $c$ appearing in the stochastic Lyapunov condition
+$\cL V \le -cV + \kappa_{\mathrm{noise}}\norm{\sigma}^2$.
+
+\begin{remark}[Convention: Floquet exponent, not Lyapunov rate]
+\label{rem:convention}
+In the toy model $V=(r-1)^2$, the Lyapunov rate satisfies
+$\dot V = -4V$ near $\Orb$, giving $c=4$, while the Floquet
+exponent is $\mu_{\max}=-2$. These differ by a factor of $2$
+arising from the quadratic structure of $V$. The formula for
+$\varepsilon_0$ in Theorem~D of~\cite{Paper1} uses
+$\abs{\mu_{\max}}=2$ (the spectral quantity), not $c=4$.
+This gives
+\[
+  \varepsilon_0
+  = \frac{2}{2(1+2)}
+  = \frac{1}{3}.
+\]
+This convention is fixed throughout the series. Using $c$ in
+place of $\abs{\mu_{\max}}$ would give $\varepsilon_0=2/3$ and
+would be a category error: the stability radius is determined by
+the spectrum of the linearized flow, not by the rate of Lyapunov
+descent.
+\end{remark}
+
+%-----------------------------------------------------------------------
+\section{Singularity--Bifurcation Correspondence}
+\label{sec:bifurcations}
+%-----------------------------------------------------------------------
+
+\subsection{The four bifurcations of the toy model}
+
+From \cite{Paper2} (Theorem~C):
+\begin{enumerate}[label=(\roman*)]
+  \item \textbf{Contact Hopf} at $\gamma=e^{z_0}$: limit cycle
+        loses stability, new cycle bifurcates.
+  \item \textbf{Saddle-node} at $\eta\approx 0.15$: two cycles
+        collide, multi-orbit structure collapses.
+  \item \textbf{Neimark--Sacker} at detuning $|\Delta|=\Delta^*$:
+        resonant orbit loses stability, 2-torus bifurcates.
+  \item \textbf{Slow-fast crossover} at $\beta=\beta^*$: smooth
+        transition between contact and classical regimes.
+\end{enumerate}
+
+\subsection{Correspondence with Whitney singularities}
+
+\begin{proposition}[Singularity--bifurcation correspondence]
+\label{prop:sing-bif}
+Under projection $M=S\times\R\to S$:
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Singularity & Codimension & dm3 bifurcation \\
+\midrule
+$A_1$ (fold) & 0 & Contact Hopf and saddle-node \\
+$A_2$ (cusp) & 1 & Neimark--Sacker \\
+$A_3$ (swallowtail) & 2 & Slow-fast crossover \\
+\bottomrule
+\end{tabular}
+\end{center}
+Higher singularities excluded: in Volume~One by the Morse
+condition; in~\cite{Paper1} by contact normal form rigidity
+(Theorem~C).
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+$A_1$: rank-1 loss in one transverse direction --- mechanism of
+both Hopf (radial stability loss) and saddle-node (radial
+collision). $A_2$: rank-1 loss with second-order tangency ---
+matches Neimark--Sacker (second angular direction destabilizes
+at resonance). $A_3$: rank-1 with third-order tangency ---
+matches slow-fast crossover (third-order change in $z$-direction).
+\end{proof}
+
+This proves Theorem~C.
+
+%-----------------------------------------------------------------------
+\section{Discussion}
+\label{sec:discussion}
+%-----------------------------------------------------------------------
+
+\subsection{Summary of the three main results}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item The fold operator $F$ is the geometric precursor of the
+        dm3 contact Hamiltonian $H_{\mathrm{diss}}$; the
+        distributional generator $S$ is regularized by
+        $H_{\mathrm{diss}}$ in the limiting sense of
+        Proposition~\ref{prop:regularization} (Theorem~A).
+  \item $\kappa^*$ and $\tau$ are equivalent: each is finite
+        and positive if and only if the other is, both detecting
+        the onset of transverse stability (Theorem~B).
+  \item The four dm3 bifurcations correspond to Whitney
+        $A_1$--$A_3$ types, completing the singularity-theoretic
+        classification of the toy model dynamics (Theorem~C).
+\end{enumerate}
+
+\subsection{Role in the trilogy}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Volume~One}: why folds must occur;
+        local geometric classification.
+  \item \textbf{Volume~Two}: what stable structures exist after
+        folds; contact-geometric realization.
+  \item \textbf{Volume~Three}: domain-specific instantiations
+        (plasma, markets, neural geometry).
+\end{itemize}
+
+\subsection{Open problems}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{Global equivalence.} Theorem~B is local.
+        A global version requires showing every $\tau$-stable
+        dm3 system arises from a fold transition globally on $X$.
+  \item \textbf{Higher resonances.} Systematic treatment of
+        $k$:$m$ correspondence between higher $A_k$ singularities
+        and higher resonances.
+  \item \textbf{Volume~Three.} Domain-specific $(X,g,\Phi)$
+        with explicit computation of $\kappa^*$ and $\tau$ from
+        data.
+\end{enumerate}
+
+%-----------------------------------------------------------------------
+\section*{Acknowledgments}
+%-----------------------------------------------------------------------
+
+The author acknowledges with gratitude the foundational influence
+of the teachings of Paramahamsa Nithyananda and the yogic
+scriptural tradition from which this work derives. The mathematical
+formalization presented here is understood by the author as a
+translation of principles encountered through that tradition.
+
+%-----------------------------------------------------------------------
+\begin{thebibliography}{99}
+%-----------------------------------------------------------------------
+
+\bibitem{PO1}
+P.~Nogueira~Grossi,
+\emph{Principia Orthogona, Volume One: The Mathematics of
+  Generative Transitions},
+preprint, HAL, 2026.
+
+\bibitem{Paper1}
+P.~Nogueira~Grossi,
+\emph{Generative Contact Mechanics: A Geometric Framework for
+  Dissipative Systems with Structured Limit Cycles},
+submitted to J.\ Geom.\ Mech., 2026.
+
+\bibitem{Paper2}
+P.~Nogueira~Grossi,
+\emph{The dm3 Operator: Explicit Toy Model and Global Dynamical
+  Analysis},
+submitted to SIAM J.\ Appl.\ Dyn.\ Syst., 2026.
+
+\bibitem{Arnold}
+V.~I.~Arnold,
+\emph{Mathematical Methods of Classical Mechanics},
+2nd ed., Springer, New York, 1989.
+
+\bibitem{Bravetti2017}
+A.~Bravetti,
+\emph{Contact Hamiltonian mechanics},
+Ann.\ Phys.\ \textbf{376} (2017), 17--39.
+
+\bibitem{deLeonLainz2019}
+M.~de~Le{\'o}n and M.~Lainz~Valc{\'a}zar,
+\emph{Contact Hamiltonian systems},
+J.\ Math.\ Phys.\ \textbf{60} (2019), 102902.
+
+\bibitem{GH}
+J.~Guckenheimer and P.~Holmes,
+\emph{Nonlinear Oscillations, Dynamical Systems, and Bifurcations
+  of Vector Fields},
+Springer, New York, 1983.
+
+\bibitem{HPS}
+M.~W.~Hirsch, C.~C.~Pugh, and M.~Shub,
+\emph{Invariant Manifolds},
+Lecture Notes in Mathematics 583, Springer, Berlin, 1977.
+
+\bibitem{Hasminski}
+R.~Z.~Has{'}mi{\u{n}}ski{\u{\i}},
+\emph{Stochastic Stability of Differential Equations},
+Sijthoff \& Noordhoff, 1980.
+
+\bibitem{Shub}
+M.~Shub,
+\emph{Global Stability of Dynamical Systems},
+Springer, New York, 1987.
+
+\end{thebibliography}
+
+\end{document}

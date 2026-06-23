@@ -1,0 +1,204 @@
+%% ============================================================
+%%  Principia Orthogona, Volume Two
+%%  Section 3: Equivalence of kappa* and tau
+%% ============================================================
+
+\section{Equivalence of the Curvature Threshold and the
+  Embodiment Threshold}
+\label{sec:threshold-equivalence}
+
+The central bridge theorem of this volume establishes a
+quantitative correspondence between two thresholds that appear
+independently in the two frameworks:
+\begin{itemize}[leftmargin=*]
+  \item the \emph{curvature threshold} $\kappa^*$, defined
+        geometrically in Volume One as
+        $\kappa^*(x) = 1/\operatorname{foc}(x)$, and
+  \item the \emph{embodiment threshold} $\tau$, defined
+        dynamically in GCM~\cite{Paper1} as
+        $\tau = \sqrt{c/\kappa}$ from the stochastic Lyapunov
+        condition $\mathcal{L}V \le -cV + \kappa\|\sigma\|^2$.
+\end{itemize}
+
+Both thresholds govern a transition from neutral to stable
+behavior. The curvature threshold determines when a trajectory
+folds and enters the attracting regime. The embodiment threshold
+determines when noise ceases to destabilize the orbit and begins
+to reinforce it. We show these are the same transition, viewed
+from different geometric perspectives.
+
+%% ------------------------------------------------------------
+\subsection{Setup and Assumptions}
+\label{subsec:setup}
+
+Let $(X,g)$ be a smooth complete Riemannian manifold and let
+$\gamma\colon[0,T]\to X$ undergo a generative transition via the
+sequence $C\to K\to F\to U$ of Volume One~\cite{PrincipiaI}.
+Let $\Gamma\subset X$ be the post-fold invariant set (the
+stabilized orbit produced by $U$), and let $V = d_g(\cdot,\Gamma)^2$
+be the Lyapunov function of the resulting dm3 system
+$\mathfrak{D}=(X,g,Y,\Gamma,V,\sigma)$~\cite{Paper1}.
+
+\begin{assumption}\label{ass:fold-orbit}
+The fold operator $F$ produces a unique post-fold orbit $\Gamma$
+that is a hyperbolic limit cycle of the post-fold vector field,
+with transverse Floquet exponent $\mu_{\max}<0$. The unfolding
+operator $U$ selects this orbit via gradient descent on the
+Morse stability functional $\Phi$.
+\end{assumption}
+
+This assumption is satisfied in all three canonical examples of
+Volume One (elastic rod, double-well gradient flow, saddle-node
+bifurcation) and in the dm3 toy model of Paper~2~\cite{Paper2}.
+
+%% ------------------------------------------------------------
+\subsection{The Threshold Correspondence Theorem}
+\label{subsec:main-theorem}
+
+\begin{theorem}[Threshold Correspondence]
+\label{thm:threshold}
+Under Assumption~\ref{ass:fold-orbit}, let $\kappa^*$ be the
+curvature threshold of Volume One and $\tau$ be the embodiment
+threshold of~\cite{Paper1}. Then:
+\begin{enumerate}[label=\textup{(\roman*)}]
+  \item \textbf{Geometric to dynamic:} The condition
+        $\kappa(s)\uparrow\kappa^*$ is equivalent to the
+        transverse Floquet exponent becoming negative:
+        $\mu_{\max}<0$. Both conditions mark the onset of
+        transverse contraction toward $\Gamma$.
+  \item \textbf{Dynamic to stochastic:} The condition
+        $\mu_{\max}<0$ implies the existence of a finite
+        embodiment threshold
+        \[
+          \tau = \sqrt{c/\kappa} > 0,
+        \]
+        where $c=|\mu_{\max}|$ is the Lyapunov rate and
+        $\kappa$ is the noise amplification constant of
+        Axiom~5 of~\cite{Paper1}.
+  \item \textbf{Quantitative form:} In the contact normal form
+        \textup{(\cite{Paper1}, Theorem~C)}, the embodiment
+        threshold satisfies
+        \[
+          \tau(z) = \sqrt{c(z)/\kappa}
+          = 2\sqrt{1-e^{-\beta z}},
+        \]
+        which increases monotonically from $\tau(0)=0$
+        (at the fold, neutral stability) to
+        $\tau(\infty) = 2\sqrt{c_\infty/\kappa}$
+        (asymptotic stability).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textit{Claim (i).}
+In the contact normal form~\eqref{eq:nf-rho}, the transverse
+dynamics are $\dot\rho = \mu_{\max}(1-e^{-\beta z})\rho +
+O(\rho^2)$. The condition $\kappa\uparrow\kappa^*$ corresponds
+to the fold event at $s_0$: prior to the fold, $\kappa<\kappa^*$
+and trajectories are non-injective in the normal direction only
+after the fold. In the contact extension, the post-fold regime
+is characterized by $z>0$ (action has accumulated), at which
+point $\mu_{\max}(1-e^{-\beta z})<0$. Thus the curvature
+threshold $\kappa^*$ and the sign change of the transverse
+eigenvalue coincide: both mark the onset of injectivity loss
+followed by attraction.
+
+\textit{Claim (ii).}
+From Axiom~5 of~\cite{Paper1}, the stochastic Lyapunov condition
+$\mathcal{L}V \le -cV + \kappa\|\sigma\|^2$ holds with
+$c = |\mu_{\max}|(1-e^{-\beta z}) > 0$ for $z>0$. Since
+$c>0$ and $\kappa>0$, the embodiment threshold
+$\tau = \sqrt{c/\kappa}$ is finite and positive. It exists
+if and only if $\mu_{\max}<0$, i.e., if and only if the fold
+has been completed.
+
+\textit{Claim (iii).}
+In the toy model of Paper~2~\cite{Paper2}, direct computation
+gives $c(z)=4(1-e^{-z})$ and $\kappa=1$, so
+$\tau(z)=2\sqrt{1-e^{-z}}$. At $z=0$: $\tau=0$ (neutral,
+fold has just occurred). As $z\to\infty$: $\tau\to 2$
+(asymptotic threshold). This is Proposition~\ref{prop:axioms}
+of Paper~2 and Lemma~\ref{lem:transverse} thereof.
+\end{proof}
+
+%% ------------------------------------------------------------
+\subsection{Interpretation}
+\label{subsec:interpretation}
+
+Theorem~\ref{thm:threshold} has three consequences worth
+making explicit.
+
+\paragraph{The fold creates the threshold.}
+The embodiment threshold $\tau$ does not exist before the fold:
+for $\kappa<\kappa^*$, the orbit has not yet formed and there is
+no invariant set to be stabilized. The fold event at $\kappa^*$
+is precisely the geometric act that creates the conditions for
+stochastic stability. In this sense, $\kappa^*$ is the
+\emph{geometric precursor} of $\tau$.
+
+\paragraph{The action variable records the fold.}
+The contact variable $z$ measures how long the system has been
+in the post-fold regime. At $z=0$ (immediately after the fold),
+$\tau=0$: the orbit is neutrally stable and any noise will
+displace it. As $z$ grows, $\tau$ grows: the orbit becomes
+increasingly noise-tolerant. This is the embodiment mechanism
+expressed as a theorem: \emph{stability is earned by traversing
+the orbit}.
+
+\paragraph{The thresholds are not numerically equal.}
+Theorem~\ref{thm:threshold} establishes a structural
+correspondence between $\kappa^*$ and $\tau$, not a numerical
+identity. In general, $\kappa^*$ is a geometric quantity
+(units: inverse length) and $\tau$ is a dynamical quantity
+(units: noise amplitude). Their correspondence is a statement
+about which physical transition each governs, not about their
+numerical values.
+
+%% ------------------------------------------------------------
+\subsection{Explicit Verification in the Toy Model}
+\label{subsec:toy-verification}
+
+In the dm3 toy model of Paper~2~\cite{Paper2}, the threshold
+correspondence is verified explicitly:
+
+\begin{itemize}[leftmargin=*]
+  \item The limit cycle $\Gamma=\{r=1\}$ is produced by the
+        fold of the radial dynamics at the critical radius
+        $r=1$ (the curvature threshold in the radial direction).
+  \item The transverse Floquet exponent is $\mu_{\max}=-2$,
+        confirmed by linearization
+        $\dot\rho=-2(1-e^{-z})\rho+O(\rho^2)$.
+  \item The embodiment threshold is
+        $\tau(z)=2\sqrt{1-e^{-z}}\to 2$ as $z\to\infty$.
+  \item At $z=0$: $\tau=0$, confirming neutral stability
+        at the fold point.
+  \item The stability radius is
+        $\varepsilon_0 = |\mu_{\max}|/2(1+\|\Hess V\|) = 1/3$,
+        computed from Theorem~D of~\cite{Paper1}.
+\end{itemize}
+
+All values are consistent with Theorem~\ref{thm:threshold}
+and with the global attractor analysis of Paper~2 (Theorem~A
+thereof).
+
+%% ------------------------------------------------------------
+\subsection{Summary}
+\label{subsec:section3-summary}
+
+The curvature threshold $\kappa^*$ of Volume One and the
+embodiment threshold $\tau$ of GCM are structurally equivalent:
+both mark the onset of transverse contraction following a
+fold event. The contact action variable $z$ mediates the
+transition between them, recording accumulated post-fold
+dissipation and increasing $\tau$ monotonically from $0$ at
+the fold to its asymptotic value.
+
+This correspondence is the quantitative content of the claim
+made in Volume One (\S13, Proposition~10.1) that $\kappa^*$
+is the geometric precursor of $\tau$. It is now stated and
+proved as Theorem~\ref{thm:threshold}.
+
+The next section uses this correspondence to construct the
+full discrete contact realization of the operator sequence
+$C\to K\to F\to U$ and verify it against the dm3 global
+dynamics.

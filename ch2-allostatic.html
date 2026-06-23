@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 2 · The Allostatic Operator — The Mini-Beast · Principia Orthogona</title>
+<meta name="description" content="Chapter 2: The Allostatic Operator. Stress as compression. The HPA axis, cortisol, and chronic load — how living systems survive by narrowing their operating range before they can expand again. Book 3 · The Mini-Beast.">
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --mid:   #3a4f7a;
+    --rule:  #8a7340;
+    --text:  #1c1c1c;
+    --light: #e8e2d4;
+    --amber: #7a4a1a;
+    --amber-l: #d4884a;
+    --amber-pale: #fdf5ec;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+
+  nav {
+    background: var(--navy); padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { color: var(--gold); font-family: sans-serif; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; }
+  .nav-back { color: #ccc; text-decoration: none; font-size: 0.82rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-chap { color: var(--gold); font-size: 0.82rem; font-family: sans-serif; }
+
+  .ch-hero {
+    background: linear-gradient(160deg, #2a1a08 0%, var(--navy) 55%, #3a2a10 100%);
+    color: white; padding: 5rem 2rem 4rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .ch-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 40% 70%, rgba(212,136,74,0.10) 0%, transparent 65%);
+  }
+  .ch-eyebrow { font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; position: relative; z-index: 1; }
+  .ch-number { font-family: sans-serif; font-size: 5rem; font-weight: 900; color: rgba(212,136,74,0.15); line-height: 1; margin-bottom: -1.5rem; position: relative; }
+  .ch-title { font-size: clamp(2rem, 5vw, 3.2rem); color: white; position: relative; z-index: 1; margin-bottom: 0.5rem; }
+  .ch-subtitle { color: rgba(255,255,255,0.6); font-style: italic; font-size: 1.05rem; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+  .ch-operator { font-family: 'Courier New', monospace; font-size: 1.1rem; color: rgba(255,255,255,0.55); letter-spacing: 0.15em; position: relative; z-index: 1; }
+  .ch-operator .active-op { color: var(--amber-l); font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+
+  .ch-body { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+  .ch-body p { font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.4rem; }
+  .ch-body h2 { font-size: 1.35rem; color: var(--navy); margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--light); padding-bottom: 0.4rem; }
+  .ch-body h3 { font-size: 1.1rem; color: var(--mid); margin: 2rem 0 0.6rem; }
+
+  .pull-quote {
+    border-left: 4px solid var(--amber-l);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+    background: var(--amber-pale); font-style: italic;
+    font-size: 1.08rem; line-height: 1.78; color: #3a1a00;
+  }
+
+  .math-block {
+    background: #1a0e04; color: white;
+    padding: 1.5rem 2rem; margin: 2rem 0;
+    font-family: 'Courier New', monospace; font-size: 0.9rem;
+    line-height: 2.1; border-left: 4px solid var(--amber-l);
+  }
+  .math-block .math-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber-l); margin-bottom: 0.8rem; }
+  .math-block .eq { color: var(--amber-l); font-size: 1rem; }
+  .math-block .dim { color: rgba(255,255,255,0.38); }
+
+  .theorem-box {
+    border: 1.5px solid var(--amber-l); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    background: var(--amber-pale); position: relative;
+  }
+  .theorem-box::before {
+    content: 'Theorem 2.1'; position: absolute; top: -0.65rem; left: 1.2rem;
+    background: var(--amber-pale); padding: 0 0.5rem;
+    font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber);
+  }
+  .theorem-box .th-name { font-weight: bold; color: var(--amber); margin-bottom: 0.5rem; }
+  .theorem-box .th-body { font-size: 0.92rem; line-height: 1.75; }
+
+  .insight-box {
+    background: #fdf5ec; border-left: 4px solid var(--amber-l);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .insight-box .ins-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.4rem; }
+  .insight-box p { font-size: 0.93rem; line-height: 1.72; margin-bottom: 0; }
+
+  .falsify-box {
+    background: #fff0f0; border-left: 4px solid #c0392b;
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .falsify-box .fa-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: #c0392b; margin-bottom: 0.4rem; }
+  .falsify-box p { font-size: 0.93rem; line-height: 1.72; margin-bottom: 0; }
+
+  /* Cortisol curve sim */
+  .sim-wrapper { background: #1a0e04; padding: 2rem; margin: 2.5rem 0; }
+  .sim-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--amber-l); margin-bottom: 0.6rem; text-align: center; }
+  .sim-title { color: white; text-align: center; font-size: 1rem; margin-bottom: 1.2rem; }
+  canvas#sim2 { display: block; margin: 0 auto; }
+  .sim-controls { display: flex; gap: 0.8rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+  .sim-btn { background: transparent; border: 1px solid var(--amber-l); color: var(--amber-l); padding: 0.38rem 1.1rem; font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .sim-btn:hover { background: var(--amber); color: white; border-color: var(--amber); }
+  .sim-info { color: rgba(255,255,255,0.38); font-size: 0.75rem; text-align: center; margin-top: 0.8rem; font-family: sans-serif; }
+
+  /* HPA pathway visual */
+  .hpa-diagram {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: wrap; margin: 2rem 0;
+    font-family: sans-serif;
+  }
+  .hpa-node {
+    background: var(--navy); color: white; padding: 0.7rem 1.1rem;
+    font-size: 0.78rem; text-align: center; border: 1px solid rgba(212,136,74,0.3);
+    min-width: 90px;
+  }
+  .hpa-node .hpa-name { font-weight: bold; color: var(--gold); font-size: 0.72rem; letter-spacing: 0.06em; }
+  .hpa-node .hpa-role { color: rgba(255,255,255,0.5); font-size: 0.62rem; margin-top: 0.15rem; }
+  .hpa-arrow { color: var(--amber-l); font-size: 1.3rem; padding: 0 0.3rem; align-self: center; }
+  .hpa-op { font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--amber-l); text-align: center; margin-top: 0.15rem; }
+
+  .ch-nav { background: var(--smoke); border-top: 1px solid var(--light); padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .ch-nav a { color: var(--navy); text-decoration: none; font-family: sans-serif; font-size: 0.85rem; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+  .ch-nav a:hover { color: var(--gold); }
+  .ch-nav-center { font-family: sans-serif; font-size: 0.72rem; color: #999; }
+
+  .portal-section { background: var(--navy); padding: 3rem 2rem; }
+  .portal-inner { max-width: 720px; margin: 0 auto; }
+  .portal-eyebrow { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; text-align: center; }
+  .portal-heading { color: white; font-size: 1.5rem; text-align: center; margin-bottom: 0.4rem; }
+  .portal-sub { color: rgba(255,255,255,0.45); font-style: italic; text-align: center; margin-bottom: 2rem; font-size: 0.88rem; }
+  .prompt-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(212,136,74,0.2); padding: 1.4rem 1.6rem; margin-bottom: 1.1rem; }
+  .prompt-number { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--amber-l); margin-bottom: 0.3rem; }
+  .prompt-title { color: white; font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .prompt-text { color: rgba(255,255,255,0.7); font-size: 0.87rem; line-height: 1.72; font-family: sans-serif; margin-bottom: 0.9rem; border-left: 2px solid rgba(212,136,74,0.25); padding-left: 0.9rem; }
+  .copy-btn { background: transparent; border: 1px solid var(--amber-l); color: var(--amber-l); padding: 0.32rem 0.9rem; font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .copy-btn:hover, .copy-btn.copied { background: var(--amber); color: white; border-color: var(--amber); }
+
+  footer { background: var(--navy); color: rgba(255,255,255,0.35); padding: 2rem; text-align: center; font-family: sans-serif; font-size: 0.72rem; line-height: 1.9; }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← The Mini-Beast</a>
+  <a href="index.html" class="nav-logo">PRINCIPIA ORTHOGONA · BOOK 3</a>
+  <span class="nav-chap">Ch. 2 of 17</span>
+</nav>
+
+<div class="ch-hero">
+  <div class="ch-eyebrow">Book 3 · The Mini-Beast · Biological Instantiations</div>
+  <div class="ch-number">2</div>
+  <h1 class="ch-title">The Allostatic Operator</h1>
+  <div class="ch-subtitle">Stress as Compression — the body narrows before it can expand</div>
+  <div class="gold-rule"></div>
+  <div class="ch-operator">G = U ∘ F ∘ K ∘ <span class="active-op">C</span> · still compressing</div>
+</div>
+
+<div class="ch-body">
+
+  <p>You recognize it from the outside before you understand it from the inside. A person under prolonged stress looks contracted. Shoulders forward, breath shallow, attention narrow. They are not broken. They are compressing.</p>
+
+  <p>The body under chronic stress is running the C operator. It has not failed — it is doing precisely what a living system does when resources are uncertain: it narrows its operating range to preserve the one capacity it cannot afford to lose.</p>
+
+  <div class="pull-quote">
+    Allostasis means stability through change. The body does not try to hold cortisol constant — it adjusts the set point itself. The compression is not a malfunction. It is the system spending down one currency to protect another. The question is always: what is the invariant being protected?
+  </div>
+
+  <p>In Chapter 1 we saw the cajueiro compress spatially — one axial root, no lateral branching, everything directed toward the aquifer. The allostatic operator is the same logic running in physiological time. The HPA axis compresses the body's metabolic and immune bandwidth to direct maximum resource toward the perceived threat. It is C, running in cortisol.</p>
+
+  <h2>The HPA Axis as Operator Chain</h2>
+
+  <p>The hypothalamic-pituitary-adrenal axis is the body's primary stress circuit. When the hypothalamus detects threat — real or perceived — it releases corticotropin-releasing hormone (CRH). The pituitary responds with adrenocorticotropic hormone (ACTH). The adrenal glands, receiving ACTH, release cortisol. Cortisol then acts on virtually every tissue in the body — suppressing inflammation, mobilizing glucose, narrowing immune surveillance — and feeds back to the hypothalamus to signal circuit completion.</p>
+
+  <div class="hpa-diagram">
+    <div class="hpa-node">
+      <div class="hpa-name">Hypothalamus</div>
+      <div class="hpa-role">CRH release</div>
+      <div class="hpa-op">C: compress</div>
+    </div>
+    <div class="hpa-arrow">→</div>
+    <div class="hpa-node">
+      <div class="hpa-name">Pituitary</div>
+      <div class="hpa-role">ACTH release</div>
+      <div class="hpa-op">K: threshold</div>
+    </div>
+    <div class="hpa-arrow">→</div>
+    <div class="hpa-node">
+      <div class="hpa-name">Adrenal Cortex</div>
+      <div class="hpa-role">Cortisol release</div>
+      <div class="hpa-op">F: fold</div>
+    </div>
+    <div class="hpa-arrow">→</div>
+    <div class="hpa-node">
+      <div class="hpa-name">All Tissues</div>
+      <div class="hpa-role">Systemic response</div>
+      <div class="hpa-op">U: unfold</div>
+    </div>
+    <div class="hpa-arrow">↺</div>
+    <div class="hpa-node" style="border-color:rgba(201,168,76,0.5);">
+      <div class="hpa-name" style="color:var(--amber-l);">Feedback</div>
+      <div class="hpa-role">Returns to hypothalamus</div>
+      <div class="hpa-op" style="color:var(--gold);">T: circuit closes</div>
+    </div>
+  </div>
+
+  <p>Each node in this chain is an operator. The hypothalamus compresses the body's diffuse threat signals into a single chemical signal — that is C. The curvature threshold K is the concentration of CRH required to trigger pituitary response — below threshold, nothing happens; above it, the fold fires. ACTH release is F: the first self-reference, the moment the system curves back onto itself. Cortisol acting systemically is U: the unfolding into every tissue simultaneously.</p>
+
+  <p>And then the feedback to the hypothalamus is T — the circuit closing, the source enriched by one completed stress cycle. This is why chronic stress is not just tiring. Each cycle of the HPA axis leaves the hypothalamic set point slightly shifted. The source that receives the return is not quite the same as the one that initiated the circuit.</p>
+
+  <h2>Allostatic Load: When C Runs Too Long</h2>
+
+  <p>A single acute stressor — a near-accident, a difficult conversation, a physical threat — activates the HPA axis, runs the circuit, and resolves. Cortisol rises sharply, peaks, falls. The system unfolds its response, then recovers. This is healthy allostasis: C fires, the threat is resolved, recovery begins.</p>
+
+  <p>Chronic stress is different. When the stressor does not resolve — financial precarity, relationship conflict, systemic discrimination, overwork — the HPA axis does not complete its circuit. The compression phase extends. Cortisol remains elevated. What was a survival mechanism becomes a sustained drain on every system that cortisol suppresses: immune function, digestive function, reproductive function, sleep architecture, prefrontal reasoning.</p>
+
+  <div class="insight-box">
+    <div class="ins-label">Operator Insight</div>
+    <p>Allostatic load is not a failure of the C operator — it is C running without K ever firing cleanly. The system compresses, compresses, compresses, but never crosses the threshold to a new configuration because the stressor never resolves into a clear invariant. The body is stuck in perpetual compression, spending capital it cannot replenish. C without F is not stability. It is debt.</p>
+  </div>
+
+  <h3>Three Physiological Compressions Under Chronic Load</h3>
+
+  <p><strong>Immune narrowing.</strong> Cortisol suppresses pro-inflammatory cytokines. In acute stress, this is protective — inflammation during a physical threat is counterproductive. Under chronic load, the same suppression leaves the body unable to mount adequate immune responses. The operating range narrows from full immune surveillance to a compressed, anti-inflammatory posture. The body has sacrificed the width of its immune repertoire to protect the depth of its threat response.</p>
+
+  <p><strong>Hippocampal compression.</strong> The hippocampus — essential for spatial memory, contextual learning, and the ability to distinguish safe from unsafe environments — is densely populated with glucocorticoid receptors. Chronic cortisol exposure causes dendritic atrophy: the hippocampal neurons literally retract their branches. This is spatial compression at the cellular level. The tree pulls its canopy in. The cajueiro, going underground.</p>
+
+  <p><strong>Prefrontal retreat.</strong> Under sustained HPA activation, the prefrontal cortex — responsible for planning, inhibition, and abstract reasoning — loses influence over the amygdala. The amygdala, which runs threat detection, expands its relative dominance. The system compresses away from long-range planning and toward immediate threat response. It is not stupidity. It is triage.</p>
+
+  <h2>The Invariant Being Protected</h2>
+
+  <p>Every compression has an invariant it is trying to reach. The cajueiro compresses spatially to reach the water table. The HPA axis compresses physiologically to reach safety — the resolution of threat.</p>
+
+  <p>Under chronic stress the problem is not the compression. The problem is that the invariant keeps moving. The water table is not there. Cortisol rises, nothing resolves, and the system compresses further, looking for a floor that does not arrive.</p>
+
+  <div class="math-block">
+    <div class="math-label">Allostatic Compression — Operator Form</div>
+    <div class="eq">C_allo : Σ_body → Σ′_body</div><br>
+    Σ_body <span class="dim">· full physiological state space (immune, cognitive, metabolic)</span><br>
+    Σ′_body <span class="dim">· compressed threat-response state (narrowed bandwidth)</span><br><br>
+    <div class="eq">Allostatic load L = ∫₀ᵗ σ(s) ds</div><br>
+    σ(s) <span class="dim">· cortisol concentration at time s</span><br>
+    L <span class="dim">· accumulated compression cost (recoverable below threshold)</span><br>
+    L* <span class="dim">· the threshold: allostatic overload, structural change begins</span><br><br>
+    L &lt; L* <span class="dim">→</span> <span class="eq">recovery possible (C leads to F)</span><br>
+    L ≥ L* <span class="dim">→</span> <span class="eq">overload: C alone, no F. Tissue-level damage accumulates.</span>
+  </div>
+
+  <div class="theorem-box">
+    <div class="th-name">Theorem 2.1 — Allostatic Compression Precedes Recovery</div>
+    <div class="th-body">
+      For any living system under resource constraint, the allostatic operator C_allo reduces the state space Σ to a minimum viable configuration Σ′ that preserves the single capacity most essential to threat resolution. Recovery (U) is only accessible after the threat invariant I* is reached (K passes) and the fold F fires. A system that compresses without reaching I* accumulates allostatic load L. When L ≥ L*, structural reorganization — rather than recovery — becomes the system's only remaining option.
+    </div>
+  </div>
+
+  <p>This is why rest alone does not reverse burnout. Rest reduces the acute cortisol signal, but if the structural reorganization that comes with allostatic overload has already begun — hippocampal atrophy, prefrontal retreat, immune suppression — the body needs more than the absence of stress. It needs a positive signal: something that counts as the invariant. Safety. Connection. Mastery. The sense that the compression found what it was looking for.</p>
+
+  <div class="falsify-box">
+    <div class="fa-label">Falsifiability Condition</div>
+    <p>If a living system under chronic stress can achieve full physiological recovery (return to Σ_body) without first reaching a resolved threat state — without the stressor resolving into a clear invariant that the compression was seeking — then the allostatic C operator model is falsified for that system. Find one. The HPA axis, hippocampal atrophy, and prefrontal retreat are offered as existence proofs of compression-without-fold, not as proof of universality.</p>
+  </div>
+
+</div>
+
+<!-- Cortisol Simulation -->
+<div style="padding: 0 2rem;">
+<div class="sim-wrapper">
+  <div class="sim-label">Live Simulation · Chapter 2</div>
+  <div class="sim-title">Cortisol Dynamics — Acute vs. Chronic Allostatic Load</div>
+  <canvas id="sim2" width="680" height="300"></canvas>
+  <div class="sim-controls">
+    <button class="sim-btn" onclick="resetCortisol()">Reset</button>
+    <button class="sim-btn" onclick="addAcute()">Acute Stressor</button>
+    <button class="sim-btn" onclick="addChronic()">Chronic Load</button>
+    <button class="sim-btn" onclick="addRecovery()">Recovery Signal</button>
+  </div>
+  <div class="sim-info" id="sim2-info">Watch the cortisol curve. An acute stressor rises and falls — C finds the invariant, F fires, recovery follows. A chronic load never resolves.</div>
+</div>
+</div>
+
+<div class="ch-nav">
+  <a href="ch1-seed.html">← Chapter 1 · The Unfolding</a>
+  <div class="ch-nav-center">Chapter 2 of 17 · The Mini-Beast</div>
+  <a href="ch3-circadian.html">Chapter 3 · Circadian Regulation →</a>
+</div>
+
+<!-- Portal: A2 Prompts -->
+<div class="portal-section">
+  <div class="portal-inner">
+
+    <div style="text-align:center; margin-bottom: 1.8rem;">
+      <div style="display:inline-block; background:rgba(212,136,74,0.12); border:1px solid rgba(212,136,74,0.3); color:var(--amber-l); font-family:sans-serif; font-size:0.63rem; letter-spacing:0.18em; text-transform:uppercase; padding:0.22rem 0.9rem;">Student Portal · Level A2 · Operator: K</div>
+    </div>
+    <div class="portal-eyebrow">Principia Orthogona · Student Portal</div>
+    <h2 class="portal-heading">Level A2 — Pattern Recognition</h2>
+    <div class="portal-sub">At A2 you can identify what changes and what stays the same. That is exactly when science begins.</div>
+    <div style="text-align:center; font-family:sans-serif; font-size:0.76rem; color:rgba(255,255,255,0.3); margin-bottom:2rem; letter-spacing:0.1em;">G = U ∘ F ∘ <strong style="color:var(--amber-l)">K</strong> ∘ C · You are crossing into K</div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A2.1 — Invariant Hunt</div>
+      <div class="prompt-title">What does not change?</div>
+      <div class="prompt-text">I am at A2 in the Principia Orthogona series. Give me a short scientific description of one process — any domain — and ask me to identify: (1) what changes, (2) what stays the same, (3) what the stable form is at the end. Use simple English.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="I am at A2 in the Principia Orthogona series. Give me a short scientific description of one process — any domain — and ask me to identify: (1) what changes, (2) what stays the same, (3) what the stable form is at the end. Use simple English.">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A2.2 — g₃₃ Introduction</div>
+      <div class="prompt-title">Why 33?</div>
+      <div class="prompt-text">Explain to me why 33 is the threshold constant in GTCT. Do not use technical language. Use an analogy from sport, music, or learning a skill. Then ask me: "Can you think of something in your life where you had to repeat something many times before it became automatic?"</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="Explain to me why 33 is the threshold constant in GTCT. Do not use technical language. Use an analogy from sport, music, or learning a skill. Then ask me: 'Can you think of something in your life where you had to repeat something many times before it became automatic?'">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt A2.3 — Domain Bridge</div>
+      <div class="prompt-title">The same law, two domains</div>
+      <div class="prompt-text">Show me how the same mathematical structure appears in (1) a biological system and (2) a language learning process. Use the sequence C → K → F → U to describe both. Ask me one question after each example.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="Show me how the same mathematical structure appears in (1) a biological system and (2) a language learning process. Use the sequence C → K → F → U to describe both. Ask me one question after each example.">COPY PROMPT</button>
+    </div>
+
+    <div style="margin-top:2rem; padding-top:1.4rem; border-top:1px solid rgba(255,255,255,0.07); text-align:center;">
+      <a href="sportal.html" style="display:inline-block; border:1px solid var(--gold); color:var(--gold); padding:0.5rem 1.8rem; font-family:sans-serif; font-size:0.73rem; letter-spacing:0.14em; text-transform:uppercase; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">All Levels A1 → D2 →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>Principia Orthogona · Book 3 · The Mini-Beast</div>
+  <div>G6 LLC · Newark, NJ · 2026 · ISBN 979-8-9954416-6-3</div>
+  <div style="margin-top:0.5rem;">
+    <a href="index.html">Book Index</a> ·
+    <a href="chapters-diagram.html">Chapter Map</a> ·
+    <a href="sportal.html">Student Portal</a> ·
+    <a href="https://totogt.github.io/AXLE/" target="_blank">AXLE</a>
+  </div>
+</footer>
+
+<script>
+/* Copy */
+function copyPrompt(btn) {
+  const text = btn.dataset.prompt || btn.closest('.prompt-card').querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIED ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+/* ── Cortisol Simulation ── */
+const canvas = document.getElementById('sim2');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resizeCanvas() {
+  W = Math.min(680, window.innerWidth - 40);
+  canvas.width = W; canvas.height = H = Math.round(W * 300/680);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// State
+let cortisol = [];   // {t, val} history
+let events = [];     // {t, type} stressors & recoveries
+let time = 0;
+let baseLevel = 0.18;
+let load = 0;        // allostatic load accumulator
+let running = true;
+let rafId;
+const LOAD_THRESH = 1.8;
+
+function resetCortisol() {
+  cancelAnimationFrame(rafId);
+  cortisol = []; events = []; time = 0; load = 0;
+  running = true;
+  document.getElementById('sim2-info').textContent = 'Baseline cortisol — normal diurnal pattern. Add a stressor to watch the compression response.';
+  animate();
+}
+
+function addAcute() {
+  events.push({ t: time, type: 'acute', dur: 80, intensity: 0.65 });
+  document.getElementById('sim2-info').textContent = 'Acute stressor — cortisol rises sharply. C fires, K threshold crossed, F unfolds the response. Watch for recovery.';
+}
+
+function addChronic() {
+  events.push({ t: time, type: 'chronic', dur: 999, intensity: 0.38 });
+  document.getElementById('sim2-info').textContent = 'Chronic load — cortisol stays elevated. C running without resolution. Allostatic load accumulates. K never fires cleanly.';
+  baseLevel += 0.06;
+}
+
+function addRecovery() {
+  events = events.filter(e => e.type !== 'chronic');
+  baseLevel = Math.max(0.18, baseLevel - 0.06);
+  events.push({ t: time, type: 'recovery', dur: 120, intensity: -0.12 });
+  document.getElementById('sim2-info').textContent = 'Recovery signal — the invariant is found. Cortisol drops below baseline briefly. The body begins to restore bandwidth.';
+}
+
+function getCortisolLevel(t) {
+  let c = baseLevel;
+  // Diurnal rhythm (gentle sine)
+  c += 0.06 * Math.sin((t / 200) * Math.PI * 2 - Math.PI/2);
+  // Events
+  for (const e of events) {
+    const dt = t - e.t;
+    if (dt < 0) continue;
+    if (e.type === 'acute') {
+      if (dt < e.dur) {
+        const rise = Math.min(1, dt / 20);
+        const fall = dt < e.dur * 0.4 ? 1 : Math.max(0, 1 - (dt - e.dur*0.4)/(e.dur*0.6));
+        c += e.intensity * rise * fall;
+      }
+    } else if (e.type === 'chronic') {
+      c += e.intensity * Math.min(1, dt / 40);
+    } else if (e.type === 'recovery') {
+      if (dt < e.dur) {
+        const shape = Math.sin((dt/e.dur) * Math.PI);
+        c += e.intensity * shape;
+      }
+    }
+  }
+  return Math.max(0.02, Math.min(0.99, c));
+}
+
+function stepTime() {
+  time += 0.5;
+  const val = getCortisolLevel(time);
+  cortisol.push({ t: time, val });
+  // Load accumulates above threshold
+  if (val > 0.45) load += (val - 0.45) * 0.01;
+  else load = Math.max(0, load - 0.005);
+  if (cortisol.length > 800) cortisol.shift();
+}
+
+function drawCortisol() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#1a0e04';
+  ctx.fillRect(0, 0, W, H);
+
+  const padL = W * 0.06, padR = W * 0.04;
+  const padT = H * 0.12, padB = H * 0.18;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+
+  // Axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT);
+  ctx.lineTo(padL, padT + plotH);
+  ctx.lineTo(padL + plotW, padT + plotH);
+  ctx.stroke();
+
+  // Normal range band
+  const normLo = padT + plotH * (1 - 0.35);
+  const normHi = padT + plotH * (1 - 0.12);
+  ctx.fillStyle = 'rgba(58,122,90,0.08)';
+  ctx.fillRect(padL, normHi, plotW, normLo - normHi);
+  ctx.fillStyle = 'rgba(58,122,90,0.35)';
+  const fs = Math.max(8, W*0.011);
+  ctx.font = `${fs}px sans-serif`;
+  ctx.fillText('normal range', padL + 4, normHi - 3);
+
+  // Overload threshold
+  const overloadY = padT + plotH * (1 - 0.62);
+  ctx.setLineDash([5, 4]);
+  ctx.strokeStyle = 'rgba(192,57,43,0.45)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, overloadY);
+  ctx.lineTo(padL + plotW, overloadY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(192,57,43,0.6)';
+  ctx.fillText('L* overload', padL + 4, overloadY - 4);
+
+  // Cortisol curve
+  if (cortisol.length > 1) {
+    const tMin = cortisol[0].t, tMax = cortisol[cortisol.length-1].t;
+    const tRange = Math.max(1, tMax - tMin);
+    ctx.beginPath();
+    for (let i = 0; i < cortisol.length; i++) {
+      const pt = cortisol[i];
+      const x = padL + ((pt.t - tMin) / tRange) * plotW;
+      const y = padT + plotH * (1 - pt.val);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    const last = cortisol[cortisol.length-1];
+    const isHigh = last.val > 0.62;
+    const isLow = last.val < 0.28;
+    ctx.strokeStyle = isHigh ? '#e07040' : isLow ? '#7acc9a' : '#d4884a';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Shade under curve
+    ctx.beginPath();
+    for (let i = 0; i < cortisol.length; i++) {
+      const pt = cortisol[i];
+      const x = padL + ((pt.t - tMin) / tRange) * plotW;
+      const y = padT + plotH * (1 - pt.val);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.lineTo(padL + plotW, padT + plotH);
+    ctx.lineTo(padL, padT + plotH);
+    ctx.closePath();
+    ctx.fillStyle = isHigh ? 'rgba(224,112,64,0.08)' : 'rgba(212,136,74,0.06)';
+    ctx.fill();
+
+    // Event markers
+    for (const e of events) {
+      const ex = padL + ((e.t - tMin) / tRange) * plotW;
+      if (ex >= padL && ex <= padL + plotW) {
+        ctx.beginPath();
+        ctx.moveTo(ex, padT);
+        ctx.lineTo(ex, padT + plotH);
+        ctx.strokeStyle = e.type === 'recovery' ? 'rgba(122,204,154,0.4)' : 'rgba(224,112,64,0.4)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3,3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = e.type === 'recovery' ? '#7acc9a' : '#e07040';
+        ctx.font = `bold ${fs}px sans-serif`;
+        ctx.fillText(e.type === 'recovery' ? '↓ recovery' : e.type === 'acute' ? '↑ acute' : '~ chronic', ex + 3, padT + 12);
+      }
+    }
+  }
+
+  // Allostatic load bar
+  const barW = plotW * 0.25, barH = 8;
+  const barX = padL + plotW * 0.73, barY = padT + plotH + 14;
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  ctx.fillRect(barX, barY, barW, barH);
+  const loadFill = Math.min(1, load / LOAD_THRESH);
+  const loadCol = loadFill > 0.85 ? '#c0392b' : loadFill > 0.5 ? '#e07040' : '#d4884a';
+  ctx.fillStyle = loadCol;
+  ctx.fillRect(barX, barY, barW * loadFill, barH);
+  ctx.font = `${fs}px sans-serif`;
+  ctx.fillStyle = 'rgba(255,255,255,0.38)';
+  ctx.fillText('Allostatic Load L', barX, barY - 4);
+  if (load >= LOAD_THRESH * 0.85) {
+    ctx.fillStyle = '#c0392b';
+    ctx.font = `bold ${fs}px sans-serif`;
+    ctx.fillText('⚠ L ≥ L*', barX + barW + 6, barY + 7);
+    document.getElementById('sim2-info').textContent = 'Allostatic overload — L ≥ L*. Structural reorganization begins. Hippocampal atrophy, prefrontal retreat. C without F.';
+  }
+
+  // Operator labels on curve
+  if (cortisol.length > 10) {
+    const recent = cortisol.slice(-30);
+    const rising = recent[recent.length-1].val > recent[0].val + 0.05;
+    const falling = recent[recent.length-1].val < recent[0].val - 0.05;
+    const stableHigh = !rising && !falling && recent[recent.length-1].val > 0.45;
+    ctx.font = `bold ${Math.max(9,W*0.014)}px sans-serif`;
+    const lx = padL + plotW * 0.5, ly = padT + 28;
+    if (rising) { ctx.fillStyle = '#e07040'; ctx.fillText('C ↑ compressing', lx, ly); }
+    else if (stableHigh) { ctx.fillStyle = '#e07040'; ctx.fillText('C ↑ load accumulating', lx, ly); }
+    else if (falling) { ctx.fillStyle = '#7acc9a'; ctx.fillText('F → U · recovery', lx, ly); }
+  }
+
+  // Y axis label
+  ctx.save();
+  ctx.translate(10, padT + plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = `${fs}px sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('cortisol', 0, 0);
+  ctx.restore();
+  ctx.textAlign = 'left';
+}
+
+function animate() {
+  if (!running) return;
+  stepTime();
+  drawCortisol();
+  rafId = requestAnimationFrame(animate);
+}
+
+function toggleSim() { running = !running; if (running) animate(); }
+
+resetCortisol();
+</script>
+</body>
+</html>

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 8 · The Mountain and the Serpent · Principia Orthogona</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:       #0a0e1a;
+    --navy-mid:   #111827;
+    --navy-light: #1a2235;
+    --gold:       #c9a84c;
+    --gold-bright:#e8c96a;
+    --gold-dim:   #8a6f2e;
+    --cream:      #f5f0e8;
+    --cream-dim:  #d4cfc7;
+    --jade:       #2d6a4f;
+    --jade-bright:#52b788;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--navy);
+    color:var(--cream);
+    font-family:'Cormorant Garamond','EB Garamond',Georgia,serif;
+    font-size:1.15rem;
+    line-height:1.9;
+  }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(10,14,26,0.96);
+    border-bottom:1px solid var(--gold-dim);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0.7rem 2.5rem;
+    backdrop-filter:blur(8px);
+  }
+  nav .series { font-size:0.78rem; letter-spacing:0.18em; color:var(--gold-dim); text-transform:uppercase; }
+  nav .chapter-nav { display:flex; gap:1.5rem; }
+  nav a { color:var(--gold); text-decoration:none; font-size:0.85rem; letter-spacing:0.08em; transition:color 0.2s; }
+  nav a:hover { color:var(--gold-bright); }
+  .free-badge {
+    font-size:0.62rem; letter-spacing:0.2em; color:var(--jade-bright);
+    border:1px solid var(--jade); padding:0.15rem 0.5rem; border-radius:2px;
+    text-transform:uppercase; margin-left:0.5rem;
+  }
+
+  /* HERO */
+  .hero {
+    min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:6rem 2rem 4rem;
+    position:relative; overflow:hidden;
+  }
+  .hero-canvas { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+  .hero-eyebrow { font-size:0.72rem; letter-spacing:0.3em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:1.5rem; position:relative; z-index:1; }
+  .hero h1 { font-size:clamp(2.8rem,7vw,5.5rem); font-weight:300; color:var(--gold-bright); line-height:1.1; margin-bottom:0.6rem; letter-spacing:0.02em; position:relative; z-index:1; }
+  .hero h2 { font-size:clamp(1.1rem,2.5vw,1.6rem); font-weight:300; color:var(--cream-dim); font-style:italic; margin-bottom:2.5rem; letter-spacing:0.04em; position:relative; z-index:1; }
+  .hero-divider { width:80px; height:1px; background:var(--gold); margin:0 auto 2.5rem; position:relative; z-index:1; }
+  .hero-epigraph { max-width:580px; font-size:1rem; font-style:italic; color:var(--cream-dim); line-height:1.75; position:relative; z-index:1; }
+  .hero-epigraph cite { display:block; margin-top:0.7rem; font-size:0.78rem; letter-spacing:0.15em; color:var(--gold-dim); font-style:normal; text-transform:uppercase; }
+
+  /* BODY */
+  .chapter-body { max-width:820px; margin:0 auto; padding:4rem 2rem; }
+  .section { margin-bottom:5rem; }
+  .section-number { font-size:0.68rem; letter-spacing:0.3em; color:var(--gold-dim); text-transform:uppercase; margin-bottom:0.8rem; }
+  .section h3 { font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:400; color:var(--gold-bright); margin-bottom:1.5rem; line-height:1.25; }
+  .section p { margin-bottom:1.4rem; font-size:1.08rem; }
+
+  blockquote { border-left:2px solid var(--gold); padding:1.2rem 0 1.2rem 2rem; margin:2.5rem 0; font-style:italic; font-size:1.15rem; color:var(--gold-bright); line-height:1.65; }
+  blockquote cite { display:block; margin-top:0.6rem; font-size:0.75rem; letter-spacing:0.15em; color:var(--gold-dim); font-style:normal; text-transform:uppercase; }
+
+  .theorem { background:var(--navy-light); border:1px solid var(--gold-dim); border-left:3px solid var(--gold); padding:1.8rem 2rem; margin:2.5rem 0; border-radius:2px; }
+  .theorem-label { font-size:0.68rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin-bottom:0.8rem; }
+  .theorem-body { font-size:1.05rem; line-height:1.75; }
+  .theorem-body em { color:var(--gold-bright); font-style:normal; font-weight:500; }
+
+  /* MACHINES */
+  .machine { background:var(--navy-mid); border:1px solid var(--gold-dim); border-radius:4px; padding:2rem; margin:3rem 0; }
+  .machine-title { font-size:0.7rem; letter-spacing:0.25em; color:var(--gold); text-transform:uppercase; margin-bottom:1.2rem; display:flex; align-items:center; gap:0.8rem; }
+  .machine-title::after { content:''; flex:1; height:1px; background:var(--gold-dim); opacity:0.4; }
+  canvas { display:block; margin:0 auto; }
+  .btn-row { display:flex; flex-wrap:wrap; gap:0.5rem; margin:1rem 0; justify-content:center; }
+  .btn { background:transparent; border:1px solid var(--gold-dim); color:var(--gold); padding:0.4rem 1rem; font-family:'Cormorant Garamond',serif; font-size:0.85rem; letter-spacing:0.08em; cursor:pointer; border-radius:2px; transition:all 0.2s; }
+  .btn:hover,.btn.active { background:var(--gold); color:var(--navy); border-color:var(--gold); }
+  .machine-label { text-align:center; font-size:0.78rem; color:var(--gold-dim); letter-spacing:0.1em; margin-top:0.8rem; font-style:italic; }
+
+  /* MERU TABLE */
+  .meru-grid { display:flex; flex-direction:column; align-items:center; gap:3px; margin:1.5rem 0; font-family:'Cormorant Garamond',serif; }
+  .meru-row { display:flex; gap:3px; }
+  .meru-cell {
+    width:44px; height:44px; display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(201,168,76,0.25); border-radius:2px;
+    font-size:0.78rem; color:var(--gold-dim); transition:all 0.4s;
+    background:var(--navy-light);
+  }
+  .meru-cell.lit { background:rgba(201,168,76,0.18); color:var(--gold-bright); border-color:var(--gold); }
+  .meru-cell.edge { background:rgba(201,168,76,0.08); color:var(--gold); border-color:var(--gold-dim); }
+  .meru-cell.fib { background:rgba(232,201,106,0.25); color:var(--gold-bright); border-color:var(--gold-bright); }
+
+  /* NUMBER SCALE */
+  .number-scale { margin:2rem 0; }
+  .scale-row { display:flex; align-items:baseline; gap:1rem; padding:0.5rem 0; border-bottom:1px solid rgba(201,168,76,0.08); }
+  .scale-sanskrit { color:var(--gold-bright); font-size:1rem; min-width:120px; }
+  .scale-value { color:var(--gold-dim); font-size:0.85rem; font-family:monospace; min-width:100px; }
+  .scale-meaning { color:var(--cream-dim); font-size:0.88rem; font-style:italic; }
+  .scale-bar { height:3px; background:var(--gold); border-radius:1px; transition:width 0.5s; }
+
+  /* JAIN INFINITY */
+  .jain-panel { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; margin:2rem 0; }
+  .jain-card { background:var(--navy-light); border:1px solid var(--gold-dim); padding:1.2rem; border-radius:2px; text-align:center; cursor:pointer; transition:all 0.25s; }
+  .jain-card:hover,.jain-card.active { border-color:var(--gold); }
+  .jain-card .jain-name { font-size:1rem; color:var(--gold-bright); }
+  .jain-card .jain-sanskrit { font-size:0.8rem; color:var(--gold-dim); margin-top:0.2rem; letter-spacing:0.08em; }
+  .jain-card .jain-desc { font-size:0.82rem; color:var(--cream-dim); margin-top:0.5rem; font-style:italic; }
+
+  /* UPANISHAD BLOCK */
+  .upanishad-block {
+    background:var(--navy-light);
+    border:1px solid var(--gold-dim);
+    border-top:3px solid var(--gold);
+    padding:2.5rem;
+    margin:2.5rem 0;
+    text-align:center;
+  }
+  .upanishad-sanskrit { font-size:1.6rem; color:var(--gold-bright); line-height:1.8; margin-bottom:1.2rem; letter-spacing:0.05em; }
+  .upanishad-trans { font-size:1rem; color:var(--cream-dim); font-style:italic; line-height:1.8; }
+  .upanishad-source { font-size:0.72rem; letter-spacing:0.2em; color:var(--gold-dim); text-transform:uppercase; margin-top:1rem; }
+
+  /* DATA TABLE */
+  .data-table { width:100%; border-collapse:collapse; margin:2rem 0; font-size:0.92rem; }
+  .data-table th { background:var(--navy-light); color:var(--gold); padding:0.7rem 1rem; text-align:left; font-weight:500; letter-spacing:0.08em; border-bottom:1px solid var(--gold-dim); font-size:0.75rem; text-transform:uppercase; }
+  .data-table td { padding:0.65rem 1rem; border-bottom:1px solid rgba(201,168,76,0.1); vertical-align:top; line-height:1.6; }
+  .data-table tr:hover td { background:rgba(201,168,76,0.04); }
+  .data-table td:first-child { color:var(--gold-bright); font-weight:500; }
+
+  footer { border-top:1px solid var(--gold-dim); padding:3rem 2rem; text-align:center; color:var(--gold-dim); font-size:0.82rem; letter-spacing:0.1em; }
+  footer .nav-links { display:flex; justify-content:center; gap:3rem; margin-bottom:1.5rem; flex-wrap:wrap; }
+  footer a { color:var(--gold); text-decoration:none; }
+  footer a:hover { color:var(--gold-bright); }
+  footer .series-mark { font-size:0.7rem; margin-top:1rem; opacity:0.6; }
+
+  @media(max-width:600px){
+    .jain-panel { grid-template-columns:1fr; }
+    .meru-cell { width:32px; height:32px; font-size:0.65rem; }
+    nav { padding:0.6rem 1rem; }
+    .chapter-body { padding:3rem 1.2rem; }
+  }
+  #egg { cursor: none !important; color: inherit !important; text-decoration: none !important; border: none !important; outline: none !important; }
+  #egg:hover { cursor: none !important; }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="series">Principia Orthogona · G6 LLC <span class="free-badge">free</span></span>
+  <div class="chapter-nav">
+    <a href="ch7-crystalline.html">← Ch. 7</a>
+    <a href="#8-1">8.1</a>
+    <a href="#8-3">8.3</a>
+    <a href="#8-5">8.5</a>
+    <a href="#8-7">8.7</a>
+    <a href="https://www.ebay.com/itm/336530438926" target="_blank">Buy the Book ↗</a>
+  </div>
+</nav>
+
+<!-- HERO with Ouroboros animation -->
+<section class="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-eyebrow">Principia Orthogona · Volume II · Chapter 8 · Open Access</div>
+  <h1>The Mountain and the Serpent</h1>
+  <h2>Mount Meru, the Ouroboros, and the Ancient Intuition of Infinity</h2>
+  <div class="hero-divider"></div>
+  <div class="hero-epigraph">
+    "That is full. This is full. From fullness, fullness comes.<br>
+    Remove fullness from fullness — fullness remains."
+    <cite>— Isha Upanishad · c. 700 BCE · one thousand years before zero had a symbol</cite>
+  </div>
+</section>
+
+<main class="chapter-body">
+
+  <!-- 8.1 ACTIVATION -->
+  <section class="section" id="8-1">
+    <div class="section-number">Section 8.1 · Activation</div>
+    <h3>Before Zero</h3>
+
+    <p>Write the number one thousand without using the digit zero. Without using positional notation. Without Hindu-Arabic numerals at all.</p>
+
+    <p>The Romans wrote it: M. One symbol, one concept. No position. No zero. No place value. The number one thousand existed in every human mind long before anyone had a notation for it — before the placeholder that makes positional arithmetic possible was invented in India around the 5th century CE and transmitted westward through Baghdad to Europe by the 13th century.</p>
+
+    <p>This chapter is about what humanity knew before that notation arrived. Not what they guessed, not what they dimly sensed — what they <em>knew</em>, with precision, with geometry, with systems of thought that encoded mathematical structures of extraordinary depth. They did not have the symbol for zero. They had something else: the intuition of the infinite, carried in sacred mountains and serpents and the architecture of ritual space.</p>
+
+    <p>The dm³ system did not begin with formal mathematics. It began with this: the human mind recognising, in the structure of the world, patterns that repeat across scales. The mountain is the same shape at every level. The serpent eating its tail is the same loop at every scale. These are not decorations. They are the oldest mathematical diagrams in human history.</p>
+  </section>
+
+  <!-- 8.2 MOUNT MERU -->
+  <section class="section" id="8-2">
+    <div class="section-number">Section 8.2 · Mount Meru</div>
+    <h3>The Sacred Mountain as Mathematical Structure</h3>
+
+    <p>In Hindu, Buddhist, and Jain cosmology, Mount Meru is the axis of the universe — the great mountain at the centre of the world, around which the sun, moon, and stars revolve. It is not a physical mountain. It is a <em>structural principle</em>: the point of perfect symmetry around which all motion organises itself. In dm³ terms, it is F — the fixed point of the cosmic operator, the still centre of the turning world.</p>
+
+    <p>But Mount Meru appears in mathematics too, under the name <em>Meru Prastara</em> — the staircase of Meru. The Sanskrit poet and mathematician Pingala described it in his treatise on prosody, the <em>Chandaśāstra</em>, around 200 BCE. It is the arrangement of numbers in a triangular staircase such that each number is the sum of the two numbers above it. It is, exactly, what we now call Pascal's Triangle — described in India 1,800 years before Blaise Pascal was born.</p>
+
+    <div class="machine">
+      <div class="machine-title">Meru Prastara · The Staircase of Meru · Pascal's Triangle 200 BCE</div>
+      <div id="meruGrid" class="meru-grid"></div>
+      <div class="btn-row">
+        <button class="btn active" onclick="setMeruMode('plain')">Plain</button>
+        <button class="btn" onclick="setMeruMode('fibonacci')">Diagonal Sums → Fibonacci</button>
+        <button class="btn" onclick="setMeruMode('powers2')">Row Sums → Powers of 2</button>
+        <button class="btn" onclick="setMeruMode('odd')">Odd Numbers → Sierpiński</button>
+      </div>
+      <div class="machine-label" id="meruLabel">Meru Prastara · each cell = sum of the two above · Pingala, c.200 BCE</div>
+    </div>
+
+    <p>The Meru Prastara contains, hidden in its structure, virtually every combinatorial identity in mathematics. The diagonal sums produce the Fibonacci sequence. The row sums produce powers of two. The odd-numbered cells, when highlighted, produce the Sierpiński triangle — a fractal self-similar at every scale. The binomial coefficients — the number of ways to choose k items from n — are read directly from row n, position k. All of this from a triangular arrangement of numbers that a Sanskrit scholar described while studying the metres of Sanskrit poetry two centuries before the Common Era.</p>
+
+    <p>Pingala was not doing mathematics as a separate discipline. He was studying <em>rhythm</em> — the patterns of long and short syllables in Sanskrit verse. The Meru Prastara emerged from the question: how many arrangements of long (guru) and short (laghu) syllables produce a line of n beats? The answer is the binomial expansion. The mountain is a prosodic diagram that turned out to be the foundation of combinatorics. This is the C operator at work: the contact between two domains — poetry and counting — produces a fixed point neither domain anticipated.</p>
+
+    <blockquote>
+      The mountain appeared where the poet was measuring rhythm. The mathematician arrived later and found it already built.
+    </blockquote>
+
+    <table class="data-table">
+      <thead><tr><th>What Pingala found in Meru Prastara</th><th>What Western mathematics named it</th><th>Date of Western naming</th></tr></thead>
+      <tbody>
+        <tr><td>Binomial coefficients (n choose k)</td><td>Pascal's Triangle</td><td>1653 CE</td></tr>
+        <tr><td>Diagonal sums = 1,1,2,3,5,8,13…</td><td>Fibonacci sequence</td><td>1202 CE (Fibonacci); named 1877</td></tr>
+        <tr><td>Row sums = 1,2,4,8,16…</td><td>Powers of 2</td><td>Euclid had this; formal: 17th C</td></tr>
+        <tr><td>Odd cell fractal pattern</td><td>Sierpiński triangle</td><td>1915 CE</td></tr>
+        <tr><td>Hockey stick identity</td><td>Hockey stick identity</td><td>17th–18th C</td></tr>
+      </tbody>
+    </table>
+
+    <p>The mountain was always there. It was named after Pascal because Europe arrived at it in 1653. It was named Meru Prastara because India arrived at it in 200 BCE — and named it after the fixed point of the universe, because that is exactly what it is.</p>
+  </section>
+
+  <!-- 8.3 OUROBOROS -->
+  <section class="section" id="8-3">
+    <div class="section-number">Section 8.3 · The Ouroboros</div>
+    <h3>The Serpent That Eats Its Own Tail</h3>
+
+    <p>The Ouroboros is one of the oldest symbols in recorded history. It appears in an Egyptian funerary text from approximately 1600 BCE — the <em>Enigmatic Book of the Netherworld</em>. It appears in the Phoenician cosmogony preserved by Philo of Byblos. It appears in Norse mythology as Jörmungandr, the Midgard Serpent encircling the world. It appears in Gnostic texts, in alchemical manuscripts, in Hindu representations of time. In every tradition, it means the same thing: a process that feeds on itself, a system that is self-sustaining, a loop that has no beginning and no end.</p>
+
+    <div class="machine">
+      <div class="machine-title">Ouroboros · The Self-Consuming Loop · Live Animation</div>
+      <canvas id="ouroCanvas" width="440" height="440" style="max-width:100%"></canvas>
+      <div class="btn-row">
+        <button class="btn active" onclick="setOuroMode('classic')">Classical</button>
+        <button class="btn" onclick="setOuroMode('operator')">dm³ Operators</button>
+        <button class="btn" onclick="setOuroMode('infinity')">∞ Loop</button>
+        <button class="btn" onclick="setOuroMode('godel')">Gödel's G</button>
+      </div>
+      <div class="machine-label" id="ouroLabel">The serpent eating its tail · self-reference · the loop that has no beginning</div>
+    </div>
+
+    <p>The Ouroboros is a mathematical diagram. It depicts a function applied to its own output, indefinitely. In formal terms: f(f(f(…))) — a function iterated until it reaches a fixed point, or until it becomes clear that it will never reach one. The fixed point of the self-consuming function is the moment the serpent finds the right place to bite: not too far back (the loop collapses), not too far forward (the system extends without closure). The fixed point is the exact curvature that makes the snake's head meet the snake's tail in a stable circle.</p>
+
+    <p>This is why Gödel's incompleteness theorem has the same structure as the Ouroboros. Gödel constructed a statement that says "I am not provable." The statement refers to itself — it eats its own tail. And like the Ouroboros, it finds a fixed point: a true statement that the system cannot prove from within itself. The ancient symbol and the 20th-century theorem are the same operator, viewed from different angles.</p>
+
+    <p>The alchemists called the Ouroboros the symbol of the <em>prima materia</em> — the first matter, the undifferentiated substrate from which all transformation proceeds. In dm³ terms, this is the state before C fires: the loop that contains all potential contact events but has not yet distinguished any of them. The serpent eating its tail is the system in its most general state — the U operator looping back to C, the return that makes the next cycle possible.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">The Ouroboros Fixed-Point Theorem</div>
+      <div class="theorem-body">
+        Any system that applies an operator to its own output will either: (a) converge to a fixed point — the serpent finds its bite-point and stabilises; (b) diverge without bound — the serpent grows without closing; or (c) enter a periodic orbit — the serpent traces the same path repeatedly. The Ouroboros depicts case (a): <em>the fixed point of self-reference</em>. It was understood geometrically in Egypt 3,600 years before Banach's Fixed-Point Theorem formalised it in 1922.
+      </div>
+    </div>
+  </section>
+
+  <!-- 8.4 ANCIENT INFINITIES -->
+  <section class="section" id="8-4">
+    <div class="section-number">Section 8.4 · Ancient Infinities</div>
+    <h3>What the Ancients Knew Before the Notation Existed</h3>
+
+    <p>The modern concept of infinity — as a mathematical object that can be counted, compared, and operated upon — was formalised by Georg Cantor in 1874. Cantor proved that some infinities are larger than others: the infinity of real numbers is strictly larger than the infinity of natural numbers. This was considered revolutionary, even scandalous. The mathematics establishment resisted it for decades.</p>
+
+    <p>But the <em>intuition</em> of infinity — the recognition that there are quantities without bound, processes without end, sets that exceed any finite description — is not a 19th-century discovery. It is one of the oldest thoughts in human intellectual history.</p>
+
+    <!-- Vedic Numbers -->
+    <div class="machine">
+      <div class="machine-title">Vedic Number Scale · From 1 to Parardha · The Ancient Reach</div>
+      <canvas id="scaleCanvas" width="600" height="300" style="max-width:100%"></canvas>
+      <div class="btn-row">
+        <button class="btn active" onclick="setScaleMode('vedic')">Vedic Sanskrit</button>
+        <button class="btn" onclick="setScaleMode('jain')">Jain Cosmological</button>
+        <button class="btn" onclick="setScaleMode('archimedes')">Archimedes</button>
+        <button class="btn" onclick="setScaleMode('cantor')">Cantor's Alephs</button>
+      </div>
+      <div class="machine-label" id="scaleLabel">Vedic Sanskrit number names · reaching to 10¹² before positional notation existed</div>
+    </div>
+
+    <p>The Yajurveda — one of the four Vedas, composed approximately 1200–900 BCE — contains a sequence of number names reaching to <em>parardha</em>: 10¹². One hundred billion. The Vedic tradition named every power of ten up to this limit, not because they needed to count that high in daily life, but because the cosmos required numbers of that magnitude — the number of grains of sand on the riverbank of the Ganges, the number of years in a cosmic cycle, the number of stars in the sky as the eye imagines it.</p>
+
+    <p>This was not speculation. It was a formal linguistic and philosophical system. The Sanskrit grammarian Pāṇini — whose <em>Ashtadhyayi</em> (c. 400 BCE) contains 3,959 rules of Sanskrit grammar so precise that they constitute a formal generative grammar equivalent to a modern context-free grammar — worked within a tradition that took the naming of large quantities as a serious intellectual project.</p>
+
+    <div class="number-scale">
+      <div class="scale-row"><span class="scale-sanskrit">Eka</span><span class="scale-value">10⁰ = 1</span><span class="scale-meaning">one — the contact point, C</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Dasha</span><span class="scale-value">10¹ = 10</span><span class="scale-meaning">ten — the first orbit, K</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Shata</span><span class="scale-value">10² = 100</span><span class="scale-meaning">hundred</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Sahasra</span><span class="scale-value">10³ = 1,000</span><span class="scale-meaning">thousand — spoken before zero existed</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Ayuta</span><span class="scale-value">10⁴ = 10,000</span><span class="scale-meaning">ten thousand</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Niyuta</span><span class="scale-value">10⁵ = 100,000</span><span class="scale-meaning">hundred thousand</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Prayuta</span><span class="scale-value">10⁶ = 1,000,000</span><span class="scale-meaning">million — named 900 BCE</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Arbuda</span><span class="scale-value">10⁷</span><span class="scale-meaning">ten million</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Nyarbuda</span><span class="scale-value">10⁸</span><span class="scale-meaning">hundred million</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Samudra</span><span class="scale-value">10⁹</span><span class="scale-meaning">ocean — billion, named for what contains all rivers</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Madhya</span><span class="scale-value">10¹⁰</span><span class="scale-meaning">middle — ten billion</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Anta</span><span class="scale-value">10¹¹</span><span class="scale-meaning">end — hundred billion</span></div>
+      <div class="scale-row"><span class="scale-sanskrit">Parardha</span><span class="scale-value">10¹² = 1,000,000,000,000</span><span class="scale-meaning">the far half — the limit of the nameable · F</span></div>
+    </div>
+
+    <p><em>Parardha</em> means "the far half" — the other half of infinity, the part that is named so that the nameless part beyond it can be gestured at. The word itself knows it is a limit. It names its own incompleteness. This is Gödel's G written in Sanskrit, one thousand years before Euclid.</p>
+  </section>
+
+  <!-- 8.5 JAIN MATHEMATICS -->
+  <section class="section" id="8-5">
+    <div class="section-number">Section 8.5 · Jain Mathematics</div>
+    <h3>Three Orders of Infinity: The Oldest Formal Classification</h3>
+
+    <p>Jain philosophy, developing from approximately the 6th century BCE onward, produced the most sophisticated pre-modern classification of infinity. Jain thinkers divided quantity into three orders — not just "finite" and "infinite," but a structured hierarchy that anticipated Cantor's transfinite numbers by two millennia.</p>
+
+    <div class="jain-panel">
+      <div class="jain-card active" onclick="showJain(0)" id="jain-0">
+        <div class="jain-name">Enumerable</div>
+        <div class="jain-sanskrit">Sankhya</div>
+        <div class="jain-desc">Quantities that can in principle be counted — finite, but possibly very large. Three sub-types: lowest (jaghanya), intermediate (madhyama), highest (utkrishta).</div>
+      </div>
+      <div class="jain-card" onclick="showJain(1)" id="jain-1">
+        <div class="jain-name">Innumerable</div>
+        <div class="jain-sanskrit">Asankhya</div>
+        <div class="jain-desc">Beyond counting but not truly infinite — larger than any nameable finite number. Three sub-types including "nearly infinite" (asankhyata-asankhya).</div>
+      </div>
+      <div class="jain-card" onclick="showJain(2)" id="jain-2">
+        <div class="jain-name">Infinite</div>
+        <div class="jain-sanskrit">Ananta</div>
+        <div class="jain-desc">Truly boundless — itself divided into five types including "infinite in one direction," "infinite in area," "infinite everywhere," and "eternal infinite."</div>
+      </div>
+    </div>
+    <canvas id="jainCanvas" width="580" height="220" style="max-width:100%"></canvas>
+    <div class="machine-label" id="jainLabel">Sankhya · Enumerable · finite quantities, however large · the domain of counting</div>
+
+    <p>The Jain category of <em>ananta</em> (infinite) was itself divided into five sub-types, including distinctions between what we would now recognise as: the countable infinite (ℵ₀ in Cantor's notation), the uncountable infinite (the cardinality of the continuum), and what the Jains called <em>anantananta</em> — the infinite of infinities. Cantor formalised this in 1874 as the aleph hierarchy: ℵ₀, ℵ₁, ℵ₂, …. The Jain thinkers had the structure. They lacked only the notation.</p>
+
+    <p>This is the pattern that runs through this entire chapter: the structure precedes the notation. The mountain was understood before the triangle was named. The serpent was drawn before the fixed-point theorem was proved. The infinite was classified before the symbol <span id="egg" onclick="window.location='ch8-axiomatic.html'" style="cursor:none!important;user-select:none;color:inherit;text-decoration:none;">∞</span> was invented (John Wallis, 1655). The intuition is older than the language. The operator is older than its name.</p>
+  </section>
+
+  <!-- 8.6 THE ISHA UPANISHAD -->
+  <section class="section" id="8-6">
+    <div class="section-number">Section 8.6 · The Isha Upanishad</div>
+    <h3>The Oldest Statement About Infinite Sets</h3>
+
+    <p>The Isha Upanishad is one of the shortest and most celebrated of the Upanishads — eighteen verses, composed approximately 700 BCE. Its opening verse is the following:</p>
+
+    <div class="upanishad-block">
+      <div class="upanishad-sanskrit">
+        ॐ पूर्णमदः पूर्णमिदम्<br>
+        पूर्णात् पूर्णमुदच्यते ।<br>
+        पूर्णस्य पूर्णमादाय<br>
+        पूर्णमेवावशिष्यते ॥
+      </div>
+      <div class="upanishad-trans">
+        That is full (pūrṇam). This is full.<br>
+        From fullness, fullness proceeds.<br>
+        Taking fullness from fullness,<br>
+        fullness alone remains.
+      </div>
+      <div class="upanishad-source">Isha Upanishad · Śukla Yajurveda · c. 700 BCE</div>
+    </div>
+
+    <p>This verse is not a poem about abundance. It is a precise statement about a property of infinite sets: that an infinite set, unlike a finite set, does not become smaller when you remove elements from it. Remove all even numbers from the natural numbers — infinitely many elements — and infinitely many remain. Remove all natural numbers from the integers — infinitely many in both directions — and infinitely many remain on the positive side. The set is <em>pūrṇa</em> — complete, whole, full — before and after the removal.</p>
+
+    <p>Cantor's formal statement of this property came in 1874: an infinite set has a proper subset of the same cardinality as itself. This was so counterintuitive to the 19th-century mathematical establishment that it was called paradoxical, heretical, a "disease." David Hilbert called it "Cantor's paradise" — a place no one wanted to enter. But the Isha Upanishad had been recited every morning in Sanskrit households for 2,600 years before Cantor's paper was published. The understanding was already there. What was missing was the notation, the formalism, the proof.</p>
+
+    <div class="theorem">
+      <div class="theorem-label">The Pūrṇa Theorem (Cantor 1874 · Isha Upanishad c.700 BCE)</div>
+      <div class="theorem-body">
+        An infinite set S has the property that S ≅ S \ F for any finite subset F — removing finitely many elements from an infinite set leaves a set of the same cardinality. More strongly: S ≅ S \ S′ for any proper subset S′ of lesser cardinality. <em>Pūrṇam evāvaśiṣyate.</em> Fullness alone remains. The dm³ operator U applied to an infinite set returns the set itself unchanged — infinity is the fixed point of the unification operator.
+      </div>
+    </div>
+  </section>
+
+  <!-- 8.7 ARCHIMEDES -->
+  <section class="section" id="8-7">
+    <div class="section-number">Section 8.7 · Archimedes and the Sand</div>
+    <h3>Reaching for a Number That Did Not Yet Exist</h3>
+
+    <p>In 250 BCE, Archimedes of Syracuse wrote a letter to King Gelon of Syracuse. The letter was called the <em>Psammites</em> — the Sand Reckoner. Its purpose: to calculate the number of grains of sand that would fill the universe.</p>
+
+    <p>This was not an idle exercise. Archimedes was responding to a common Greek assumption that some quantities were simply "innumerable" — too large to be spoken of precisely. He disagreed. He believed that any finite quantity, however large, could be expressed, compared, and reasoned about. To prove it, he needed a number system that could reach further than any existing notation allowed. So he invented one.</p>
+
+    <p>He defined <em>myriad</em> (10,000) as the base unit. He raised it to successive powers — a myriad myriads (10⁸), a myriad of myriad myriads (10¹⁶) — and kept going, building what we would now recognise as a positional number system with base 10⁸. He estimated the diameter of the universe using Aristarchus's heliocentric model (the largest available). He computed that the universe could contain at most 10⁶³ grains of sand.</p>
+
+    <p>Archimedes did not have positional notation. He did not have the numeral zero. He had Greek letter-numerals, which are non-positional — each letter represents a specific quantity, and there is no place value. To write large numbers, you either need many letters or you need to invent a meta-system above the notation. He invented the meta-system.</p>
+
+    <blockquote>
+      I will try to show you, by means of geometrical proofs which you will be able to follow, that, of the numbers named by me and given in the work which I sent to Zeuxippus, some exceed not only the number of the mass of sand equal in magnitude to the earth — but also that of the mass equal in magnitude to the universe.
+      <cite>— Archimedes, The Sand Reckoner, c. 250 BCE</cite>
+    </blockquote>
+
+    <p>What Archimedes was doing — without the language for it — was building an exponentiation tower. 10⁸ raised to 10⁸ raised to 10⁸. The notation did not exist. The concept did. He reached it by analogy, by geometry, by the pure force of intellect pressing against the boundary of the nameable. This is the C operator in its most heroic form: making contact with a concept that exceeds the available language, and dragging it into legibility by any means necessary.</p>
+  </section>
+
+  <!-- 8.8 THE DM3 READING -->
+  <section class="section" id="8-8">
+    <div class="section-number">Section 8.8 · The dm³ Reading</div>
+    <h3>Mount Meru and the Ouroboros as Operator Diagrams</h3>
+
+    <p>Every major symbol in this chapter is a dm³ diagram in disguise.</p>
+
+    <p><strong>Mount Meru</strong> is the F operator made visible. The fixed point of the universe — the still axis around which everything turns — depicted as a mountain because mountains are the most stable things that ancient people knew. The Meru Prastara (Pascal's Triangle) is F applied to counting: each number is the fixed point of the two numbers above it, their sum, the point where two trajectories meet and stabilise. The mountain grows downward, each row the fixed-point reconciliation of the row above.</p>
+
+    <p><strong>The Ouroboros</strong> is the U→C transition made visible. The serpent completes its consumption (U: unification of self and consumed) and begins again from the same point (C: new contact with the substrate). It is the diagram of iteration — the operator applied to its own output — and its circular form is the visual proof that this iteration converges: the snake found the right angle, the right curvature, the right bite-point. It is a fixed point drawn as a body.</p>
+
+    <p><strong>The Vedic number sequence</strong> ending in <em>parardha</em> is the K operator: the orbit of the counting mind, extending as far as language allows and then gesturing at the beyond. The word <em>parardha</em> — the far half — is the K operator naming its own boundary. It goes as far as conjugate pairs go, then stops, because U has not yet been reached. The infinite is named not by crossing the boundary but by standing at it and acknowledging the other side.</p>
+
+    <p><strong>The Jain three-fold infinity</strong> (sankhya / asankhya / ananta) is the full dm³ chain applied to quantity itself. Sankhya is C — the enumerable, the finite, the world of contact and counting. Asankhya is K — the innumerable, beyond finite naming but still structured, still orbit-like. Ananta is F — the true infinite, the fixed point of the limiting process, the quantity that does not change when you add to it or remove from it.</p>
+
+    <p><strong>The Isha Upanishad</strong> is U: the recognition that fullness added to fullness remains fullness, that the operator of unification applied to the infinite returns the infinite unchanged. <em>Pūrṇameva avaśiṣyate.</em> Fullness alone remains. This is U at infinite scale: when you unify infinity with infinity, you do not get two infinities. You get one. The U operator at infinity is the fixed point. The Upanishad knew this 2,600 years before Cantor proved it.</p>
+
+    <div class="machine">
+      <div class="machine-title">dm³ Operator Reading · Ancient Symbol Decoder</div>
+      <canvas id="decoderCanvas" width="600" height="300" style="max-width:100%"></canvas>
+      <div class="btn-row">
+        <button class="btn active" onclick="showDecoder('meru')">Mount Meru = F</button>
+        <button class="btn" onclick="showDecoder('ouro')">Ouroboros = U→C</button>
+        <button class="btn" onclick="showDecoder('vedic')">Parardha = K boundary</button>
+        <button class="btn" onclick="showDecoder('jain')">Jain infinity = full chain</button>
+        <button class="btn" onclick="showDecoder('isha')">Isha Upanishad = U at ∞</button>
+      </div>
+      <div class="machine-label" id="decoderLabel">Mount Meru · F operator · the fixed point of the cosmic operator · the still centre</div>
+    </div>
+  </section>
+
+  <!-- 8.9 BRIDGE -->
+  <section class="section" id="8-9">
+    <div class="section-number">Section 8.9 · Bridge</div>
+    <h3>What Zero Made Possible — and What It Closed</h3>
+
+    <p>The Hindu-Arabic numeral system — with its placeholder zero and positional notation — was one of the most consequential intellectual inventions in human history. It made arithmetic tractable: calculation that required an abacus or a counting board could now be done on paper. It made algebra possible: the placeholder could be treated as a variable, and the variable could be manipulated symbolically. It made the scientific revolution possible: Newton's calculus required a language in which infinitesimals could be written and manipulated.</p>
+
+    <p>But something also closed. The infinite, which the ancient traditions had held as a living philosophical and mathematical concept, became dangerous. The Greeks had called it <em>apeiron</em> — the boundless, the formless, the predecessor of all defined things. Anaximander made it the first principle of the universe in the 6th century BCE. But the Greek mathematical tradition, built around geometry and proof, had no way to operate on the infinite without paradox. Zeno's paradoxes — Achilles and the tortoise, the flying arrow — were not puzzles. They were warnings: the infinite resists the finite tools built to contain it.</p>
+
+    <p>Medieval European mathematics, inheriting both the Greek geometric tradition and the Hindu-Arabic arithmetic system, largely avoided the infinite. It was God's domain. Cantor's revolution was not mathematical — it was ontological. He insisted that the infinite was a mathematical domain, not a theological one, and that it obeyed laws that could be discovered, proved, and mapped. For this he was denounced as a corrupter of youth. The establishment called his work a "grave disease infecting mathematics."</p>
+
+    <p>The ancient traditions had no such anxiety. The infinite was simply part of the landscape — the mountain at the centre, the serpent around the edge, the fullness that remains when fullness is taken from fullness. They did not need to prove it. They lived inside it.</p>
+
+    <p>What this chapter argues is not that the ancients were better mathematicians than Cantor. It argues that intuition and formalism are two instruments measuring the same reality — and that the history of mathematics is the slow, difficult, sometimes violent process of making the intuition rigorous without losing the living contact with what the intuition was pointing at.</p>
+
+    <p>The mountain was always there. The serpent was always eating its tail. The fullness was always remaining. What changed, over three thousand years, was the notation — the language in which these structures could be made precise enough to build on, to transmit to machines, to verify in Lean 4. The dm³ system is that notation, applied to the oldest problems the human mind has faced.</p>
+
+    <p><strong>Task — Generate:</strong> Identify one concept from your own field of work or study — not mathematics, anything — that you have always understood intuitively but have never been able to make precise. Name the intuition. Then name what notation, what language, what formal system, would be needed to make it precise. The gap between those two names is the location of your next dm³ cycle.</p>
+
+    <p><strong>Task — Extend:</strong> The Isha Upanishad says: from fullness, fullness proceeds. The Cantor diagonal argument says: no list of real numbers can be complete. Are these the same statement? Write three sentences. There is no correct answer, but there is a productive direction.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="nav-links">
+    <a href="ch7-crystalline.html">← Chapter 7 · The Crystalline Return</a>
+    <a href="https://www.ebay.com/itm/336530438926" target="_blank">Purchase the Full Book ↗</a>
+    <a href="newark-wellness.html">Newark Wellness Center</a>
+  </div>
+  <div>Principia Orthogona Series · G6 LLC · Newark NJ</div>
+  <div>ISBN 979-8-9954416-1-8 · pablogrossi@hotmail.com</div>
+  <div class="series-mark">© 2026 Pablo Nogueira Grossi · Sri Brodananda · All rights reserved · This chapter is free to read and share</div>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────
+// HERO — Large Snake + Snakeskin Background
+// ─────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('heroCanvas');
+  const ctx=c.getContext('2d');
+  function resize(){c.width=c.offsetWidth;c.height=c.offsetHeight;}
+  resize(); window.addEventListener('resize',resize);
+  let t=0;
+
+  // Snakeskin scale tile — hexagonal/diamond pattern
+  function drawSnakeskin(W,H,phase){
+    const sw=38, sh=22; // scale width/height
+    for(let row=-1;row<Math.ceil(H/sh)+2;row++){
+      for(let col=-1;col<Math.ceil(W/sw)+2;col++){
+        const ox=(row%2)*sw*0.5;
+        const x=col*sw+ox, y=row*sh;
+        const dist=Math.sqrt((x-W/2)**2+(y-H/2)**2);
+        const pulse=Math.sin(dist*0.018-phase*0.4)*0.5+0.5;
+        const alpha=0.03+pulse*0.06;
+        // Diamond/scale shape
+        ctx.beginPath();
+        ctx.moveTo(x+sw*0.5, y);
+        ctx.lineTo(x+sw,     y+sh*0.5);
+        ctx.lineTo(x+sw*0.5, y+sh);
+        ctx.lineTo(x,        y+sh*0.5);
+        ctx.closePath();
+        ctx.fillStyle=`rgba(${40+Math.floor(pulse*30)},${55+Math.floor(pulse*20)},${20+Math.floor(pulse*15)},${alpha})`;
+        ctx.fill();
+        ctx.strokeStyle=`rgba(201,168,76,${alpha*0.6})`;
+        ctx.lineWidth=0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Giant coiled snake body
+  function drawSnake(W,H,T){
+    const cx=W/2, cy=H/2+60;
+    const coils=3.5;
+    const N=400;
+    const maxR=Math.min(W,H)*0.46;
+
+    // Shadow/glow first
+    ctx.save();
+    for(let i=0;i<N;i++){
+      const frac=i/N;
+      const angle=frac*Math.PI*2*coils - Math.PI/2;
+      const r=maxR*(0.08+0.92*frac);
+      const bodyW=maxR*0.13*(1-frac*0.5)+8;
+      const x=cx+r*Math.cos(angle);
+      const y=cy+r*Math.sin(angle)*0.55;
+      ctx.beginPath();
+      ctx.arc(x,y,bodyW*1.3,0,Math.PI*2);
+      ctx.fillStyle='rgba(0,12,4,0.08)';
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // Scale pattern along body
+    for(let i=0;i<N;i++){
+      const frac=i/N;
+      const angle=frac*Math.PI*2*coils - Math.PI/2;
+      const r=maxR*(0.08+0.92*frac);
+      const bodyW=maxR*0.13*(1-frac*0.5)+8;
+      const x=cx+r*Math.cos(angle);
+      const y=cy+r*Math.sin(angle)*0.55;
+      // Body segment
+      const scaleColor=Math.sin(frac*12+T*0.2)*0.5+0.5;
+      const g=ctx.createRadialGradient(x,y,0,x,y,bodyW);
+      g.addColorStop(0,`rgba(${Math.floor(30+scaleColor*40)},${Math.floor(60+scaleColor*30)},${Math.floor(20+scaleColor*20)},0.82)`);
+      g.addColorStop(0.6,`rgba(${Math.floor(15+scaleColor*25)},${Math.floor(35+scaleColor*20)},${Math.floor(10+scaleColor*10)},0.7)`);
+      g.addColorStop(1,'rgba(5,10,2,0)');
+      ctx.beginPath();
+      ctx.arc(x,y,bodyW,0,Math.PI*2);
+      ctx.fillStyle=g;
+      ctx.fill();
+      // Scale diamonds along spine
+      if(i%6===0){
+        ctx.beginPath();
+        ctx.arc(x,y,bodyW*0.32,0,Math.PI*2);
+        ctx.fillStyle=`rgba(201,168,76,${0.08+scaleColor*0.14})`;
+        ctx.fill();
+      }
+      // Dorsal ridge
+      if(i%3===0){
+        ctx.beginPath();
+        ctx.arc(x,y,bodyW*0.12,0,Math.PI*2);
+        ctx.fillStyle=`rgba(232,201,106,${0.06+scaleColor*0.1})`;
+        ctx.fill();
+      }
+    }
+
+    // Head — at the outer end of the coil
+    const headFrac=0.998;
+    const headAngle=headFrac*Math.PI*2*coils - Math.PI/2 + T*0.15;
+    const headR=maxR*(0.08+0.92*headFrac);
+    const hx=cx+headR*Math.cos(headAngle);
+    const hy=cy+headR*Math.sin(headAngle)*0.55;
+    const headW=maxR*0.15;
+
+    // Head glow
+    const hg=ctx.createRadialGradient(hx,hy,4,hx,hy,headW*1.8);
+    hg.addColorStop(0,'rgba(82,183,136,0.12)');
+    hg.addColorStop(1,'rgba(82,183,136,0)');
+    ctx.beginPath();ctx.arc(hx,hy,headW*1.8,0,Math.PI*2);
+    ctx.fillStyle=hg;ctx.fill();
+
+    // Head shape
+    ctx.beginPath();
+    ctx.ellipse(hx,hy,headW,headW*0.7,headAngle,0,Math.PI*2);
+    const hfill=ctx.createRadialGradient(hx,hy,2,hx,hy,headW);
+    hfill.addColorStop(0,'rgba(55,90,35,0.9)');
+    hfill.addColorStop(0.7,'rgba(30,55,18,0.85)');
+    hfill.addColorStop(1,'rgba(10,20,5,0.5)');
+    ctx.fillStyle=hfill;ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.35)';ctx.lineWidth=1;ctx.stroke();
+
+    // Eyes
+    const eyeOff=headW*0.4;
+    [-1,1].forEach(side=>{
+      const ex=hx+eyeOff*Math.cos(headAngle+side*Math.PI/3);
+      const ey=hy+eyeOff*Math.sin(headAngle+side*Math.PI/3)*0.6;
+      // Eye glow
+      ctx.beginPath();ctx.arc(ex,ey,6,0,Math.PI*2);
+      ctx.fillStyle='rgba(232,201,106,0.4)';ctx.fill();
+      ctx.beginPath();ctx.arc(ex,ey,4,0,Math.PI*2);
+      ctx.fillStyle='rgba(10,14,26,0.95)';ctx.fill();
+      // Slit pupil
+      ctx.beginPath();
+      ctx.ellipse(ex,ey,1.2,3.5,headAngle+Math.PI/2,0,Math.PI*2);
+      ctx.fillStyle='rgba(232,201,106,0.9)';ctx.fill();
+    });
+
+    // Forked tongue
+    const tongueA=headAngle;
+    const tx=hx+headW*1.1*Math.cos(tongueA);
+    const ty=hy+headW*1.1*Math.sin(tongueA)*0.6;
+    const tLen=headW*0.55;
+    ctx.strokeStyle='rgba(200,60,60,0.7)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(hx+headW*0.8*Math.cos(tongueA),hy+headW*0.8*Math.sin(tongueA)*0.6);ctx.lineTo(tx,ty);ctx.stroke();
+    [-1,1].forEach(fork=>{
+      ctx.beginPath();ctx.moveTo(tx,ty);
+      ctx.lineTo(tx+tLen*Math.cos(tongueA+fork*0.4),ty+tLen*Math.sin(tongueA+fork*0.4)*0.6);
+      ctx.stroke();
+    });
+
+    // Tail — inner coil tip, fading
+    const tailFrac=0.01;
+    const tailAngle=tailFrac*Math.PI*2*coils - Math.PI/2;
+    const tailR=maxR*(0.08+0.92*tailFrac);
+    const tailX=cx+tailR*Math.cos(tailAngle);
+    const tailY=cy+tailR*Math.sin(tailAngle)*0.55;
+    const tailGrad=ctx.createRadialGradient(tailX,tailY,0,tailX,tailY,12);
+    tailGrad.addColorStop(0,'rgba(25,50,15,0.5)');tailGrad.addColorStop(1,'rgba(25,50,15,0)');
+    ctx.beginPath();ctx.arc(tailX,tailY,12,0,Math.PI*2);ctx.fillStyle=tailGrad;ctx.fill();
+  }
+
+  // Floating Sanskrit glyphs
+  const glyphs=Array.from({length:18},()=>({
+    x:Math.random(),y:Math.random(),
+    vx:(Math.random()-0.5)*0.00025,vy:(Math.random()-0.5)*0.00025,
+    sym:['ॐ','∞','△','○','⊕','Ω','∂','ℵ'][Math.floor(Math.random()*8)],
+    a:0.04+Math.random()*0.1,s:12+Math.random()*16
+  }));
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    // Snakeskin texture
+    drawSnakeskin(c.width,c.height,t);
+    // Large coiled snake
+    drawSnake(c.width,c.height,t);
+    // Floating glyphs
+    glyphs.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=1;if(p.x>1)p.x=0;if(p.y<0)p.y=1;if(p.y>1)p.y=0;
+      ctx.fillStyle=`rgba(201,168,76,${p.a})`;
+      ctx.font=`${p.s}px Cormorant Garamond,serif`;ctx.textAlign='center';
+      ctx.fillText(p.sym,p.x*c.width,p.y*c.height);
+    });
+    t+=0.008;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─────────────────────────────────────────────
+// MERU PRASTARA
+// ─────────────────────────────────────────────
+let meruMode='plain';
+const ROWS=9;
+let meruData=[];
+function buildMeru(){
+  meruData=[];
+  for(let r=0;r<ROWS;r++){
+    const row=[];
+    for(let c=0;c<=r;c++){
+      if(c===0||c===r) row.push(1);
+      else row.push(meruData[r-1][c-1]+meruData[r-1][c]);
+    }
+    meruData.push(row);
+  }
+}
+buildMeru();
+
+function fibDiagonals(){
+  const fibs=new Set();
+  for(let d=0;d<ROWS+5;d++){
+    let r=d,c=0,sum=0;
+    while(r<ROWS&&c>=0){fibs.add(`${r},${c}`);sum+=meruData[r][c];r++;c--;}
+  }
+  return fibs;
+}
+
+function drawMeru(){
+  const grid=document.getElementById('meruGrid');
+  grid.innerHTML='';
+  const fibs=meruMode==='fibonacci'?fibDiagonals():new Set();
+  meruData.forEach((row,ri)=>{
+    const div=document.createElement('div');
+    div.className='meru-row';
+    row.forEach((val,ci)=>{
+      const cell=document.createElement('div');
+      cell.className='meru-cell';
+      const isEdge=ci===0||ci===ri;
+      const isFib=fibs.has(`${ri},${ci}`);
+      const isOdd=val%2!==0;
+      if(meruMode==='fibonacci'&&isFib) cell.classList.add('fib');
+      else if(meruMode==='odd'&&!isOdd) cell.style.opacity='0.08';
+      else if(meruMode==='powers2'&&isEdge) cell.classList.add('edge');
+      else cell.classList.add('lit');
+      cell.textContent=val>9999?'…':val;
+      div.appendChild(cell);
+    });
+    grid.appendChild(div);
+  });
+}
+function setMeruMode(m){
+  meruMode=m;
+  document.querySelectorAll('#meruGrid ~ .btn-row .btn').forEach((b,i)=>b.classList.toggle('active',['plain','fibonacci','powers2','odd'][i]===m));
+  const labels={plain:'Meru Prastara · each cell = sum of two above · Pingala c.200 BCE',fibonacci:'Diagonal sums: 1,1,2,3,5,8,13… · the Fibonacci sequence hidden in the mountain',powers2:'Row sums: 1,2,4,8,16,32… · every row doubles · powers of 2',odd:'Odd cells only → Sierpiński triangle · fractal self-similarity · 1915 named, ancient origin'};
+  document.getElementById('meruLabel').textContent=labels[m];
+  drawMeru();
+}
+drawMeru();
+
+// ─────────────────────────────────────────────
+// OUROBOROS
+// ─────────────────────────────────────────────
+let ouroMode='classic', ouroT=0;
+const ouroCanvas=document.getElementById('ouroCanvas');
+const ouroCtx=ouroCanvas.getContext('2d');
+const ouroLabels={classic:'The serpent eating its tail · self-reference · Egypt c.1600 BCE · the oldest loop',operator:'C → K → F → U → C · the operator chain is the Ouroboros · each U feeds the next C',infinity:'f(f(f(…))) · the self-applied function · convergence to fixed point = the bite-point',godel:'"I am not provable" · Gödel\'s G · the statement that eats its own truth-value'};
+function setOuroMode(m){
+  ouroMode=m;
+  document.querySelectorAll('#ouroCanvas ~ .btn-row .btn').forEach((b,i)=>b.classList.toggle('active',['classic','operator','infinity','godel'][i]===m));
+  document.getElementById('ouroLabel').textContent=ouroLabels[m];
+}
+function drawOuro(){
+  const W=ouroCanvas.width,H=ouroCanvas.height,cx=W/2,cy=H/2;
+  ouroCtx.clearRect(0,0,W,H);
+  ouroCtx.fillStyle='rgba(17,24,39,0.95)';ouroCtx.fillRect(0,0,W,H);
+  const R=160, thick=28;
+  // Body segments
+  const N=120;
+  for(let i=0;i<N;i++){
+    const a=(i/N)*Math.PI*2+ouroT*0.3;
+    const scaleHue=i/N;
+    const r2=R+(Math.sin(i*0.3+ouroT)*4);
+    const x=cx+r2*Math.cos(a),y=cy+r2*Math.sin(a);
+    const sw=thick*(0.6+0.4*scaleHue)*(1-0.3*(i/N>0.85?1:0));
+    ouroCtx.beginPath();
+    ouroCtx.arc(x,y,sw/2,0,Math.PI*2);
+    const alpha=0.3+0.5*scaleHue;
+    const col=ouroMode==='operator'?`rgba(201,168,76,${alpha})`:ouroMode==='infinity'?`rgba(96,160,255,${alpha})`:ouroMode==='godel'?`rgba(255,80,80,${alpha})`:`rgba(${Math.floor(82+120*scaleHue)},${Math.floor(100+68*scaleHue)},${Math.floor(46+30*scaleHue)},${alpha})`;
+    ouroCtx.fillStyle=col;ouroCtx.fill();
+  }
+  // Scales pattern
+  for(let i=0;i<N;i+=3){
+    const a=(i/N)*Math.PI*2+ouroT*0.3;
+    const x=cx+R*Math.cos(a),y=cy+R*Math.sin(a);
+    ouroCtx.beginPath();ouroCtx.arc(x,y,4,0,Math.PI*2);
+    ouroCtx.fillStyle='rgba(201,168,76,0.4)';ouroCtx.fill();
+  }
+  // Head
+  const headA=ouroT*0.3;
+  const hx=cx+R*Math.cos(headA),hy=cy+R*Math.sin(headA);
+  ouroCtx.beginPath();ouroCtx.arc(hx,hy,thick*0.65,0,Math.PI*2);
+  ouroCtx.fillStyle='rgba(201,168,76,0.9)';ouroCtx.fill();
+  // Eye
+  ouroCtx.beginPath();ouroCtx.arc(hx+6*Math.cos(headA+0.5),hy+6*Math.sin(headA+0.5),4,0,Math.PI*2);
+  ouroCtx.fillStyle='rgba(10,14,26,0.95)';ouroCtx.fill();
+  ouroCtx.beginPath();ouroCtx.arc(hx+6*Math.cos(headA+0.5),hy+6*Math.sin(headA+0.5),2,0,Math.PI*2);
+  ouroCtx.fillStyle='rgba(232,201,106,0.9)';ouroCtx.fill();
+  // Mode label inside ring
+  ouroCtx.fillStyle='rgba(201,168,76,0.7)';ouroCtx.font='13px Cormorant Garamond,serif';ouroCtx.textAlign='center';
+  const inner={classic:'c.1600 BCE',operator:'C→K→F→U',infinity:'f∘f∘f∘…',godel:'G = ¬Prov(G)'};
+  ouroCtx.fillText(inner[ouroMode],cx,cy-8);
+  const inner2={classic:'Egypt · self-reference',operator:'the operator chain',infinity:'iteration · fixed point',godel:'Gödel · 1931'};
+  ouroCtx.fillStyle='rgba(201,168,76,0.4)';ouroCtx.font='11px Cormorant Garamond,serif';
+  ouroCtx.fillText(inner2[ouroMode],cx,cy+12);
+  // Operator labels
+  if(ouroMode==='operator'){
+    ['C','K','F','U'].forEach((op,i)=>{
+      const a=i*Math.PI/2+ouroT*0.3;
+      const x=cx+(R+50)*Math.cos(a),y=cy+(R+50)*Math.sin(a);
+      ouroCtx.fillStyle='rgba(232,201,106,0.8)';ouroCtx.font='bold 16px Cormorant Garamond,serif';
+      ouroCtx.fillText(op,x,y+5);
+    });
+  }
+  ouroT+=0.008;requestAnimationFrame(drawOuro);
+}
+drawOuro();
+
+// ─────────────────────────────────────────────
+// SCALE CANVAS
+// ─────────────────────────────────────────────
+let scaleMode='vedic';
+const scaleCanvas=document.getElementById('scaleCanvas');
+const scaleCtx=scaleCanvas.getContext('2d');
+const scaleData={
+  vedic:[{n:'Eka',e:0},{n:'Dasha',e:1},{n:'Shata',e:2},{n:'Sahasra',e:3},{n:'Ayuta',e:4},{n:'Niyuta',e:5},{n:'Prayuta',e:6},{n:'Arbuda',e:7},{n:'Nyarbuda',e:8},{n:'Samudra',e:9},{n:'Madhya',e:10},{n:'Anta',e:11},{n:'Parardha',e:12}],
+  jain:[{n:'Jaghanya Sankhya',e:1},{n:'Madhyama Sankhya',e:6},{n:'Utkrishta Sankhya',e:15},{n:'Jaghanya Asankhya',e:20},{n:'Madhyama Asankhya',e:40},{n:'Asankhyata-asankhya',e:60},{n:'Jaghanya Ananta',e:80},{n:'Madhyama Ananta',e:120},{n:'Anantananta',e:180}],
+  archimedes:[{n:'Myriad',e:4},{n:'Myriad²',e:8},{n:'Myriad⁴',e:16},{n:'Myriad⁸',e:32},{n:'Sand in Earth',e:51},{n:'Sand in Universe',e:63},{n:'Archimedes max',e:80000}],
+  cantor:[{n:'ℵ₀ (countable ∞)',e:Infinity},{n:'ℵ₁ (continuum)',e:Infinity},{n:'ℵ₂',e:Infinity},{n:'ℵ_ω',e:Infinity},{n:'Beth numbers',e:Infinity},{n:'Inaccessible cardinals',e:Infinity}]
+};
+const scaleLabels={vedic:'Vedic Sanskrit number names · reaching to 10¹² before positional notation existed',jain:'Jain cosmological quantities · three orders of infinity · sankhya / asankhya / ananta',archimedes:'Archimedes · Sand Reckoner · c.250 BCE · inventing exponentiation to name the unnameable',cantor:'Cantor\'s Aleph hierarchy · 1874 · formalising what the ancients intuited'};
+function setScaleMode(m){
+  scaleMode=m;
+  document.querySelectorAll('#scaleCanvas ~ .btn-row .btn').forEach((b,i)=>b.classList.toggle('active',['vedic','jain','archimedes','cantor'][i]===m));
+  document.getElementById('scaleLabel').textContent=scaleLabels[m];
+  drawScale();
+}
+function drawScale(){
+  const W=scaleCanvas.width,H=scaleCanvas.height;
+  scaleCtx.clearRect(0,0,W,H);
+  scaleCtx.fillStyle='rgba(17,24,39,0.95)';scaleCtx.fillRect(0,0,W,H);
+  const data=scaleData[scaleMode];
+  const maxE=scaleMode==='cantor'?10:Math.max(...data.map(d=>Math.min(d.e,200)));
+  const pad={t:20,b:40,l:140,r:20};
+  const bh=Math.floor((H-pad.t-pad.b)/data.length)-3;
+  data.forEach((d,i)=>{
+    const y=pad.t+i*(bh+3);
+    const bw=scaleMode==='cantor'?W-pad.l-pad.r-20:(d.e/maxE)*(W-pad.l-pad.r-20);
+    const alpha=0.3+0.7*(i/data.length);
+    scaleCtx.fillStyle=`rgba(201,168,76,${alpha*0.3})`;scaleCtx.fillRect(pad.l,y,bw,bh);
+    scaleCtx.strokeStyle=`rgba(201,168,76,${alpha*0.8})`;scaleCtx.lineWidth=1;scaleCtx.strokeRect(pad.l,y,bw,bh);
+    scaleCtx.fillStyle=`rgba(201,168,76,0.9)`;scaleCtx.font='11px Cormorant Garamond,serif';scaleCtx.textAlign='right';
+    scaleCtx.fillText(d.n,pad.l-6,y+bh*0.72);
+    if(scaleMode!=='cantor'){
+      scaleCtx.fillStyle='rgba(201,168,76,0.5)';scaleCtx.textAlign='left';scaleCtx.font='10px monospace';
+      scaleCtx.fillText(d.e<1000?`10^${d.e}`:'→∞',pad.l+bw+4,y+bh*0.72);
+    } else {
+      scaleCtx.fillStyle='rgba(232,201,106,0.7)';scaleCtx.textAlign='center';scaleCtx.font='12px Cormorant Garamond,serif';
+      scaleCtx.fillText('∞',pad.l+bw/2,y+bh*0.72);
+    }
+  });
+  // Axis label
+  scaleCtx.fillStyle='rgba(201,168,76,0.4)';scaleCtx.font='10px Cormorant Garamond,serif';scaleCtx.textAlign='center';
+  scaleCtx.fillText(scaleMode==='cantor'?'all equally infinite — but not equal':scaleMode==='archimedes'?'exponent (powers of 10)':'power of 10 →',W/2,H-8);
+}
+drawScale();
+
+// ─────────────────────────────────────────────
+// JAIN CANVAS
+// ─────────────────────────────────────────────
+let jainMode=0;
+const jainCanvas=document.getElementById('jainCanvas');
+const jainCtx=jainCanvas.getContext('2d');
+const jainDescs=['Enumerable (Sankhya): finite quantities. However large, they can in principle be counted. The domain of arithmetic, of markets, of stars as the naked eye sees them. Three sub-types: lowest (a few), intermediate (millions), highest (approaching 10⁶⁰). These correspond to the natural numbers ℕ.','Innumerable (Asankhya): beyond any finite count, but not truly boundless. Like the number of points on a line segment — more than any natural number, but contained within boundaries. Three sub-types approaching what Cantor would call ℵ₀: the first transfinite cardinal, the infinity of the natural numbers themselves.','Infinite (Ananta): truly without bound. Itself divided into five types: one-directional (the positive integers, unbounded in one direction), infinite in two directions (all integers), infinite in area (the plane), infinite everywhere (all of space), and anantananta — the infinite of infinities, the class of all infinities — what Cantor would later call the absolute infinite, the Ω that cannot be a set.'];
+function showJain(i){
+  jainMode=i;
+  document.querySelectorAll('.jain-card').forEach((c,j)=>c.classList.toggle('active',j===i));
+  const lbl=['Sankhya · Enumerable · finite quantities, however large · the domain of counting','Asankhya · Innumerable · beyond counting · structure without name · ≅ ℵ₀','Ananta · Infinite · five sub-types · anantananta = the infinite of infinities · ≅ absolute ∞'];
+  document.getElementById('jainLabel').textContent=lbl[i];
+  drawJain(i);
+}
+function drawJain(mode){
+  const W=jainCanvas.width,H=jainCanvas.height;
+  jainCtx.clearRect(0,0,W,H);
+  jainCtx.fillStyle='rgba(17,24,39,0.95)';jainCtx.fillRect(0,0,W,H);
+  // Three nested regions
+  const regions=[{label:'Sankhya',col:'rgba(201,168,76',r:60},{label:'Asankhya',col:'rgba(96,160,255',r:100},{label:'Ananta',col:'rgba(82,183,136',r:140}];
+  const cx=W*0.28,cy=H/2;
+  regions.slice().reverse().forEach(({label,col,r},ri)=>{
+    const idx=2-ri;
+    const alpha=idx===mode?0.2:0.07;
+    jainCtx.beginPath();jainCtx.arc(cx,cy,r,0,Math.PI*2);
+    jainCtx.fillStyle=`${col},${alpha})`;jainCtx.fill();
+    jainCtx.strokeStyle=`${col},${0.5+(idx===mode?0.4:0)})`;jainCtx.lineWidth=idx===mode?2:1;jainCtx.stroke();
+    jainCtx.fillStyle=`${col},0.8)`;jainCtx.font=`${idx===mode?'bold ':''}11px Cormorant Garamond,serif`;jainCtx.textAlign='center';
+    jainCtx.fillText(label,cx,cy-r+18);
+  });
+  // Description text
+  jainCtx.fillStyle='rgba(201,168,76,0.75)';jainCtx.font='11.5px Cormorant Garamond,serif';jainCtx.textAlign='left';
+  const words=jainDescs[mode].split(' ');
+  let line='',lines=[],maxW=W-W*0.58-20;
+  words.forEach(w=>{
+    const test=line+w+' ';
+    if(jainCtx.measureText(test).width>maxW&&line){lines.push(line);line=w+' ';}else line=test;
+  });
+  lines.push(line);
+  lines.slice(0,10).forEach((l,i)=>jainCtx.fillText(l.trim(),W*0.58,28+i*18));
+}
+drawJain(0);
+
+// ─────────────────────────────────────────────
+// DECODER MACHINE
+// ─────────────────────────────────────────────
+let decoderMode='meru';
+const decoderCanvas=document.getElementById('decoderCanvas');
+const decoderCtx=decoderCanvas.getContext('2d');
+const decoderData={
+  meru:{symbol:'△',op:'F',color:'#e8c96a',chain:[{o:'C',d:'Each number makes\ncontact with two above'},{o:'K',d:'Sum = conjugate\nof the pair'},{o:'F',d:'The triangle itself:\nfixed point of the rule'},{o:'U',d:'All combinatorics\nunified below'}]},
+  ouro:{symbol:'⊕',op:'U→C',color:'#c9a84c',chain:[{o:'U',d:'Serpent completes\nconsumption'},{o:'C',d:'Head meets tail:\nnew contact point'},{o:'K',d:'Loop orbit:\nself-similar at all scales'},{o:'F',d:'The circle:\nfixed point of iteration'}]},
+  vedic:{symbol:'∂',op:'K',color:'#8080ff',chain:[{o:'C',d:'Eka: one\nfirst contact'},{o:'K',d:'The counting orbit:\nshata, sahasra…'},{o:'F',d:'Parardha: 10¹²\nthe far half, the limit'},{o:'U?',d:'Beyond parardha:\ngesture at the infinite'}]},
+  jain:{symbol:'∞',op:'C→K→F→U',color:'#52b788',chain:[{o:'C',d:'Sankhya:\nenumerable finite'},{o:'K',d:'Asankhya:\ninnumerable orbit'},{o:'F',d:'Ananta:\nthe infinite fixed point'},{o:'U',d:'Anantananta:\ninfinite of infinities'}]},
+  isha:{symbol:'ॐ',op:'U at ∞',color:'#ff9060',chain:[{o:'C',d:'Pūrṇam: contact\nwith fullness'},{o:'K',d:'Fullness proceeds\nfrom fullness'},{o:'F',d:'Fullness remains:\nstable under removal'},{o:'U',d:'∞ ∪ ∞ = ∞:\nunification is trivial'}]}
+};
+function showDecoder(m){
+  decoderMode=m;
+  document.querySelectorAll('#decoderCanvas ~ .btn-row .btn').forEach((b,i)=>b.classList.toggle('active',['meru','ouro','vedic','jain','isha'][i]===m));
+  const lbl={meru:'Mount Meru · F operator · the fixed point of the cosmic operator · the still centre',ouro:'Ouroboros · U→C transition · self-reference · the oldest iteration diagram',vedic:'Parardha · K boundary · the conjugate orbit of counting meets its limit',jain:'Jain infinity · full dm³ chain · sankhya→asankhya→ananta = C→K→F with U beyond',isha:'Isha Upanishad · U at infinity · pūrṇam = fixed point of the unification operator'};
+  document.getElementById('decoderLabel').textContent=lbl[m];
+  drawDecoder();
+}
+function drawDecoder(){
+  const W=decoderCanvas.width,H=decoderCanvas.height;
+  decoderCtx.clearRect(0,0,W,H);
+  decoderCtx.fillStyle='rgba(17,24,39,0.95)';decoderCtx.fillRect(0,0,W,H);
+  const {symbol,op,color,chain}=decoderData[decoderMode];
+  // Symbol
+  decoderCtx.fillStyle=color;decoderCtx.font='52px Cormorant Garamond,serif';decoderCtx.textAlign='center';
+  decoderCtx.fillText(symbol,90,H/2+20);
+  // = operator
+  decoderCtx.fillStyle='rgba(201,168,76,0.5)';decoderCtx.font='24px Cormorant Garamond,serif';
+  decoderCtx.fillText('=',160,H/2+8);
+  // Chain cards
+  const cardW=(W-195)/4-8;
+  chain.forEach(({o,d},i)=>{
+    const x=195+i*(cardW+8),y=20;
+    decoderCtx.fillStyle='rgba(201,168,76,0.1)';decoderCtx.fillRect(x,y,cardW,H-40);
+    decoderCtx.strokeStyle=color;decoderCtx.lineWidth=1;decoderCtx.strokeRect(x,y,cardW,H-40);
+    decoderCtx.fillStyle=color;decoderCtx.font='bold 18px Cormorant Garamond,serif';decoderCtx.textAlign='center';
+    decoderCtx.fillText(o,x+cardW/2,y+30);
+    decoderCtx.fillStyle='rgba(201,168,76,0.7)';decoderCtx.font='10.5px Cormorant Garamond,serif';
+    d.split('\n').forEach((l,li)=>decoderCtx.fillText(l,x+cardW/2,y+56+li*16));
+  });
+}
+drawDecoder();
+</script>
+</body>
+</html>

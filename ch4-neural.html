@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 4 — Neural Oscillations | Book 3: The Mini-Beast</title>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --dark: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --text: #e8e4d8;
+    --text-dim: #9994a0;
+    --k-color: #e05a3a;   /* K operator — red-orange */
+    --c-color: #4a9eff;   /* C operator — blue */
+    --f-color: #50c878;   /* F operator — green */
+    --u-color: #c084fc;   /* U operator — violet */
+    --t-color: #f9c74f;   /* T operator — gold */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.96);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0.6rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  .nav-logo {
+    font-family: 'Georgia', serif;
+    font-size: 0.85rem; letter-spacing: 0.18em;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; font-size: 0.8rem; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .chapter-hero {
+    background: linear-gradient(160deg, #0d0d18 0%, #131320 60%, #0f0a14 100%);
+    border-bottom: 1px solid #2a2a3a;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-letter {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 22rem; font-weight: 900;
+    color: rgba(224,90,58,0.04);
+    user-select: none; pointer-events: none;
+    font-family: 'Georgia', serif; line-height: 1;
+  }
+  .chapter-tag {
+    font-size: 0.72rem; letter-spacing: 0.25em;
+    color: var(--k-color); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .chapter-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400; letter-spacing: 0.04em;
+    color: var(--text); margin-bottom: 1rem;
+    position: relative;
+  }
+  .chapter-subtitle {
+    font-size: 1.1rem; color: var(--text-dim);
+    max-width: 600px; margin: 0 auto 2rem;
+    font-style: italic;
+  }
+  .operator-chain {
+    font-family: 'Courier New', monospace;
+    font-size: 1.05rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .operator-chain .active {
+    color: var(--k-color);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: bold;
+  }
+  .chapter-meta {
+    display: flex; gap: 2rem; justify-content: center;
+    flex-wrap: wrap; margin-top: 1.5rem;
+    font-size: 0.78rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+  .meta-badge {
+    background: rgba(224,90,58,0.1);
+    border: 1px solid rgba(224,90,58,0.3);
+    padding: 0.3rem 0.9rem; border-radius: 2px;
+    color: var(--k-color);
+  }
+
+  /* CONTENT */
+  .content-wrap {
+    max-width: 780px; margin: 0 auto; padding: 3rem 2rem 4rem;
+  }
+  h2 {
+    font-size: 1.4rem; font-weight: 400;
+    color: var(--gold); margin: 3rem 0 1rem;
+    letter-spacing: 0.06em;
+  }
+  h3 {
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--text); margin: 2rem 0 0.7rem;
+  }
+  p { margin-bottom: 1.2rem; }
+
+  .gold-rule {
+    border: none; border-top: 1px solid var(--gold-dim);
+    margin: 2.5rem 0; opacity: 0.4;
+  }
+  .fleur {
+    text-align: center; color: var(--gold-dim);
+    font-size: 1.2rem; margin: 2rem 0; opacity: 0.5;
+  }
+
+  /* THEOREM BOX */
+  .theorem-box {
+    background: rgba(224,90,58,0.06);
+    border-left: 3px solid var(--k-color);
+    padding: 1.5rem 1.8rem;
+    margin: 2rem 0; border-radius: 0 4px 4px 0;
+  }
+  .theorem-label {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .theorem-body { font-style: italic; color: var(--text); }
+  .theorem-proof {
+    margin-top: 1rem; font-size: 0.9rem;
+    color: var(--text-dim); font-style: normal;
+  }
+
+  /* INSIGHT BOX */
+  .insight-box {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 4px;
+  }
+  .insight-label {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+
+  /* MATH */
+  .math-block {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem; color: var(--k-color);
+    border-radius: 4px; overflow-x: auto;
+  }
+
+  /* OPERATOR TAG */
+  .op-tag {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem; border-radius: 2px;
+    vertical-align: middle;
+  }
+  .op-k { background: rgba(224,90,58,0.15); color: var(--k-color); border: 1px solid rgba(224,90,58,0.3); }
+  .op-c { background: rgba(74,158,255,0.15); color: var(--c-color); border: 1px solid rgba(74,158,255,0.3); }
+  .op-f { background: rgba(80,200,120,0.15); color: var(--f-color); border: 1px solid rgba(80,200,120,0.3); }
+  .op-u { background: rgba(192,132,252,0.15); color: var(--u-color); border: 1px solid rgba(192,132,252,0.3); }
+
+  /* FALSIFIABILITY */
+  .falsify-box {
+    background: rgba(80,200,120,0.06);
+    border-left: 3px solid var(--f-color);
+    padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 0 4px 4px 0;
+  }
+  .falsify-label {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--f-color); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+
+  /* CIRCUIT DIAGRAM */
+  .circuit-diagram {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .circuit-title {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase;
+    margin-bottom: 1rem; text-align: center;
+  }
+  .circuit-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.5rem 1rem;
+    align-items: center;
+  }
+  .circuit-node {
+    background: var(--surface);
+    border: 1px solid #2a2a3a;
+    border-radius: 4px;
+    padding: 0.6rem 0.8rem;
+    text-align: center;
+  }
+  .node-name { font-size: 0.85rem; color: var(--text); font-weight: 600; }
+  .node-freq { font-size: 0.7rem; color: var(--text-dim); font-family: 'Courier New', monospace; }
+  .node-op { font-size: 0.65rem; margin-top: 0.3rem; }
+  .circuit-arrow {
+    text-align: center; font-size: 1.5rem;
+    color: var(--k-color); line-height: 1;
+  }
+  .circuit-center {
+    background: rgba(224,90,58,0.1);
+    border: 1px solid rgba(224,90,58,0.4);
+    border-radius: 50%;
+    width: 80px; height: 80px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    font-size: 0.7rem; color: var(--k-color);
+    font-family: 'Courier New', monospace;
+    margin: auto;
+  }
+
+  /* SIMULATION */
+  .sim-section {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 6px; margin: 3rem 0; overflow: hidden;
+  }
+  .sim-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #2a2a3a;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .sim-title {
+    font-size: 0.78rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase; flex: 1;
+  }
+  .sim-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .sim-btn {
+    background: rgba(224,90,58,0.12);
+    border: 1px solid rgba(224,90,58,0.3);
+    color: var(--k-color);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    cursor: pointer; border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.2s;
+  }
+  .sim-btn:hover { background: rgba(224,90,58,0.25); }
+  .sim-btn.gold {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.35);
+    color: var(--gold);
+  }
+  .sim-btn.gold:hover { background: rgba(201,168,76,0.25); }
+  .sim-btn.green {
+    background: rgba(80,200,120,0.12);
+    border-color: rgba(80,200,120,0.35);
+    color: var(--f-color);
+  }
+  canvas {
+    display: block; width: 100%;
+    background: #080810;
+  }
+  .sim-status {
+    padding: 0.8rem 1.5rem;
+    font-family: 'Courier New', monospace; font-size: 0.78rem;
+    display: flex; gap: 2rem; flex-wrap: wrap;
+    border-top: 1px solid #2a2a3a;
+  }
+  .status-item { color: var(--text-dim); }
+  .status-val { color: var(--k-color); font-weight: bold; }
+  .status-val.synced { color: var(--f-color); }
+
+  /* PORTAL */
+  .portal-section {
+    background: linear-gradient(160deg, #0d0a18 0%, #130d20 100%);
+    border: 1px solid rgba(224,90,58,0.25);
+    border-radius: 6px; margin: 3rem 0; overflow: hidden;
+  }
+  .portal-header {
+    background: rgba(224,90,58,0.08);
+    border-bottom: 1px solid rgba(224,90,58,0.2);
+    padding: 1.2rem 1.8rem;
+  }
+  .portal-level {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase; margin-bottom: 0.3rem;
+  }
+  .portal-heading {
+    font-size: 1.15rem; color: var(--text);
+    font-weight: 400;
+  }
+  .portal-desc { font-size: 0.88rem; color: var(--text-dim); margin-top: 0.4rem; }
+  .prompt-card {
+    padding: 1.5rem 1.8rem;
+    border-bottom: 1px solid rgba(224,90,58,0.1);
+  }
+  .prompt-card:last-child { border-bottom: none; }
+  .prompt-num {
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .prompt-title { font-size: 1rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .prompt-text {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 4px; padding: 1rem 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem; color: var(--text);
+    line-height: 1.6; margin: 0.7rem 0;
+  }
+  .copy-btn {
+    background: rgba(224,90,58,0.1);
+    border: 1px solid rgba(224,90,58,0.25);
+    color: var(--k-color);
+    padding: 0.3rem 0.7rem; font-size: 0.72rem;
+    letter-spacing: 0.08em; cursor: pointer;
+    border-radius: 2px; font-family: 'Courier New', monospace;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(224,90,58,0.22); }
+  .copy-btn.copied { color: var(--f-color); border-color: rgba(80,200,120,0.35); }
+  .portal-footer {
+    padding: 1rem 1.8rem; border-top: 1px solid rgba(224,90,58,0.15);
+    font-size: 0.78rem; color: var(--text-dim); text-align: center;
+  }
+  .portal-footer a { color: var(--k-color); text-decoration: none; }
+
+  /* NAV FOOTER */
+  .chapter-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 2rem; border-top: 1px solid #2a2a3a;
+    max-width: 780px; margin: 0 auto;
+  }
+  .chapter-nav a {
+    color: var(--gold); text-decoration: none;
+    font-size: 0.85rem; letter-spacing: 0.08em;
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.5rem 1rem; border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .chapter-nav a:hover { background: rgba(201,168,76,0.08); }
+
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+    border-top: 1px solid #1a1a24;
+  }
+  footer .fleur-footer { color: var(--gold-dim); margin: 0 0.5rem; }
+
+  @media (max-width: 600px) {
+    .hero-letter { font-size: 10rem; }
+    .circuit-grid { grid-template-columns: 1fr; }
+    .circuit-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="impa-portal.html" class="nav-logo">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <div class="nav-links">
+    <a href="chapters-diagram.html">All Chapters</a>
+    <a href="course-16weeks.html">Course</a>
+    <a href="Sportal.html">Portal</a>
+    <a href="trilogy-sale.html">Get the Book</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="chapter-hero">
+  <div class="hero-letter">K</div>
+  <div class="chapter-tag">Chapter 4 · Week 4–5 · CEFR B1</div>
+  <h1 class="chapter-title">Neural Oscillations</h1>
+  <p class="chapter-subtitle">When the brain synchronizes, something new becomes possible. That synchrony is K.</p>
+  <div class="operator-chain">G = U ∘ F ∘ <span class="active">K</span> ∘ C</div>
+  <div class="chapter-meta">
+    <span class="meta-badge">Operator: K · Threshold</span>
+    <span style="color:var(--text-dim)">Week 4–5</span>
+    <span style="color:var(--text-dim)">CEFR B1 → B2</span>
+    <span style="color:var(--text-dim)">γ / θ / α / δ</span>
+  </div>
+</section>
+
+<!-- CIRCUIT DIAGRAM -->
+<div class="content-wrap">
+
+<div class="circuit-diagram">
+  <div class="circuit-title">Neural Frequency Bands as Operator Stages</div>
+  <div class="circuit-grid">
+    <div class="circuit-node">
+      <div class="node-name">δ Delta</div>
+      <div class="node-freq">0.5–4 Hz</div>
+      <div class="node-op"><span class="op-tag op-c">C — deep compression</span></div>
+    </div>
+    <div class="circuit-arrow">→</div>
+    <div class="circuit-node">
+      <div class="node-name">θ Theta</div>
+      <div class="node-freq">4–8 Hz</div>
+      <div class="node-op"><span class="op-tag op-c">C → K transition</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:0.8rem 0;font-size:0.8rem;color:var(--text-dim)">↓ synchrony rising</div>
+  <div class="circuit-grid">
+    <div class="circuit-node">
+      <div class="node-name">α Alpha</div>
+      <div class="node-freq">8–12 Hz</div>
+      <div class="node-op"><span class="op-tag op-k">K — idle threshold</span></div>
+    </div>
+    <div class="circuit-arrow">→</div>
+    <div class="circuit-node">
+      <div class="node-name">γ Gamma</div>
+      <div class="node-freq">30–100 Hz</div>
+      <div class="node-op"><span class="op-tag op-k">K fires — binding</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:0.8rem 0;font-size:0.8rem;color:var(--k-color)">
+    ↓ K threshold crossed → F releases coherent thought
+  </div>
+  <div style="max-width:300px;margin:0 auto;">
+    <div class="circuit-center">
+      <div style="font-size:1.1rem;font-weight:bold">K*</div>
+      <div style="font-size:0.6rem">40 Hz binding</div>
+      <div style="font-size:0.6rem">threshold</div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<h2>The Synchrony You Don't See</h2>
+
+<p>Close your eyes. You are thinking about nothing in particular. Somewhere in your visual cortex, 10 billion synapses are firing. In your hippocampus, theta waves at 6 Hz are sweeping through CA1. In your prefrontal cortex, a slower rhythm is organizing what will count as a thought and what will be discarded.</p>
+
+<p>None of this is conscious. And yet, the moment you decide to read the next sentence, something changes. A 40 Hz gamma oscillation couples to the theta wave in your hippocampus. Spatially distant populations — visual cortex, Broca's area, prefrontal cortex — suddenly fire in phase. The binding problem, which neuroscientists argued about for 30 years, solves itself in 25 milliseconds. You read a sentence.</p>
+
+<p>That synchronization event is <span class="op-tag op-k">K</span>. It is the threshold — the moment when compression becomes structure, when isolated firing becomes coherent information. The operator K does not create the oscillation. It selects which oscillations are permitted to bind.</p>
+
+<h2>Three Neural Compressions</h2>
+
+<h3>1. The Hopf Bifurcation — C becomes K</h3>
+
+<p>A single neuron fires. Then two fire. Then ten, twenty, fifty — all at the same frequency. At some critical coupling strength λ*, the system crosses a Hopf bifurcation: the damped oscillation (which dies without input) becomes a limit cycle (which sustains itself). The neuron population crosses from noise into rhythm.</p>
+
+<div class="math-block">
+dz/dt = (λ + iω)z − |z|²z
+<br><br>
+λ &lt; λ*  →  damped: oscillation decays (C alone)
+λ = λ*  →  bifurcation: K fires, limit cycle born
+λ &gt; λ*  →  sustained: stable gamma oscillation (F begins)
+</div>
+
+<p>The Hopf bifurcation is K written in the language of dynamical systems. It is the exact moment at which local compression (individual neurons firing) crosses into global coherence (a population oscillating together). Before λ*: each neuron is compressing its own input. After λ*: they are one system.</p>
+
+<h3>2. Theta-Gamma Coupling — K as the Carrier</h3>
+
+<p>In the hippocampus, memory encoding uses a two-frequency architecture. The theta wave (6 Hz) sets the temporal frame — one theta cycle is roughly one working memory slot. Inside each theta cycle, 4–7 gamma bursts appear, each carrying a different item. The gamma is nested inside the theta like pages inside a chapter.</p>
+
+<p>This nesting is not accidental. Theta provides the K threshold that gates which gamma bursts are permitted to carry information to long-term storage. A gamma burst that occurs at the wrong phase of theta — when K is not open — does not consolidate. It is compressed away. Only gamma that fires at the theta peak crosses the K threshold into the fold (F), into memory.</p>
+
+<p>Sleep-dependent consolidation, which you learned about in Chapter 3, is the downstream consequence: the language you studied at 10pm is not stored if your theta-gamma coupling during slow-wave sleep is disrupted.</p>
+
+<h3>3. The Binding Threshold at 40 Hz — K as Global Operator</h3>
+
+<p>Francis Crick and Christof Koch proposed in 1990 that 40 Hz gamma oscillations solve the binding problem: the question of how the brain unifies the red of an apple, the round of its shape, and the word "apple" into one percept. Their proposal was K before the language existed. They were describing a threshold frequency at which spatially distributed representations became coherent enough to act as one object in cognition.</p>
+
+<p>Subsequent work complicated the picture — gamma alone does not solve binding, and the threshold varies by task and region. But the core operator was correct: there is a frequency threshold K* at which integration becomes possible. Below K*, you have compression. Above K*, you have thought.</p>
+
+<div class="theorem-box">
+  <div class="theorem-label">Theorem 4.1 — The Neural Synchrony Threshold</div>
+  <div class="theorem-body">Let P₁, P₂ be two neural populations with firing rates r₁(t), r₂(t). Define their coherence C(P₁,P₂) = |⟨e^{i(φ₁−φ₂)}⟩|. Then information transfer between populations is bounded by C(P₁,P₂). There exists a critical coherence K* such that for C &lt; K*, information transfer is below the resolution threshold of downstream populations (effective compression only). For C ≥ K*, the fold operator F becomes accessible: the populations can act as a unified information source.</div>
+  <div class="theorem-proof"><strong>Proof sketch:</strong> Phase coherence bounds mutual information between populations via the data processing inequality. At C = K* the Shannon capacity of the inter-population channel crosses the minimum necessary for stable attractor formation in the downstream network. This is the K threshold. □</div>
+</div>
+
+<div class="insight-box">
+  <div class="insight-label">Insight — The 33 Cycles Question</div>
+  <p>Chapter 1 established that 33 operator cycles produce a fundamental practitioner. In neural terms: the cortex runs approximately 40 gamma cycles per second. In a 45-minute study session, roughly 108,000 gamma cycles complete. But the relevant count is not raw gamma cycles — it is the number of times K fires on novel material, binding a new structure into memory. The 33 that matter are 33 threshold crossings on genuinely new pattern. This is why passive re-reading does not produce the same effect as active recall: re-reading does not fire K on novel structure. Only the unexpected pattern — the one the model did not already compress — triggers K.</p>
+</div>
+
+<hr class="gold-rule">
+
+<h2>What Would Break the Model</h2>
+
+<div class="falsify-box">
+  <div class="falsify-label">Falsifiability Condition</div>
+  <p>If a patient with complete disruption of gamma oscillations (e.g., through targeted optogenetic silencing of parvalbumin interneurons) retains the ability to bind spatially distributed representations into coherent percepts — without any compensatory mechanism — then Theorem 4.1 is false and K is not the binding operator in neural tissue.</p>
+  <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--text-dim)">Current evidence: parvalbumin interneuron ablation in mice disrupts object recognition and working memory capacity, consistent with K as the binding threshold. The model survives, but is not proven.</p>
+</div>
+
+<h2>Exercises</h2>
+
+<p><strong>4.1</strong> — A student studying for an exam reads their notes for 2 hours without pausing. Another student reads for 30 minutes, then closes the notes and writes everything they can recall. Using the theta-gamma coupling model, explain why the second strategy crosses K more times than the first.</p>
+
+<p><strong>4.2</strong> — The math block above shows the Hopf bifurcation in complex notation. Identify which term represents compression (C), which represents the threshold crossing (K), and which would represent the fold (F) if the equation were extended.</p>
+
+<p><strong>4.3</strong> — You are designing an experiment to test whether a specific language learning intervention increases K-threshold crossings in the hippocampus. What would you measure? What would a positive result look like? What would falsify the intervention's effectiveness?</p>
+
+<p><strong>4.4</strong> — In your first language, how many words do you know? Estimate the number of K threshold events that produced that lexicon, given that each new word requires approximately 8–12 meaningful exposures before the K threshold is crossed into long-term storage.</p>
+
+</div><!-- /content-wrap -->
+
+<!-- SIMULATION -->
+<div class="content-wrap" style="padding-top:0">
+<div class="sim-section">
+  <div class="sim-header">
+    <div class="sim-title">Live Simulation — Neural Synchrony &amp; K Threshold</div>
+    <div class="sim-controls">
+      <button class="sim-btn" onclick="simReset()">Reset</button>
+      <button class="sim-btn" onclick="simAddStimulus()">Novel Stimulus</button>
+      <button class="sim-btn gold" onclick="simBoostCoupling()">↑ Coupling λ</button>
+      <button class="sim-btn" onclick="simDisrupt()">Disrupt γ</button>
+      <button class="sim-btn green" onclick="simSleep()">Sleep Phase</button>
+    </div>
+  </div>
+  <canvas id="simCanvas" height="280"></canvas>
+  <div class="sim-status">
+    <div class="status-item">Coupling λ: <span class="status-val" id="statLambda">0.3</span></div>
+    <div class="status-item">Coherence: <span class="status-val" id="statCoherence">0.18</span></div>
+    <div class="status-item">K threshold: <span class="status-val" id="statThresh">0.65</span></div>
+    <div class="status-item">Status: <span class="status-val" id="statStatus">C — compressing</span></div>
+    <div class="status-item">K events: <span class="status-val" id="statKEvents">0</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+// State
+let lambda = 0.3;
+const LAMBDA_MAX = 1.2;
+const K_THRESH = 0.65;
+let kEvents = 0;
+let t = 0;
+let disrupted = false;
+let sleepPhase = false;
+let stimulusActive = false;
+let stimulusTimer = 0;
+let animId;
+
+// Two oscillator populations
+let phi1 = 0; // phase of population 1 (gamma ~40Hz)
+let phi2 = Math.PI * 0.7; // phase of population 2 (starts desynchronized)
+let theta = 0; // theta envelope phase
+let history1 = [], history2 = [], historyCoherence = [], historyTheta = [];
+const HISTORY_LEN = 400;
+
+// Resize canvas
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = 280;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function coherence() {
+  if (history1.length < 20) return 0;
+  let re = 0, im = 0;
+  const n = Math.min(20, history1.length);
+  for (let i = history1.length - n; i < history1.length; i++) {
+    const dphi = history1[i].phi - history2[i].phi;
+    re += Math.cos(dphi);
+    im += Math.sin(dphi);
+  }
+  return Math.sqrt(re*re + im*im) / n;
+}
+
+function step() {
+  t += 0.016;
+
+  // Theta envelope (6 Hz) — slower oscillation gating gamma
+  theta = Math.sin(2 * Math.PI * 6 * t) * 0.5 + 0.5;
+
+  // Gamma oscillation frequencies
+  const omega1 = 2 * Math.PI * 38; // ~38 Hz
+  const omega2 = 2 * Math.PI * 42; // ~42 Hz, slightly different
+
+  // Phase update with Kuramoto-style coupling
+  const coupling = disrupted ? 0.02 : lambda;
+  const dPhi = omega2 - omega1;
+  const phaseDiff = phi2 - phi1;
+
+  phi1 += omega1 * 0.016;
+  phi2 += omega2 * 0.016 - coupling * Math.sin(phaseDiff) * 0.016 * 60;
+
+  // Stimulus transiently boosts coupling
+  if (stimulusActive) {
+    stimulusTimer -= 0.016;
+    if (stimulusTimer <= 0) { stimulusActive = false; disrupted = false; }
+  }
+
+  // Sleep phase: theta-gamma coupling — only allow during theta peak
+  let gammaGate = 1.0;
+  if (sleepPhase) {
+    gammaGate = theta > 0.6 ? 1.2 : 0.3;
+  }
+
+  // Compute amplitudes
+  const amp1 = Math.sin(phi1) * gammaGate;
+  const amp2 = Math.sin(phi2) * gammaGate;
+
+  history1.push({ val: amp1, phi: phi1 % (2*Math.PI) });
+  history2.push({ val: amp2, phi: phi2 % (2*Math.PI) });
+
+  const c = coherence();
+  historyCoherence.push(c);
+  historyTheta.push(theta);
+
+  if (history1.length > HISTORY_LEN) {
+    history1.shift(); history2.shift();
+    historyCoherence.shift(); historyTheta.shift();
+  }
+
+  // K event detection
+  const prevC = historyCoherence.length > 5 ? historyCoherence[historyCoherence.length - 5] : 0;
+  if (c >= K_THRESH && prevC < K_THRESH) {
+    kEvents++;
+  }
+
+  return c;
+}
+
+function draw(c) {
+  const W = canvas.width, H = canvas.height;
+  ctx.fillStyle = '#080810';
+  ctx.fillRect(0, 0, W, H);
+
+  const lanes = 3;
+  const laneH = H / lanes;
+
+  // Row labels
+  ctx.font = '10px monospace';
+  ctx.fillStyle = 'rgba(153,148,160,0.6)';
+  ctx.fillText('Population 1 (γ)', 8, 18);
+  ctx.fillText('Population 2 (γ)', 8, laneH + 18);
+  ctx.fillText('Coherence C(P₁,P₂)', 8, 2*laneH + 18);
+
+  // Draw waveforms
+  function drawWave(data, yBase, color, scale) {
+    if (data.length < 2) return;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const step = W / HISTORY_LEN;
+    for (let i = 0; i < data.length; i++) {
+      const x = i * step;
+      const y = yBase + laneH * 0.5 - data[i] * scale;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  const vals1 = history1.map(h => h.val);
+  const vals2 = history2.map(h => h.val);
+
+  drawWave(vals1, 0, 'rgba(74,158,255,0.8)', laneH * 0.38);
+  drawWave(vals2, laneH, 'rgba(192,132,252,0.8)', laneH * 0.38);
+
+  // Theta envelope overlay on population 2 row
+  if (sleepPhase) {
+    ctx.strokeStyle = 'rgba(249,199,79,0.3)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    const step = W / historyTheta.length;
+    for (let i = 0; i < historyTheta.length; i++) {
+      const x = i * step;
+      const y = laneH + laneH * 0.5 - historyTheta[i] * laneH * 0.4;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Coherence lane
+  const kThreshY = 2 * laneH + laneH * (1 - K_THRESH);
+  // K threshold line
+  ctx.strokeStyle = 'rgba(224,90,58,0.4)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([6, 4]);
+  ctx.beginPath();
+  ctx.moveTo(0, kThreshY); ctx.lineTo(W, kThreshY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(224,90,58,0.6)';
+  ctx.font = '9px monospace';
+  ctx.fillText('K* = 0.65', W - 70, kThreshY - 3);
+
+  // Coherence curve
+  const cohStep = W / historyCoherence.length;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 0; i < historyCoherence.length; i++) {
+    const x = i * cohStep;
+    const y = 2 * laneH + laneH * (1 - historyCoherence[i]);
+    const color = historyCoherence[i] >= K_THRESH ? '#50c878' : '#e05a3a';
+    ctx.strokeStyle = color;
+    if (i === 0) { ctx.moveTo(x, y); continue; }
+    if (i > 0 && ((historyCoherence[i] >= K_THRESH) !== (historyCoherence[i-1] >= K_THRESH))) {
+      ctx.stroke(); ctx.beginPath();
+      ctx.strokeStyle = historyCoherence[i] >= K_THRESH ? '#50c878' : '#e05a3a';
+      ctx.moveTo(x, y);
+    }
+    ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Lane dividers
+  ctx.strokeStyle = 'rgba(42,42,58,0.8)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, laneH); ctx.lineTo(W, laneH);
+  ctx.moveTo(0, 2*laneH); ctx.lineTo(W, 2*laneH);
+  ctx.stroke();
+
+  // Flash on K event
+  if (c >= K_THRESH) {
+    ctx.fillStyle = 'rgba(80,200,120,0.04)';
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Update status
+  document.getElementById('statLambda').textContent = lambda.toFixed(2);
+  document.getElementById('statCoherence').textContent = c.toFixed(2);
+  const statusEl = document.getElementById('statStatus');
+  if (disrupted) {
+    statusEl.textContent = '⚠ γ disrupted';
+    statusEl.className = 'status-val';
+    statusEl.style.color = '#e05a3a';
+  } else if (c >= K_THRESH) {
+    statusEl.textContent = '✓ K fired — binding';
+    statusEl.className = 'status-val synced';
+    statusEl.style.color = '';
+  } else {
+    statusEl.textContent = 'C — compressing';
+    statusEl.className = 'status-val';
+    statusEl.style.color = '';
+  }
+  document.getElementById('statKEvents').textContent = kEvents;
+}
+
+function loop() {
+  const c = step();
+  draw(c);
+  animId = requestAnimationFrame(loop);
+}
+
+function simReset() {
+  lambda = 0.3; phi1 = 0; phi2 = Math.PI * 0.7;
+  kEvents = 0; t = 0;
+  disrupted = false; sleepPhase = false; stimulusActive = false;
+  history1 = []; history2 = []; historyCoherence = []; historyTheta = [];
+}
+
+function simAddStimulus() {
+  // Novel stimulus: transiently boosts coupling — can trigger K
+  lambda = Math.min(lambda + 0.25, LAMBDA_MAX);
+  stimulusActive = true; stimulusTimer = 1.5;
+}
+
+function simBoostCoupling() {
+  lambda = Math.min(lambda + 0.15, LAMBDA_MAX);
+}
+
+function simDisrupt() {
+  disrupted = true; stimulusActive = true; stimulusTimer = 2.0;
+}
+
+function simSleep() {
+  sleepPhase = !sleepPhase;
+  document.querySelectorAll('.sim-btn.green')[0].textContent =
+    sleepPhase ? 'Sleep ON ✓' : 'Sleep Phase';
+}
+
+loop();
+</script>
+
+<!-- PORTAL -->
+<div class="content-wrap" style="padding-top:0">
+<div class="portal-section">
+  <div class="portal-header">
+    <div class="portal-level">Student Portal · Level B1–B2 · Operator: K</div>
+    <div class="portal-heading">Level B1 — The Threshold Crossing</div>
+    <div class="portal-desc">You have read the chapter. Now use these prompts with an AI assistant to move from reading to writing. Each prompt takes you one step further into K.</div>
+  </div>
+
+  <!-- Prompt 1 -->
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 1 of 3</div>
+    <div class="prompt-title">Find Your Threshold</div>
+    <div class="prompt-text" id="p1text">I am a B1 English learner reading a chapter on neural oscillations and the K operator (threshold / curvature). The chapter claims there is a critical coherence threshold K* such that below it, neural populations only compress information, and above it, they can bind distributed representations into coherent thought. I want to find the equivalent of K* in my own field of study or work. My field is: [INSERT YOUR FIELD]. Please help me identify: (1) what the equivalent of "two populations that need to synchronize" looks like in my domain, (2) what the threshold event is — the moment when coordination becomes possible — and (3) one published paper or textbook that describes this threshold. Use simple English. End with a one-sentence claim I could test.</div>
+    <button class="copy-btn" onclick="copyPrompt('p1text', this)">Copy Prompt</button>
+  </div>
+
+  <!-- Prompt 2 -->
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 2 of 3</div>
+    <div class="prompt-title">Write the Mechanism</div>
+    <div class="prompt-text" id="p2text">I am writing a short academic paragraph (150 words, B1 English) about a threshold event in [MY FIELD]. The K operator in Book 3 describes a threshold where compression becomes coherence — where isolated parts suddenly act as a whole. My threshold event is: [DESCRIBE YOUR THRESHOLD]. Please help me write one clear academic paragraph that: (1) names the threshold event, (2) states what exists below it and above it, (3) gives one measurable condition that would confirm the threshold was crossed, and (4) ends with a falsifiability statement. Use simple vocabulary but precise scientific language. Do not use bullet points.</div>
+    <button class="copy-btn" onclick="copyPrompt('p2text', this)">Copy Prompt</button>
+  </div>
+
+  <!-- Prompt 3 -->
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 3 of 3</div>
+    <div class="prompt-title">g₃₃ — The 33rd Crossing</div>
+    <div class="prompt-text" id="p3text">I am a language learner using Book 3: The Mini-Beast. I have just completed Chapter 4 on neural oscillations. The book argues that the 33rd threshold crossing (K event on genuinely novel material) produces a permanent change in the learner — the practitioner threshold. I want to reflect on my own learning: How many times have I encountered a concept I did not already know and stayed with it long enough for K to fire? Please ask me three questions that will help me identify my K-crossing history in this subject. Then help me write a 100-word self-assessment in academic English: what I knew before, what the threshold was, and what I can do now that I could not do before.</div>
+    <button class="copy-btn" onclick="copyPrompt('p3text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="portal-footer">
+    All 21 prompts across levels A1 → D2 available at <a href="Sportal.html">sportal.html</a>
+  </div>
+</div>
+</div>
+
+<script>
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+<!-- CHAPTER NAV -->
+<div class="chapter-nav">
+  <a href="ch3-circadian.html">← Chapter 3: Circadian Regulation</a>
+  <a href="ch5-immune.html">Chapter 5: Immune Memory →</a>
+</div>
+
+<footer>
+  <span class="fleur-footer">⚜</span>
+  Book 3: The Mini-Beast &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Chapter 4 of 17
+  <span class="fleur-footer">⚜</span>
+</footer>
+
+</body>
+</html>
+    <div class="prompt-title">Find Your Threshold</div>
+    <div class="prompt-text" id="p1text">I am a B1 English learner reading a chapter on neural oscillations and the K operator (threshold / curvature). The chapter claims there is a critical coherence threshold K* such that below it, neural populations only compress information, and above it, they can bind distributed representations into coherent thought. I want to find the equivalent of K* in my own field of study or work. My field is: [INSERT YOUR FIELD]. Please help me identify: (1) what the equivalent of "two populations that need to synchronize" looks like in my domain, (2) what the threshold event is — the moment when coordination becomes possible — and (3) one published paper or textbook that describes this threshold. Use simple English. End with a one-sentence claim I could test.

@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch12 · Fixed Point — The Conclusion as Attractor · Book 3</title>
+<style>
+  /* ── G operator palette (synthesis / amber gold) ─────────── */
+  :root {
+    --g-color:  #f59e0b;
+    --g-dim:    #b45309;
+    --g-glow:   rgba(245, 158, 11, 0.16);
+    --bg:       #120d00;
+    --bg2:      #1c1400;
+    --bg3:      #241a00;
+    --text:     #f0ead8;
+    --muted:    #a89060;
+    --gold:     #f59e0b;
+    --border:   rgba(245, 158, 11, 0.22);
+    /* operator colours for the chain diagram */
+    --c-color:  #4a9eff;
+    --k-color:  #e05a3a;
+    --f-color:  #50c878;
+    --u-color:  #c084fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    color: var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height: 100vh;
+    line-height: 1.75;
+  }
+
+  /* ── Top nav ─────────────────────────────── */
+  nav.top {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    padding: .75rem 1.5rem;
+    background: rgba(18,13,0,.85);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Courier New', monospace;
+    font-size: .78rem;
+  }
+  nav.top a {
+    color: var(--g-color); text-decoration: none;
+    padding: .2rem .6rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: background .2s;
+  }
+  nav.top a:hover { background: var(--g-glow); }
+
+  /* ── Hero ────────────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 40%,
+      rgba(245,158,11,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .operator-badge {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: .8rem; font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--bg);
+    background: var(--g-color);
+    padding: .25rem .9rem;
+    border-radius: 3px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-letter {
+    font-size: clamp(5rem, 16vw, 11rem);
+    font-style: italic;
+    color: var(--g-color);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(245,158,11,.4);
+    margin-bottom: .5rem;
+  }
+  .hero h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: .5rem;
+  }
+  .hero .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+  .meta-row {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    font-family: 'Courier New', monospace; font-size: .8rem;
+    color: var(--muted);
+  }
+  .meta-row span { color: var(--g-color); }
+
+  /* ── Section containers ───────────────────── */
+  .section {
+    max-width: 860px;
+    margin: 0 auto 2.5rem;
+    padding: 0 1.5rem;
+  }
+  .section h2 {
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--g-color);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .4rem;
+    margin-bottom: 1.2rem;
+  }
+  .section p { margin-bottom: 1rem; color: var(--text); }
+  .section em { color: var(--g-color); font-style: normal; }
+
+  /* ── Math display ────────────────────────── */
+  .math-block {
+    background: rgba(245,158,11,.06);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--g-color);
+    border-radius: 6px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.4rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: .95rem;
+    line-height: 2;
+    overflow-x: auto;
+  }
+  .math-block .label {
+    font-size: .72rem; letter-spacing: .1em;
+    color: var(--g-color); text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  /* ── Operator chain diagram ───────────────── */
+  .chain-row {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: .3rem;
+    margin: 1.6rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+  }
+  .op-chip {
+    padding: .35rem .9rem;
+    border-radius: 4px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    font-size: .88rem;
+  }
+  .op-c  { background: rgba(74,158,255,.15);  color: var(--c-color); border: 1px solid var(--c-color); }
+  .op-k  { background: rgba(224,90,58,.15);   color: var(--k-color); border: 1px solid var(--k-color); }
+  .op-f  { background: rgba(80,200,120,.15);  color: var(--f-color); border: 1px solid var(--f-color); }
+  .op-u  { background: rgba(192,132,252,.15); color: var(--u-color); border: 1px solid var(--u-color); }
+  .op-g  { background: rgba(245,158,11,.15);  color: var(--g-color); border: 1px solid var(--g-color); font-size: 1rem; }
+  .op-arrow { color: var(--muted); font-size: 1.1rem; }
+  .op-eq    { color: var(--g-color); font-size: 1.1rem; font-weight: 400; }
+
+  /* ── Fixed-point cards ───────────────────── */
+  .fp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem; margin: 1.4rem 0;
+  }
+  .fp-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem;
+  }
+  .fp-card .fc-label {
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; letter-spacing: .08em;
+    color: var(--g-color); text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+  .fp-card .fc-val  {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem; color: var(--g-color);
+    margin-bottom: .4rem;
+  }
+  .fp-card .fc-desc { font-size: .87rem; color: var(--text); }
+
+  /* ── Conclusion anatomy table ─────────────── */
+  .anatomy-table {
+    width: 100%; border-collapse: collapse;
+    font-size: .88rem; margin: 1.4rem 0;
+  }
+  .anatomy-table th {
+    text-align: left;
+    color: var(--g-color);
+    border-bottom: 1px solid var(--border);
+    padding: .5rem .8rem;
+    font-family: 'Courier New', monospace;
+    font-size: .78rem; letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+  .anatomy-table td {
+    padding: .55rem .8rem;
+    border-bottom: 1px solid rgba(245,158,11,.08);
+    vertical-align: top;
+  }
+  .anatomy-table .move { font-family: 'Courier New', monospace; color: var(--g-color); }
+  .anatomy-table .bad  { color: #f87171; }
+  .anatomy-table .good { color: #50c878; }
+
+  /* ── Theorem box ─────────────────────────── */
+  .theorem {
+    background: rgba(245,158,11,.07);
+    border: 1px solid rgba(245,158,11,.3);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.6rem 0;
+  }
+  .theorem .thm-label {
+    font-family: 'Courier New', monospace;
+    font-size: .75rem; letter-spacing: .1em;
+    color: var(--g-color); text-transform: uppercase;
+    margin-bottom: .6rem;
+  }
+  .theorem .thm-body { color: var(--text); line-height: 1.9; }
+  .theorem code   { font-family: 'Courier New', monospace; color: var(--g-color); }
+  .theorem strong { color: var(--g-color); }
+
+  /* ── Insight box ─────────────────────────── */
+  .insight {
+    background: rgba(245,158,11,.06);
+    border-left: 3px solid var(--g-color);
+    border-radius: 4px;
+    padding: 1rem 1.4rem;
+    margin: 1.4rem 0;
+    font-style: italic;
+    color: #f0dda8;
+    font-size: .95rem;
+  }
+
+  /* ── Canvas panel ────────────────────────── */
+  .canvas-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.6rem;
+    margin: 1.6rem auto 2rem;
+    max-width: 860px;
+  }
+  .canvas-panel h3 {
+    font-size: 1rem; font-weight: 400;
+    color: var(--g-color);
+    margin-bottom: .8rem;
+    font-family: 'Courier New', monospace;
+  }
+  canvas {
+    display: block;
+    width: 100%; max-width: 760px;
+    height: 320px;
+    background: #0a0800;
+    border-radius: 6px;
+    border: 1px solid rgba(245,158,11,.15);
+    margin: 0 auto .8rem;
+  }
+
+  .sim-info {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    margin: .5rem 0;
+    font-family: 'Courier New', monospace; font-size: .82rem;
+  }
+  .sim-cell {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: .4rem .9rem;
+    text-align: center;
+  }
+  .sim-cell .sc-label { color: var(--g-color); font-size: .68rem; margin-bottom: .2rem; }
+
+  .btn-row {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    justify-content: center; margin-top: .6rem;
+  }
+  .sim-btn {
+    font-family: 'Courier New', monospace;
+    font-size: .78rem;
+    padding: .4rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid;
+    background: transparent;
+    transition: background .2s;
+  }
+  .btn-fast   { color: #50c878; border-color: #50c878; }
+  .btn-fast:hover { background: rgba(80,200,120,.15); }
+  .btn-slow   { color: var(--g-color); border-color: var(--g-color); }
+  .btn-slow:hover { background: var(--g-glow); }
+  .btn-expand { color: #f87171; border-color: #f87171; }
+  .btn-expand:hover { background: rgba(248,113,113,.15); }
+  .btn-step   { color: var(--u-color); border-color: var(--u-color); }
+  .btn-step:hover { background: rgba(192,132,252,.15); }
+  .btn-reset  { color: var(--muted); border-color: rgba(168,144,96,.3); }
+  .btn-reset:hover { background: rgba(168,144,96,.1); }
+
+  .canvas-status {
+    text-align: center;
+    font-family: 'Courier New', monospace;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-top: .4rem;
+    min-height: 1.2em;
+  }
+
+  /* ── Prompt portal ───────────────────────── */
+  .prompt-portal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.6rem;
+    margin: 2rem auto;
+    max-width: 860px;
+  }
+  .prompt-portal h3 {
+    font-size: 1.1rem; font-weight: 400;
+    color: var(--g-color); margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+  .prompt-card {
+    background: var(--bg3);
+    border: 1px solid rgba(245,158,11,.2);
+    border-radius: 7px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+  }
+  .prompt-card .p-id {
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; color: var(--g-color);
+    letter-spacing: .1em; margin-bottom: .4rem;
+  }
+  .prompt-card .p-title {
+    font-size: .95rem; font-weight: 600;
+    color: var(--text); margin-bottom: .5rem;
+  }
+  .prompt-card .p-text {
+    font-size: .85rem; color: var(--muted);
+    line-height: 1.6; margin-bottom: .8rem;
+  }
+  .copy-btn {
+    font-family: 'Courier New', monospace;
+    font-size: .72rem;
+    padding: .3rem .8rem;
+    border: 1px solid rgba(245,158,11,.3);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--g-color);
+    cursor: pointer;
+  }
+  .copy-btn:hover { background: var(--g-glow); }
+
+  /* ── Chapter nav ─────────────────────────── */
+  .chapter-nav {
+    display: flex; justify-content: space-between;
+    max-width: 860px; margin: 2rem auto;
+    padding: 0 1.5rem 3rem;
+  }
+  .chapter-nav a {
+    color: var(--g-color); text-decoration: none;
+    font-family: 'Courier New', monospace; font-size: .82rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    transition: background .2s;
+  }
+  .chapter-nav a:hover { background: var(--g-glow); }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--muted);
+    font-size: .78rem;
+    font-family: 'Courier New', monospace;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .hero-letter { font-size: 5rem; }
+    .fp-grid { grid-template-columns: 1fr; }
+    .chain-row { font-size: .8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top nav ──────────────────────────────── -->
+<nav class="top">
+  <a href="impa-portal.html">⬡ AXLE Portal</a>
+  <a href="chapters-diagram.html">Map</a>
+  <a href="course-16weeks.html">16 Weeks</a>
+  <a href="Sportal.html">S-Portal</a>
+  <a href="trilogy-sale.html">Trilogy</a>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────── -->
+<div class="hero">
+  <div class="operator-badge">OPERATOR G · CHAPTER 12</div>
+  <div class="hero-letter">x*</div>
+  <h1>Fixed Point — The Conclusion as Attractor</h1>
+  <p class="subtitle">A paper is a contraction mapping. Its Conclusion is the unique fixed point.</p>
+  <div class="meta-row">
+    <div>Week <span>15</span></div>
+    <div>Level <span>D1→D2</span></div>
+    <div>Operator <span>G = U ∘ F ∘ K ∘ C</span></div>
+    <div>Focus <span>Conclusion · Fixed Point · Revision as Iteration</span></div>
+  </div>
+</div>
+
+<!-- ── Operator chain ─────────────────────────── -->
+<div class="section">
+  <div class="chain-row">
+    <span class="op-chip op-c">C · Compress</span>
+    <span class="op-arrow">∘</span>
+    <span class="op-chip op-k">K · Threshold</span>
+    <span class="op-arrow">∘</span>
+    <span class="op-chip op-f">F · Fold</span>
+    <span class="op-arrow">∘</span>
+    <span class="op-chip op-u">U · Unfold</span>
+    <span class="op-eq">=</span>
+    <span class="op-chip op-g">G · Conclusion</span>
+  </div>
+</div>
+
+<!-- ── Section 1: Banach Fixed Point Theorem ────── -->
+<div class="section">
+  <h2>§1 · The Banach Fixed Point Theorem</h2>
+  <p>
+    A <em>contraction mapping</em> T: X → X on a complete metric space
+    is a function that brings every pair of points strictly closer together —
+    by a factor L &lt; 1 at each step.
+    The Banach theorem guarantees that such a mapping has
+    exactly one fixed point x* where T(x*) = x*,
+    and that iterating T from <em>any</em> starting point x₀ converges to x*.
+  </p>
+
+  <div class="math-block">
+    <div class="label">Theorem 12.1 — Banach Contraction Mapping Theorem (1922)</div>
+    Let  (X, d)  be a complete metric space.
+    Let  T : X → X  satisfy the Lipschitz condition:
+    <br><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;d(T(x), T(y))  ≤  L · d(x, y)  &nbsp;&nbsp;&nbsp; for all x, y ∈ X,  &nbsp; L &lt; 1
+    <br><br>
+    Then:
+    <br>
+    1.  There exists a <strong>unique</strong> fixed point  x*  with  T(x*) = x*
+    <br>
+    2.  For any  x₀ ∈ X,  the sequence  x_{n+1} = T(xₙ)  converges to  x*
+    <br>
+    3.  Error bound:  d(xₙ, x*)  ≤  Lⁿ / (1−L) · d(x₁, x₀)
+    <br><br>
+    L = 0.5:  error halves each step  (fast Conclusion)
+    L = 0.9:  error shrinks 10% each step  (slow but convergent)
+    L ≥ 1:   no convergence — argument diverges from any stable claim
+  </div>
+
+  <p>
+    The cobweb diagram below makes this tangible:
+    draw the function T(x), then "bounce" vertically to T, horizontally to the diagonal y = x,
+    repeat. If L &lt; 1, the bounces spiral inward to x*. If L ≥ 1, they spiral outward — no fixed point.
+  </p>
+
+  <div class="fp-grid">
+    <div class="fp-card">
+      <div class="fc-label">Fast contraction</div>
+      <div class="fc-val">L = 0.5</div>
+      <div class="fc-desc">Each revision halves the distance to the final conclusion. Three rounds of peer review suffice.</div>
+    </div>
+    <div class="fp-card">
+      <div class="fc-label">Slow contraction</div>
+      <div class="fc-val">L = 0.85</div>
+      <div class="fc-desc">Converges, but many revisions needed. The argument is sound but structurally complex.</div>
+    </div>
+    <div class="fp-card">
+      <div class="fc-label">Divergence</div>
+      <div class="fc-val">L ≥ 1</div>
+      <div class="fc-desc">No stable conclusion exists. Each revision opens new questions faster than it closes old ones — the paper needs restructuring, not polishing.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Section 2: Homeostasis ──────────────────── -->
+<div class="section">
+  <h2>§2 · Homeostasis — Biology's Fixed Point</h2>
+  <p>
+    Every stable biological system maintains a fixed point against perturbation.
+    Body temperature 37.0°C, blood pH 7.40, fasting glucose 5.0 mmol/L —
+    these are not coincidences. They are the x* values of contraction mappings
+    built by millions of years of selection pressure.
+  </p>
+
+  <div class="math-block">
+    <div class="label">Homeostatic Fixed Points</div>
+    Core body temperature:&nbsp;&nbsp; x* = 37.0 °C  &nbsp;&nbsp; L ≈ 0.95  (tight regulation)
+    Blood pH:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x* = 7.40   &nbsp;&nbsp;&nbsp; L ≈ 0.80  (bicarbonate buffer)
+    Fasting glucose:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; x* = 5.0 mmol/L  L ≈ 0.70  (insulin/glucagon)
+    <br><br>
+    Perturbation:  x → x + δ
+    Response:      T(x + δ) → x* + L·δ
+    After n steps: L^n · δ → 0  (convergence to setpoint)
+    <br><br>
+    Fever  =  deliberate shift of x* upward (new fixed point during infection)
+    Diabetes  =  failure of T to be contractive  (L ≥ 1 for glucose regulation)
+  </div>
+
+  <p>
+    Notice: fever is not a broken thermostat — it is the immune system
+    shifting x* to a higher temperature where pathogens are less viable.
+    The fixed point itself becomes a variable of the immune response.
+    Chapter 5's K operator determines where the new x* is set.
+  </p>
+
+  <div class="insight">
+    Homeostasis and argument stability are the same structure:
+    a contraction mapping that returns to x* after every perturbation.
+    Peer review is the fever — a temporary shift that tests whether
+    your Conclusion is a true fixed point or merely a local equilibrium.
+  </div>
+</div>
+
+<!-- ── Section 3: Conclusion anatomy ──────────── -->
+<div class="section">
+  <h2>§3 · Anatomy of a Fixed-Point Conclusion</h2>
+  <p>
+    The Conclusion section has a precise structure in academic writing —
+    not as a stylistic convention but as a logical necessity.
+    A Conclusion that summarises instead of synthesises
+    has Lipschitz constant L = 1: it maps the paper onto itself, unchanged.
+    No new fixed point is reached.
+  </p>
+
+  <table class="anatomy-table">
+    <thead>
+      <tr>
+        <th>Move</th>
+        <th>Function</th>
+        <th>Fixed-Point Role</th>
+        <th>Error to Avoid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="move">C1 · Restate thesis</td>
+        <td>One sentence restating the core claim — not copied from Introduction</td>
+        <td>Identifies x*</td>
+        <td class="bad">Copy-paste from Abstract</td>
+      </tr>
+      <tr>
+        <td class="move">C2 · Synthesise</td>
+        <td>Show how Results + Discussion together establish x*</td>
+        <td>Demonstrates T(x₀)→x* converged</td>
+        <td class="bad">List results again (L = 1)</td>
+      </tr>
+      <tr>
+        <td class="move">C3 · Scope</td>
+        <td>State what x* applies to and what it does not</td>
+        <td>Ensures ρ(U) ≤ 1 (Ch11)</td>
+        <td class="bad">Silent generalisation</td>
+      </tr>
+      <tr>
+        <td class="move">C4 · Limitations</td>
+        <td>Name the largest perturbation δ the argument survived</td>
+        <td>Confirms L &lt; 1 — contraction held</td>
+        <td class="bad">Hedging without specifics</td>
+      </tr>
+      <tr>
+        <td class="move">C5 · Future work</td>
+        <td>Identify the next iterate T(x*) — what becomes possible now that x* is established</td>
+        <td>Points to the next fixed-point problem</td>
+        <td class="bad">"More research is needed."</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="theorem">
+    <div class="thm-label">Theorem 12.2 — Conclusion as Fixed Point</div>
+    <div class="thm-body">
+      A Conclusion is a <strong>genuine fixed point</strong> of the paper's argument if and only if:
+      <br><br>
+      <code>T(Conclusion) = Conclusion</code>
+      <br><br>
+      where T = "apply the paper's evidence and reasoning once more."
+      A Conclusion that changes when you re-read the paper is not yet x*.
+      A Conclusion that would be identical after a further round of peer review
+      is the fixed point: the claim your data can sustain indefinitely under iteration.
+      <br><br>
+      Equivalently: a Conclusion is x* iff removing any single supporting result
+      (the Lyapunov test of Ch10) does not collapse it, and its spectral reach
+      ρ ≤ 1 (the AXLE test of Ch11).
+    </div>
+  </div>
+</div>
+
+<!-- ── Section 4: Revision as iteration ──────────── -->
+<div class="section">
+  <h2>§4 · Revision as Contraction — Why Peer Review Works</h2>
+  <p>
+    Each round of peer review is one application of T to the current draft.
+    If the paper is a contraction mapping, every revision brings the draft
+    strictly closer to the fixed-point Conclusion — even when reviewers disagree,
+    even when revisions feel like going backwards.
+  </p>
+
+  <div class="math-block">
+    <div class="label">Revision Convergence Schema</div>
+    Draft₀  →  T(Draft₀) = Draft₁  →  T(Draft₁) = Draft₂  →  …  →  x*
+    <br><br>
+    d(Draft_{n+1}, x*)  ≤  L · d(Draftₙ, x*)
+    <br><br>
+    Total distance:  d(Draft₀, x*)  ≤  1/(1−L) · d(Draft₁, Draft₀)
+    <br><br>
+    From the error bound: if the first revision is small  (Draft₀ → Draft₁ close),
+    the final paper is also close to Draft₀ — you were already near x*.
+    If the first revision is large — restructuring, rewriting — the fixed point
+    is far from your first draft and further revision is needed.
+    <br><br>
+    A paper that "gets worse" in every revision has L ≥ 1:
+    the argument is not contractive and the Conclusion is not a fixed point.
+  </p>
+
+  <p>
+    This explains a common research experience: after major revision,
+    the Conclusion often returns to something close to the original intuition —
+    but sharpened, scoped, and defended. The first draft's Conclusion was
+    a rough approximation of x*; revision contracted the distance to zero.
+  </p>
+
+  <div class="insight">
+    The hardest Conclusion to write is the one where the paper's argument
+    is not yet contractive — where every revision changes the core claim.
+    The fix is not linguistic: it is structural. The operator chain
+    C→K→F→U must be made consistent before x* can exist.
+  </div>
+</div>
+
+<!-- ── Canvas Simulation ───────────────────────── -->
+<div class="canvas-panel">
+  <h3>▶ Cobweb Diagram · Fixed-Point Iteration</h3>
+
+  <div class="sim-info">
+    <div class="sim-cell">
+      <div class="sc-label">MAPPING T(x)</div>
+      <div id="map-label">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">LIPSCHITZ L</div>
+      <div id="L-display">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">FIXED POINT x*</div>
+      <div id="fp-display">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">ITERATIONS</div>
+      <div id="iter-display">0</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">|xₙ − x*|</div>
+      <div id="err-display">—</div>
+    </div>
+  </div>
+
+  <canvas id="cobwebCanvas" width="760" height="320"></canvas>
+
+  <div class="btn-row">
+    <button class="sim-btn btn-fast"   onclick="setMap('fast')">L = 0.50 · Fast</button>
+    <button class="sim-btn btn-slow"   onclick="setMap('slow')">L = 0.85 · Slow</button>
+    <button class="sim-btn btn-expand" onclick="setMap('expand')">L = 1.20 · Diverge</button>
+    <button class="sim-btn btn-step"   onclick="stepOnce()">+ One Revision</button>
+    <button class="sim-btn btn-step"   onclick="runMany()">Run ×10</button>
+    <button class="sim-btn btn-reset"  onclick="resetSim()">Reset</button>
+  </div>
+  <div class="canvas-status" id="simStatus">
+    Select a mapping to begin cobweb iteration.
+  </div>
+</div>
+
+<!-- ── Prompt Portal ───────────────────────────── -->
+<div class="prompt-portal">
+  <h3>⬡ LLM Prompt Portal · Chapter 12</h3>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 6.3 · CONCLUSION AUDIT</div>
+    <div class="p-title">Fixed-Point Check for Your Conclusion</div>
+    <div class="p-text">
+      Read your Conclusion section. For each sentence, classify it as:<br>
+      C1 = thesis restatement &nbsp;·&nbsp; C2 = synthesis &nbsp;·&nbsp;
+      C3 = scope &nbsp;·&nbsp; C4 = limitation &nbsp;·&nbsp;
+      C5 = future work &nbsp;·&nbsp; X = summary (repeat of results — remove).<br>
+      Then apply the fixed-point test: if you re-read your entire paper
+      and rewrote the Conclusion from scratch, would it be the same?
+      If not, identify which move (C1–C5) is missing or misplaced,
+      and rewrite until T(Conclusion) = Conclusion.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p63', this)">Copy Prompt 6.3</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 7.1 · FIXED-POINT CLAIM</div>
+    <div class="p-title">The Claim That Survives Infinite Revision</div>
+    <div class="p-text">
+      Imagine your paper goes through ten rounds of peer review.
+      Each round removes one weak claim and tightens one strong one.
+      What single sentence would remain unchanged at the end — the x* of your argument?<br>
+      Write that sentence now. That is your Conclusion's core.
+      Then verify: (a) Is it supported by all three of your key results independently?
+      (b) Does its spectral reach ρ ≤ 1? (c) Would a skeptical reviewer in an adjacent
+      field accept the warrant? If yes to all three: this is your fixed point.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p71', this)">Copy Prompt 7.1</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">EXTENSION · OPERATOR CHAIN AUDIT</div>
+    <div class="p-title">G = U ∘ F ∘ K ∘ C — Full Chain Verification</div>
+    <div class="p-text">
+      Trace your paper through the full operator chain:<br>
+      C — What did you compress? (Ch4–5: what is the minimal representation of your data?)<br>
+      K — What threshold did you cross? (Ch4–5: what is the claim that separates signal from noise?)<br>
+      F — How did you fold the results into a narrative? (Ch9: did you approach K* subcritically?)<br>
+      U — How far did you unfold into the Discussion? (Ch11: is ρ ≤ 1?)<br>
+      x* — Is your Conclusion the genuine fixed point of G? (Ch12: does T(Conclusion) = Conclusion?)<br>
+      Write one sentence for each operator describing your paper's instantiation of it.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('ext', this)">Copy Extension</button>
+  </div>
+</div>
+
+<!-- ── Chapter nav ─────────────────────────────── -->
+<div class="chapter-nav">
+  <a href="ch11-spectral.html">← Ch11 · Spectral Radius</a>
+  <a href="ch13-revision.html">Ch13 · Revision →</a>
+</div>
+
+<footer>
+  Chapter 12 of 17 &nbsp;·&nbsp; Book 3: The Mini-Beast &nbsp;·&nbsp;
+  G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; © G6 LLC
+</footer>
+
+<script>
+/* ── Cobweb Diagram Simulation ───────────────────────────────── */
+const canvas = document.getElementById('cobwebCanvas');
+const ctx    = canvas.getContext('2d');
+
+// Mappings T(x) on [0,1]
+// We display cobweb for x ∈ [0,1]
+const MAPS = {
+  fast: {
+    T: x => 0.5*x + 0.25,        // fixed point x* = 0.5, L = 0.5
+    fp: 0.5,
+    L: 0.5,
+    label: 'T(x) = 0.5x + 0.25',
+    color: '#50c878',
+    statusInit: 'L = 0.50 — fast contraction. Converges to x* = 0.50.'
+  },
+  slow: {
+    T: x => 0.85*x + 0.0975,     // fixed point x* = 0.65, L = 0.85
+    fp: 0.65,
+    L: 0.85,
+    label: 'T(x) = 0.85x + 0.0975',
+    color: '#f59e0b',
+    statusInit: 'L = 0.85 — slow contraction. Many revisions needed; x* = 0.65.'
+  },
+  expand: {
+    T: x => Math.min(1, Math.max(0, 1.2*x - 0.1)),   // L = 1.2, diverges
+    fp: null,
+    L: 1.2,
+    label: 'T(x) = 1.2x − 0.1',
+    color: '#f87171',
+    statusInit: 'L = 1.20 — not contractive. No fixed point; argument diverges.'
+  }
+};
+
+let cur     = null;
+let x0      = 0.1;   // starting draft position
+let cobweb  = [];    // array of {x,y} segments for the cobweb path
+let iterN   = 0;
+let curX    = x0;
+
+// Domain
+const X_MIN = 0, X_MAX = 1;
+
+function setMap(key) {
+  cur   = key;
+  curX  = x0;
+  iterN = 0;
+  cobweb = [];
+
+  const m = MAPS[key];
+  document.getElementById('map-label').textContent  = m.label;
+  document.getElementById('map-label').style.color  = m.color;
+  document.getElementById('L-display').textContent  = m.L.toFixed(2);
+  document.getElementById('fp-display').textContent = m.fp !== null ? m.fp.toFixed(4) : 'none';
+  document.getElementById('iter-display').textContent = '0';
+  document.getElementById('err-display').textContent  = m.fp !== null
+    ? Math.abs(curX - m.fp).toFixed(4) : '—';
+  document.getElementById('simStatus').textContent   = m.statusInit;
+
+  // Initialise cobweb starting point (x0, 0) on x-axis
+  cobweb.push({ x: curX, y: curX });  // start at (x0, x0) on diagonal
+  drawCanvas();
+}
+
+function stepOnce() {
+  if (!cur) { document.getElementById('simStatus').textContent = 'Choose a mapping first.'; return; }
+  const m = MAPS[cur];
+  const newX = m.T(curX);
+
+  // Cobweb: horizontal to (newX, curX), then vertical to (newX, newX) [diagonal]
+  cobweb.push({ x: newX, y: curX   });   // horizontal segment endpoint
+  cobweb.push({ x: newX, y: newX   });   // vertical to diagonal
+
+  curX = newX;
+  iterN++;
+
+  document.getElementById('iter-display').textContent = iterN;
+  document.getElementById('err-display').textContent  = m.fp !== null
+    ? Math.abs(curX - m.fp).toFixed(6) : Math.abs(curX - 0.5).toFixed(4) + ' (from 0.5)';
+
+  const status = m.fp !== null
+    ? `n=${iterN} · x=${curX.toFixed(6)} · |x−x*|=${Math.abs(curX-m.fp).toFixed(6)}`
+    : `n=${iterN} · x=${curX.toFixed(4)} · (diverging)`;
+  document.getElementById('simStatus').textContent = status;
+  drawCanvas();
+}
+
+function runMany() {
+  for (let i = 0; i < 10; i++) stepOnce();
+}
+
+function resetSim() {
+  if (cur) setMap(cur);
+}
+
+function toCanvas(xv, yv, PAD, plotW, plotH) {
+  const cx = PAD + ((xv - X_MIN) / (X_MAX - X_MIN)) * plotW;
+  const cy = PAD + plotH - ((yv - X_MIN) / (X_MAX - X_MIN)) * plotH;
+  return { cx, cy };
+}
+
+function drawCanvas() {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0a0800';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!cur) {
+    ctx.fillStyle = '#a89060';
+    ctx.font = '13px Courier New';
+    ctx.textAlign = 'center';
+    ctx.fillText('Choose a mapping to begin cobweb iteration.', W/2, H/2);
+    return;
+  }
+
+  const PAD   = 45;
+  const plotW = W - 2*PAD;
+  const plotH = H - 2*PAD;
+  const m     = MAPS[cur];
+
+  // Grid
+  ctx.strokeStyle = 'rgba(245,158,11,0.07)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; i++) {
+    const t = i/4;
+    const gx = PAD + t * plotW;
+    const gy = PAD + t * plotH;
+    ctx.beginPath(); ctx.moveTo(gx, PAD); ctx.lineTo(gx, PAD+plotH); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(PAD, gy); ctx.lineTo(PAD+plotW, gy); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = 'rgba(245,158,11,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD, PAD); ctx.lineTo(PAD, PAD+plotH);
+  ctx.moveTo(PAD, PAD+plotH); ctx.lineTo(PAD+plotW, PAD+plotH);
+  ctx.stroke();
+
+  // Diagonal y = x (dashed gold)
+  ctx.strokeStyle = 'rgba(245,158,11,0.35)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([5, 4]);
+  ctx.beginPath();
+  ctx.moveTo(PAD, PAD+plotH); ctx.lineTo(PAD+plotW, PAD);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Draw T(x) curve
+  ctx.strokeStyle = m.color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const steps = 200;
+  for (let i = 0; i <= steps; i++) {
+    const xv = X_MIN + (i/steps)*(X_MAX - X_MIN);
+    const yv = m.T(xv);
+    const { cx, cy } = toCanvas(xv, Math.min(1, Math.max(0, yv)), PAD, plotW, plotH);
+    i === 0 ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
+  }
+  ctx.stroke();
+
+  // Fixed point dot
+  if (m.fp !== null) {
+    const { cx, cy } = toCanvas(m.fp, m.fp, PAD, plotW, plotH);
+    ctx.fillStyle = m.color;
+    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#0a0800';
+    ctx.beginPath(); ctx.arc(cx, cy, 3, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Cobweb path
+  if (cobweb.length >= 2) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    cobweb.forEach((pt, i) => {
+      const { cx, cy } = toCanvas(pt.x, pt.y, PAD, plotW, plotH);
+      i === 0 ? ctx.moveTo(cx, cy) : ctx.lineTo(cx, cy);
+    });
+    ctx.stroke();
+
+    // Current position dot
+    const last = cobweb[cobweb.length - 1];
+    const { cx, cy } = toCanvas(last.x, last.y, PAD, plotW, plotH);
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI*2); ctx.fill();
+
+    // Starting x₀ marker
+    const first = cobweb[0];
+    const { cx: fx, cy: fy } = toCanvas(first.x, first.y, PAD, plotW, plotH);
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.beginPath(); ctx.arc(fx, fy, 4, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#a89060';
+  ctx.font = '11px Courier New';
+  ctx.textAlign = 'center';
+  ctx.fillText('x (draft distance from x*)', PAD + plotW/2, H - 5);
+  ctx.save();
+  ctx.translate(12, PAD + plotH/2);
+  ctx.rotate(-Math.PI/2);
+  ctx.fillText('T(x)', 0, 0);
+  ctx.restore();
+
+  // Map label
+  ctx.fillStyle = m.color;
+  ctx.font = '12px Courier New';
+  ctx.textAlign = 'left';
+  ctx.fillText(m.label, PAD + 6, PAD + 18);
+}
+
+/* ── Copy prompts ─────────────────────────────────────────────── */
+const PROMPT_TEXT = {
+  p63: `CONCLUSION AUDIT — Prompt 6.3
+
+Read your Conclusion section. For each sentence, classify it as:
+  C1 = thesis restatement
+  C2 = synthesis (showing how results + discussion together establish the claim)
+  C3 = scope (what the claim applies to and what it does not)
+  C4 = limitation (the largest perturbation the argument survived)
+  C5 = future work (the next fixed-point problem enabled by this result)
+  X  = summary / repeat of results — flag for removal
+
+Then apply the fixed-point test: if you re-read your entire paper and rewrote the Conclusion from scratch, would it be the same? If not, identify which move (C1–C5) is missing or misplaced, and rewrite until T(Conclusion) = Conclusion.`,
+
+  p71: `FIXED-POINT CLAIM — Prompt 7.1
+
+Imagine your paper goes through ten rounds of peer review. Each round removes one weak claim and tightens one strong one. What single sentence would remain unchanged at the end — the x* of your argument?
+
+Write that sentence now. That is your Conclusion's core.
+
+Then verify:
+(a) Is it supported by all three of your key results independently? (Lyapunov test — Ch10)
+(b) Does its spectral reach ρ ≤ 1? (AXLE test — Ch11)
+(c) Would a skeptical reviewer in an adjacent field accept the warrant?
+
+If yes to all three: this is your fixed point. Build the Conclusion around it.`,
+
+  ext:  `OPERATOR CHAIN AUDIT — Extension
+
+Trace your paper through the full operator chain G = U∘F∘K∘C:
+
+C — What did you compress? (Ch4–5: what is the minimal representation of your data that preserves the signal you need?)
+
+K — What threshold did you cross? (Ch4–5: what is the claim that separates signal from noise? What would have to be true for you NOT to have crossed K*?)
+
+F — How did you fold the results into a narrative? (Ch9: did Results approach K* subcritically — approaching the limit without overclaiming it?)
+
+U — How far did you unfold into the Discussion? (Ch11: is every claim's spectral reach ρ ≤ 1?)
+
+x* — Is your Conclusion the genuine fixed point of G? (Ch12: if you applied the entire paper's argument one more time to your Conclusion, would you reach the same Conclusion?)
+
+Write one sentence for each operator describing your paper's instantiation of it.`
+};
+
+function copyPrompt(id, btn) {
+  navigator.clipboard.writeText(PROMPT_TEXT[id]).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
+}
+
+// ── Init ──
+drawCanvas();
+</script>
+</body>
+</html>

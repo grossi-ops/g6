@@ -1,0 +1,9 @@
+[submodule "AXLE"]
+	path = AXLE
+	url = https://github.com/TOTOGT/AXLE
+[submodule "DM3-lab"]
+	path = DM3-lab
+	url = https://github.com/TOTOGT/DM3-lab
+[submodule "book3-starter"]
+	path = book3-starter
+	url = https://github.com/TOTOGT/book3-starter

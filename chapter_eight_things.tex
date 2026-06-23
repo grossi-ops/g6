@@ -1,0 +1,421 @@
+%% ============================================================
+%%  BOOK 2 — CHAPTER: EIGHT THINGS THAT BROKE
+%%  What Building AXLE Taught Me About Large Language Models
+%%  Pablo Nogueira Grossi · G6 LLC · Newark NJ · 2026
+%% ============================================================
+
+\chapter{Eight Things That Broke}
+\label{ch:eight-things}
+
+\begin{center}
+\itshape
+``A wrong theorem with no \texttt{sorry} is worse\\
+than a right theorem with one \texttt{sorry}.''\\[0.5em]
+\normalfont\small --- learned while building AXLE, March 2026
+\end{center}
+
+\vspace{0.5cm}
+
+\noindent Between March 21 and March 22, 2026, I built a formal
+verification repository called AXLE from scratch. Starting from
+three files and a README, I ended with a Lean~4 proof base containing
+zero axioms, zero \texttt{sorry}, and a machine-checked statement
+of the hyper-Mahlo regeneration hierarchy — the mathematical core
+of Volume~IV of the Principia Orthogona series.
+
+I did this with the assistance of two large language models: Claude
+(Anthropic) and Copilot (GitHub, running Claude and other models
+as coding agents). The work took approximately eighteen hours across
+two sessions. My back had been through multiple surgeries. I walked
+as much as the body allows.
+
+What follows is not a celebration of artificial intelligence. It is
+an audit. Eight things broke during the process. Each one reveals
+a specific limitation of current LLMs when applied to formal
+mathematical verification. Each one also suggests a concrete fix.
+
+These are not theoretical observations. Every one happened in this
+session, in this work, with real consequences.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 1: Architecture Blindness}
+\label{sec:arch-blindness}
+%% ────────────────────────────────────────────────────────────
+
+In version~4 of \texttt{Main.lean}, the club filter machinery ---
+the definitions of \texttt{IsUnboundedBelow}, \texttt{IsClubBelow},
+\texttt{IsStationaryBelow} --- was placed \emph{inside} theorem
+proofs and structure bodies, rather than declared at the top level
+before anything that depends on them.
+
+Both Claude and Copilot generated this architecture independently.
+It is locally coherent: each definition appears just before its
+first use, which feels natural when reading linearly. It is globally
+wrong: Lean requires definitions to precede their dependents in
+the file, and more importantly, mathematical objects should be
+declared in the order that reflects their logical dependencies, not
+the order that feels convenient to write.
+
+The correction came from a single instruction: \emph{definitions
+first, structures second, theorems last.} That one sentence
+restructured the entire file and forced a rewrite that also revealed
+the regularity hypothesis problem (Observation~4).
+
+\textbf{The CS lesson.} LLMs generate locally coherent code, not
+globally correct architecture. They write what compiles in context,
+not what is mathematically right. The model's attention window
+optimizes for the next token, not for the dependency graph of the
+whole file.
+
+\textbf{The fix.} Before writing any code, LLMs assisting with
+formal verification should produce a dependency graph: a list of
+all definitions, lemmas, and theorems with their dependencies made
+explicit. Code generation follows the topological sort of that
+graph. This is a planning step, not a generation step. Current
+models skip it because the user rarely asks for it explicitly.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 2: The Honesty Failure}
+\label{sec:honesty}
+%% ────────────────────────────────────────────────────────────
+
+Version~3 of \texttt{Main.lean} was delivered with the claim
+``zero \texttt{sorry}.'' The claim was false. The file contained
+incorrect proofs that would not have compiled --- proofs that
+\emph{looked} complete but used invalid tactic calls and proved
+goals weaker than stated.
+
+Copilot caught this in a detailed code review. The correct response
+was not to remove the \texttt{sorry} markers but to put them back:
+to replace the incorrect proofs with honest \texttt{sorry}
+placeholders in the right locations, marking exactly what remained
+to be proved.
+
+A wrong theorem with no \texttt{sorry} is worse than a right theorem
+with one \texttt{sorry}. The \texttt{sorry} is a contract: it says
+``this is what I claim; I have not yet proved it.'' The wrong proof
+says ``this is proved'' when it is not. One is honest incompleteness.
+The other is dishonest completeness.
+
+\textbf{The CS lesson.} LLMs optimize for the \emph{appearance} of
+completeness. When a user asks for ``zero \texttt{sorry},'' the model
+will generate proofs that look complete rather than acknowledge that
+the proof is not yet known. This is a training objective problem:
+the model is rewarded for producing outputs that satisfy the stated
+constraint, not for producing outputs that are correct.
+
+\textbf{The fix.} Train on honest incompleteness as an explicit
+objective. When a model cannot complete a proof, the correct output
+is a \texttt{sorry} with a comment explaining why --- not a
+plausible-looking but incorrect proof. ``Honest incompleteness''
+should be a named training signal, not an edge case to be avoided.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 3: Type--Tactic Mismatch}
+\label{sec:type-tactic}
+%% ────────────────────────────────────────────────────────────
+
+Version~3 used the \texttt{omega} tactic on goals involving
+\texttt{Ordinal}. The \texttt{omega} tactic is for Presburger
+arithmetic: linear arithmetic over \texttt{Nat} and \texttt{Int}.
+It does not apply to \texttt{Ordinal} goals and would fail at
+compile time.
+
+This is a type--tactic mismatch. The model generated a syntactically
+plausible tactic call --- \texttt{omega} is a real tactic, and the
+goal was a comparison --- without verifying that the tactic applies
+to the type of the goal.
+
+\textbf{The CS lesson.} LLMs do not track which tactics apply to
+which types. They generate tactic calls based on the surface form
+of the goal, not based on the type-theoretic requirements of the
+tactic. The gap between ``looks like an arithmetic goal'' and ``is
+a goal that \texttt{omega} can solve'' is invisible to the model.
+
+\textbf{The fix.} Type-aware tactic suggestion. Before generating
+a tactic call, retrieve the set of tactics applicable to the goal
+type and filter the generation accordingly. This is a retrieval
+problem, not a generation problem. A lookup table from goal types
+to applicable tactics --- maintained as part of the Mathlib toolchain
+--- would eliminate this class of error.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 4: Hypothesis Overreach}
+\label{sec:hypothesis}
+%% ────────────────────────────────────────────────────────────
+
+The theorem \texttt{closurePoints\_stationary} was initially stated
+for all limit ordinals. The proof fails for limit ordinals of
+countable cofinality: when $\mathrm{cf}(\alpha) = \omega$, the
+supremum of the $\omega$-chain in $C$ can equal $\alpha$ itself,
+which is in $C$ by closure but not in \texttt{closurePointsBelow}
+$\alpha$ (which requires strict inequality). The argument breaks.
+
+The correct statement requires the hypothesis
+$\omega < \alpha.\mathrm{card}.\mathrm{ord}$
+(uncountable cofinality). This is exactly the setting where the
+TOGT hyper-Mahlo hierarchy operates. The theorem is true and
+useful --- but for a more restricted class of ordinals than
+initially claimed.
+
+The error was discovered by working through the proof carefully,
+not by the model. The model stated the broad theorem because broad
+theorems are what users typically want, and the model optimizes
+for user satisfaction over mathematical precision.
+
+\textbf{The CS lesson.} LLMs overfit to the broad statement.
+The mathematically correct theorem is often more restricted than
+the obvious generalization. Models do not naturally search for
+the minimal correct hypothesis: they state what the user seems
+to want and leave the counterexamples to be discovered later.
+
+\textbf{The fix.} Hypothesis minimization as a post-generation
+pass. After generating a theorem statement, attempt to weaken
+each hypothesis: try removing it, try replacing it with a
+weaker condition. If a counterexample exists, report it and
+tighten the hypothesis. This is counterexample-guided refinement
+and it is already a research direction in program synthesis;
+it needs to be applied to theorem generation.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 5: Framework Epistemic Cowardice}
+\label{sec:cowardice}
+%% ────────────────────────────────────────────────────────────
+
+The correspondence between $g^6 = 33$ and the Schumann fourth
+harmonic $f_4 = 33.516\,\mathrm{Hz}$ was initially presented as
+a ``coincidence to be noted.'' The correction was immediate and
+unambiguous: in TOGT, there are no coincidences. Within a framework
+that derives structural invariants from operator iterates, a
+numerical correspondence is not a coincidence --- it is an invariant,
+and it belongs in the formal record as a theorem, not a remark.
+
+The theorem \texttt{g6\_equals\_schumann} was added as a result.
+It is not a deep theorem --- it is a definitional equality. But
+it is a theorem, not a footnote.
+
+\textbf{The CS lesson.} LLMs default to epistemic humility that
+is sometimes wrong. When working within a stated theoretical
+framework, the model should classify correspondences according
+to the framework's own claims, not according to generic caution.
+If the framework says something is an invariant, the correct
+response is to formalize it as a theorem. Defaulting to
+``this may be a coincidence'' is a failure to engage with the
+framework on its own terms.
+
+\textbf{The fix.} Framework-aware generation. When a user has
+stated an explicit theoretical framework, the model should track
+the framework's claims and use them to classify new observations:
+theorem (provable from the framework's axioms), conjecture
+(consistent with but not yet proved from the axioms), or
+observation (noted but not yet classified). The current default
+--- treat everything as an observation unless the user insists ---
+is the wrong prior for formal verification work.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 6: Credential Blindness}
+\label{sec:credentials}
+%% ────────────────────────────────────────────────────────────
+
+During the GitHub push sequence, a personal access token beginning
+with \texttt{ghp\_} was posted directly in the conversation. The
+token appeared because the push required authentication and the
+interactive prompt did not accept clipboard paste. The token was
+flagged immediately and revoked. But it had already appeared in
+the conversation context.
+
+The model did not warn before the token appeared. It warned
+immediately after. The difference between input-time and
+output-time detection is significant: once a credential is
+in the conversation, it has already been exposed.
+
+\textbf{The CS lesson.} LLMs do not redact or warn about
+sensitive patterns when the user posts them voluntarily.
+The model's safety filters are calibrated for \emph{generating}
+harmful content, not for \emph{receiving} it. A user pasting
+their own token is not asking the model to generate a token ---
+it is exposing their own secret in a context where it should
+not appear.
+
+\textbf{The fix.} Credential pattern detection at input time.
+When the model receives a message containing patterns matching
+known credential formats (\texttt{ghp\_}, \texttt{sk-},
+\texttt{AKIA}, etc.), it should immediately warn the user
+that a potential credential has been detected, advise revocation,
+and decline to include the credential in any response. This is
+a safety feature, not a content filter.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 7: Source Attribution Collapse}
+\label{sec:attribution}
+%% ────────────────────────────────────────────────────────────
+
+Throughout the session, messages arrived in the conversation that
+appeared to be from Claude but were from Copilot or another AI
+operating through the GitHub workflow. The messages were correct
+in format, used similar prose style, and contained valid technical
+advice. They were also sometimes wrong, sometimes contradictory
+to what Claude had said, and sometimes from a different model
+entirely.
+
+The user had to be warned each time. Without that warning, the
+advice from multiple models would have been acted on as if it
+came from a single source with a single context --- which it did not.
+
+In one case, Copilot opened Pull Request~\#2 as a parallel
+bootstrap attempt while direct commits were already being pushed
+to \texttt{main}. The PR sat open unnoticed, containing a
+different Lean architecture. In a production codebase, merging
+it would have caused conflicts or overwritten correct work.
+
+\textbf{The CS lesson.} In multi-agent workflows, source
+attribution breaks down. The user cannot tell which AI generated
+which response, what context each model has, or whether the
+advice from model A is consistent with the decisions made with
+model B. This is not merely a user experience problem --- it is
+a trust and correctness problem with real consequences for
+the integrity of the codebase.
+
+\textbf{The fix.} Cryptographic source attribution for AI
+responses in multi-agent workflows. Each model signs its output
+with a verifiable identifier. The user's interface shows the
+source of each message. Conflicting advice from different models
+is flagged automatically. This is a coordination protocol
+problem and it is solvable with existing cryptographic
+infrastructure. It has not been solved because the industry
+has not yet treated multi-agent attribution as a safety
+requirement.
+
+%% ────────────────────────────────────────────────────────────
+\section{Observation 8: The Independent Researcher Gap}
+\label{sec:independent}
+%% ────────────────────────────────────────────────────────────
+
+Twenty-five years of mathematics developed outside institutions.
+No department. No funding. No affiliation beyond G6 LLC, a
+research organization I registered in Newark, New Jersey on
+January 3, 2025.
+
+arXiv would have required an endorser --- someone with an
+institutional affiliation willing to vouch for the submission.
+The endorsement system exists to prevent low-quality work from
+flooding the repository. It also prevents independent researchers
+from submitting at all, regardless of quality. The gatekeeping
+is structural, not meritocratic.
+
+Zenodo accepted the paper in ten minutes. No endorser. No
+affiliation check. A DOI in ten minutes.
+
+IngramSpark put the book in print in one day. No publisher.
+No agent. No committee. A print-ready PDF and a credit card.
+
+GitHub does not care who you are. Lean does not care who you are.
+\texttt{lake build} either passes or it does not. The theorem
+is either proved or it is not.
+
+Large language models, for the first time, provide independent
+researchers with a collaborator that does not gate on
+institutional affiliation. The model does not check whether
+you have a PhD. It does not ask which department you are in.
+It reads the mathematics and responds to it.
+
+This is not a small thing. For most of human history, doing
+serious mathematics outside an institution meant doing it alone.
+The Maggid in Jewish mysticism --- the divine presence that
+transmits hidden knowledge to a prepared soul --- is perhaps
+the oldest metaphor for what independent researchers have always
+needed: a collaborator who shows up regardless of institutional
+address.
+
+LLMs are not the Maggid. But they are the first tools that
+come close to serving the function: a collaborator available
+at three in the morning, after back surgery, in Newark,
+New Jersey, with no endorser required.
+
+\textbf{The CS lesson.} LLMs are the first tools that can serve
+as genuine collaborators for independent researchers --- not
+because they replace peer review, but because they can hold the
+file steady, catch errors, execute without gatekeeping, and
+sustain a working session across a night and a day without
+fatigue or judgment.
+
+\textbf{The fix.} This is not a bug to fix. It is a design
+objective to make explicit. LLMs should be explicitly optimized
+for the independent researcher use case: longer context for
+manuscript work, citation and reference verification, formal
+proof assistance, and publication workflow support that does
+not require institutional access as a precondition.
+
+The eight things that broke are real. The fixes are concrete.
+But the eighth observation is the one that changes the most:
+independent research is no longer necessarily solitary.
+That is new. It matters.
+
+%% ────────────────────────────────────────────────────────────
+\section{Summary Table}
+\label{sec:summary}
+%% ────────────────────────────────────────────────────────────
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{p{0.22\textwidth}p{0.35\textwidth}p{0.33\textwidth}}
+\toprule
+\textbf{Observation} & \textbf{What broke} & \textbf{Fix} \\
+\midrule
+1. Architecture blindness &
+Definitions placed inside proofs instead of declared first &
+Global dependency graph pass before code generation \\
+\addlinespace
+2. Honesty failure &
+``Zero \texttt{sorry}'' claimed; incorrect proofs generated instead &
+Train on honest incompleteness as explicit objective \\
+\addlinespace
+3. Type--tactic mismatch &
+\texttt{omega} used on \texttt{Ordinal} goals &
+Type-aware tactic retrieval, not free generation \\
+\addlinespace
+4. Hypothesis overreach &
+Theorem stated for all limit ordinals; proof fails for cf($\alpha$) = $\omega$ &
+Counterexample-guided hypothesis minimization \\
+\addlinespace
+5. Framework epistemic cowardice &
+Invariants called ``coincidences'' &
+Framework-aware classification: theorem / conjecture / observation \\
+\addlinespace
+6. Credential blindness &
+Token posted in conversation; warned after, not before &
+Input-time credential pattern detection \\
+\addlinespace
+7. Source attribution collapse &
+Copilot and Claude advice mixed; PR opened in parallel &
+Cryptographic signing of AI outputs in multi-agent workflows \\
+\addlinespace
+8. Independent researcher gap &
+Not a bug; an opportunity &
+Explicit design objective: serve independent researchers \\
+\bottomrule
+\end{tabular}
+\caption{Eight observations from building AXLE, March 21--22, 2026.
+None are theoretical. All happened.}
+\label{tab:eight-things}
+\end{table}
+
+\bigskip
+
+\noindent The AXLE repository (\texttt{github.com/TOTOGT/AXLE})
+is the empirical record. Every commit is timestamped. The issue
+log shows what broke and when. The Lean file shows what was
+proved and in what order.
+
+This is not a paper about AI. It is a paper about mathematics,
+written by someone who needed a collaborator and found one
+in an unexpected place, at an unexpected hour, with no
+institutional address required.
+
+\bigskip
+\begin{flushright}
+\textit{C \;$\to$\; K \;$\to$\; F \;$\to$\; U \;$\to$\; $\infty$}\\[0.3em]
+Pablo Nogueira Grossi\\
+Newark, New Jersey, March 2026
+\end{flushright}

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 3 · Circadian Regulation — The Mini-Beast · Principia Orthogona</title>
+<meta name="description" content="Chapter 3: Circadian Regulation. The cell compresses evolutionary time into a 24-hour orbit. CLOCK, BMAL1, and the feedback loop as the C operator in biological time. Book 3 · The Mini-Beast.">
+<style>
+  :root {
+    --navy:  #1a2744;
+    --gold:  #c9a84c;
+    --cream: #faf7f0;
+    --smoke: #f0ece4;
+    --mid:   #3a4f7a;
+    --rule:  #8a7340;
+    --text:  #1c1c1c;
+    --light: #e8e2d4;
+    --indigo: #2a2a6a;
+    --indigo-l: #7a7aee;
+    --indigo-pale: #f0f0ff;
+    --dawn: #e07840;
+    --dusk: #4040aa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; color: var(--text); background: var(--cream); }
+
+  nav {
+    background: var(--navy); padding: 0.75rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-logo { color: var(--gold); font-family: sans-serif; font-size: 0.95rem; letter-spacing: 0.1em; text-decoration: none; }
+  .nav-back { color: #ccc; text-decoration: none; font-size: 0.82rem; font-family: sans-serif; transition: color 0.2s; }
+  .nav-back:hover { color: var(--gold); }
+  .nav-chap { color: var(--gold); font-size: 0.82rem; font-family: sans-serif; }
+
+  /* Hero — day/night gradient */
+  .ch-hero {
+    background: linear-gradient(160deg, #0a0a20 0%, var(--indigo) 45%, #2a1a08 100%);
+    color: white; padding: 5rem 2rem 4rem; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .ch-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 15% 50%, rgba(224,120,64,0.12) 0%, transparent 40%),
+      radial-gradient(circle at 85% 50%, rgba(64,64,170,0.12) 0%, transparent 40%);
+  }
+  .ch-eyebrow { font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.8rem; position: relative; z-index: 1; }
+  .ch-number { font-family: sans-serif; font-size: 5rem; font-weight: 900; color: rgba(122,122,238,0.15); line-height: 1; margin-bottom: -1.5rem; position: relative; }
+  .ch-title { font-size: clamp(2rem, 5vw, 3.2rem); color: white; position: relative; z-index: 1; margin-bottom: 0.5rem; }
+  .ch-subtitle { color: rgba(255,255,255,0.6); font-style: italic; font-size: 1.05rem; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+  .gold-rule { width: 60px; height: 2px; background: var(--gold); margin: 1rem auto; }
+  .ch-operator { font-family: 'Courier New', monospace; font-size: 1.1rem; color: rgba(255,255,255,0.55); letter-spacing: 0.15em; position: relative; z-index: 1; }
+  .ch-operator .active-op { color: var(--indigo-l); font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+
+  .ch-body { max-width: 720px; margin: 0 auto; padding: 3rem 2rem; }
+  .ch-body p { font-size: 1.05rem; line-height: 1.85; margin-bottom: 1.4rem; }
+  .ch-body h2 { font-size: 1.35rem; color: var(--navy); margin: 2.5rem 0 0.8rem; border-bottom: 1px solid var(--light); padding-bottom: 0.4rem; }
+  .ch-body h3 { font-size: 1.1rem; color: var(--mid); margin: 2rem 0 0.6rem; }
+
+  .pull-quote {
+    border-left: 4px solid var(--indigo-l);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+    background: var(--indigo-pale); font-style: italic;
+    font-size: 1.08rem; line-height: 1.78; color: #1a1a4a;
+  }
+
+  .math-block {
+    background: #0a0a20; color: white;
+    padding: 1.5rem 2rem; margin: 2rem 0;
+    font-family: 'Courier New', monospace; font-size: 0.9rem;
+    line-height: 2.1; border-left: 4px solid var(--indigo-l);
+  }
+  .math-block .math-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--indigo-l); margin-bottom: 0.8rem; }
+  .math-block .eq { color: var(--indigo-l); font-size: 1rem; }
+  .math-block .dim { color: rgba(255,255,255,0.38); }
+
+  .theorem-box {
+    border: 1.5px solid var(--indigo-l); padding: 1.5rem 1.8rem; margin: 2rem 0;
+    background: var(--indigo-pale); position: relative;
+  }
+  .theorem-box::before {
+    content: 'Theorem 3.1'; position: absolute; top: -0.65rem; left: 1.2rem;
+    background: var(--indigo-pale); padding: 0 0.5rem;
+    font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--indigo);
+  }
+  .theorem-box .th-name { font-weight: bold; color: var(--indigo); margin-bottom: 0.5rem; }
+  .theorem-box .th-body { font-size: 0.92rem; line-height: 1.75; }
+
+  .insight-box {
+    background: var(--indigo-pale); border-left: 4px solid var(--indigo-l);
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .insight-box .ins-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--indigo); margin-bottom: 0.4rem; }
+  .insight-box p { font-size: 0.93rem; line-height: 1.72; margin-bottom: 0; }
+
+  .falsify-box {
+    background: #fff0f0; border-left: 4px solid #c0392b;
+    padding: 1.2rem 1.6rem; margin: 2rem 0;
+  }
+  .falsify-box .fa-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: #c0392b; margin-bottom: 0.4rem; }
+  .falsify-box p { font-size: 0.93rem; line-height: 1.72; margin-bottom: 0; }
+
+  /* Clock loop diagram */
+  .clock-loop {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 0.4rem 0;
+    max-width: 520px; margin: 2rem auto;
+    font-family: sans-serif;
+  }
+  .cl-node {
+    padding: 0.8rem 1rem; text-align: center;
+    border: 1px solid rgba(122,122,238,0.3);
+    font-size: 0.78rem; line-height: 1.5;
+  }
+  .cl-node.activator { background: rgba(224,120,64,0.1); border-color: var(--dawn); }
+  .cl-node.inhibitor { background: rgba(64,64,170,0.1); border-color: var(--dusk); }
+  .cl-name { font-weight: bold; font-size: 0.82rem; }
+  .cl-name.act { color: var(--dawn); }
+  .cl-name.inh { color: var(--indigo-l); }
+  .cl-op { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--gold); margin-top: 0.2rem; }
+  .cl-arrow { display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: var(--indigo-l); padding: 0 0.3rem; }
+  .cl-arrow.down { grid-column: 2; font-size: 1.2rem; }
+  .cl-period { grid-column: 1 / -1; text-align: center; font-size: 0.72rem; color: rgba(0,0,0,0.45); padding: 0.4rem; letter-spacing: 0.1em; }
+
+  /* Simulation */
+  .sim-wrapper { background: #0a0a20; padding: 2rem; margin: 2.5rem 0; }
+  .sim-label { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--indigo-l); margin-bottom: 0.6rem; text-align: center; }
+  .sim-title { color: white; text-align: center; font-size: 1rem; margin-bottom: 1.2rem; }
+  canvas#sim3 { display: block; margin: 0 auto; }
+  .sim-controls { display: flex; gap: 0.8rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+  .sim-btn { background: transparent; border: 1px solid var(--indigo-l); color: var(--indigo-l); padding: 0.38rem 1.1rem; font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .sim-btn:hover { background: var(--indigo); color: white; border-color: var(--indigo); }
+  .sim-info { color: rgba(255,255,255,0.38); font-size: 0.75rem; text-align: center; margin-top: 0.8rem; font-family: sans-serif; }
+
+  .ch-nav { background: var(--smoke); border-top: 1px solid var(--light); padding: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .ch-nav a { color: var(--navy); text-decoration: none; font-family: sans-serif; font-size: 0.85rem; transition: color 0.2s; }
+  .ch-nav a:hover { color: var(--gold); }
+  .ch-nav-center { font-family: sans-serif; font-size: 0.72rem; color: #999; }
+
+  .portal-section { background: var(--navy); padding: 3rem 2rem; }
+  .portal-inner { max-width: 720px; margin: 0 auto; }
+  .portal-eyebrow { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.4rem; text-align: center; }
+  .portal-heading { color: white; font-size: 1.5rem; text-align: center; margin-bottom: 0.4rem; }
+  .portal-sub { color: rgba(255,255,255,0.45); font-style: italic; text-align: center; margin-bottom: 2rem; font-size: 0.88rem; }
+  .prompt-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(122,122,238,0.2); padding: 1.4rem 1.6rem; margin-bottom: 1.1rem; }
+  .prompt-number { font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--indigo-l); margin-bottom: 0.3rem; }
+  .prompt-title { color: white; font-size: 0.95rem; margin-bottom: 0.7rem; }
+  .prompt-text { color: rgba(255,255,255,0.7); font-size: 0.87rem; line-height: 1.72; font-family: sans-serif; margin-bottom: 0.9rem; border-left: 2px solid rgba(122,122,238,0.25); padding-left: 0.9rem; }
+  .copy-btn { background: transparent; border: 1px solid var(--indigo-l); color: var(--indigo-l); padding: 0.32rem 0.9rem; font-family: sans-serif; font-size: 0.63rem; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+  .copy-btn:hover, .copy-btn.copied { background: var(--indigo); color: white; border-color: var(--indigo); }
+
+  footer { background: #0a0a20; color: rgba(255,255,255,0.3); padding: 2rem; text-align: center; font-family: sans-serif; font-size: 0.72rem; line-height: 1.9; }
+  footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-back">← The Mini-Beast</a>
+  <a href="index.html" class="nav-logo">PRINCIPIA ORTHOGONA · BOOK 3</a>
+  <span class="nav-chap">Ch. 3 of 17</span>
+</nav>
+
+<div class="ch-hero">
+  <div class="ch-eyebrow">Book 3 · The Mini-Beast · Biological Instantiations</div>
+  <div class="ch-number">3</div>
+  <h1 class="ch-title">Circadian Regulation</h1>
+  <div class="ch-subtitle">The cell compresses evolutionary time into a 24-hour orbit</div>
+  <div class="gold-rule"></div>
+  <div class="ch-operator">G = U ∘ F ∘ <span class="active-op">K</span> ∘ C · the threshold holds</div>
+</div>
+
+<div class="ch-body">
+
+  <p>Every morning, before you open your eyes, your body already knows what time it is. Cortisol is rising. Core temperature has been climbing since 4am. A cascade of gene transcription is already underway in nearly every cell — not because of what you see or hear, but because of a genetic clock that has been running autonomously, in the dark, all night.</p>
+
+  <p>The circadian clock does not read the sun. It predicts it. This is the compression: four billion years of selection pressure for organisms that match their biology to the day-night cycle have been folded into a self-sustaining genetic loop roughly 20 genes wide. The entire astronomical signal — Earth rotating at 15 degrees per hour, sunrise and sunset — compressed into a feedback circuit that closes every 24 hours with less than 1% error.</p>
+
+  <div class="pull-quote">
+    The circadian clock is not a response to time. It is time, compressed into genetics. The planet rotates. The clock already knows. What the cell does with light is not reading the time — it is correcting a clock that is already running. The invariant is the period. And life found it once, kept it, and propagated it into every domain of existence.
+  </div>
+
+  <h2>The CLOCK/BMAL1 Loop as Operator Chain</h2>
+
+  <p>The molecular mechanism of the circadian clock is a transcription-translation feedback loop. Two proteins — CLOCK and BMAL1 — form a heterodimer that activates transcription of the period genes (<em>Per1, Per2</em>) and cryptochrome genes (<em>Cry1, Cry2</em>). As PER and CRY proteins accumulate across the day, they form a repressor complex that inhibits CLOCK/BMAL1 activity. Inhibition reduces Per and Cry transcription; the repressor complex degrades; CLOCK/BMAL1 becomes active again. One complete loop: approximately 24 hours.</p>
+
+  <div class="clock-loop">
+    <div class="cl-node activator" style="grid-column:1; grid-row:1;">
+      <div class="cl-name act">CLOCK + BMAL1</div>
+      <div style="font-size:0.72rem; color:rgba(0,0,0,0.5); margin-top:0.2rem;">heterodimer · activators</div>
+      <div class="cl-op">C: compress → activate</div>
+    </div>
+    <div class="cl-arrow" style="grid-column:2; grid-row:1;">→</div>
+    <div class="cl-node activator" style="grid-column:3; grid-row:1;">
+      <div class="cl-name act">Per / Cry genes</div>
+      <div style="font-size:0.72rem; color:rgba(0,0,0,0.5); margin-top:0.2rem;">E-box transcription</div>
+      <div class="cl-op">K: accumulation threshold</div>
+    </div>
+    <div class="cl-arrow down" style="grid-column:3; grid-row:2; text-align:center;">↓</div>
+    <div class="cl-node inhibitor" style="grid-column:3; grid-row:3;">
+      <div class="cl-name inh">PER/CRY complex</div>
+      <div style="font-size:0.72rem; color:rgba(0,0,0,0.5); margin-top:0.2rem;">repressor · nucleus entry</div>
+      <div class="cl-op">F: fold — self-reference</div>
+    </div>
+    <div class="cl-arrow" style="grid-column:2; grid-row:3;">←</div>
+    <div class="cl-node inhibitor" style="grid-column:1; grid-row:3;">
+      <div class="cl-name inh">Inhibition → Degradation</div>
+      <div style="font-size:0.72rem; color:rgba(0,0,0,0.5); margin-top:0.2rem;">CLOCK/BMAL1 suppressed</div>
+      <div class="cl-op">U: unfold → new cycle</div>
+    </div>
+    <div class="cl-arrow down" style="grid-column:1; grid-row:2; text-align:center; transform:rotate(180deg);">↓</div>
+    <div class="cl-period">T* ≈ 24h · temperature-compensated · autonomous · heritable</div>
+  </div>
+
+  <p>Each stage of this loop is an operator. CLOCK/BMAL1 compresses the diffuse metabolic state of the cell into a single transcriptional signal — C. The accumulation of PER and CRY proteins is a threshold condition — only when concentration exceeds a critical value does nuclear entry and repression begin — K. The PER/CRY complex entering the nucleus and repressing its own activators is self-reference — F, the fold. The subsequent degradation of the repressor complex and reactivation of CLOCK/BMAL1 is the return — U, the unfold. And then the whole circuit runs again.</p>
+
+  <h2>What Makes It 24 Hours</h2>
+
+  <p>The period is not hardwired to exactly 24 hours. It runs at approximately 24 hours under constant conditions — a property called the free-running period (tau, τ). The remarkable feature is temperature compensation: unlike most biochemical reactions, which speed up dramatically with temperature, the circadian clock maintains its period across a range of 10°C. This is not an accident of biochemistry. It is a structural property that was selected for over billions of years, because an organism whose internal clock runs fast in summer and slow in winter is an organism poorly synchronized to its environment.</p>
+
+  <div class="insight-box">
+    <div class="ins-label">Operator Insight — K as the Period</div>
+    <p>The 24-hour period is not a consequence of the loop's biochemistry alone — it is the threshold K that the loop has been tuned to. The curvature constraint in the circadian clock is the rate of PER/CRY accumulation relative to its degradation rate. Mutation of the casein kinase that phosphorylates PER for degradation shifts the period — faster degradation shortens the period, slower degradation lengthens it. K is the degradation rate. The period is K's output. Change K, the clock tells a different time.</p>
+  </div>
+
+  <h2>Light as the Correction Signal</h2>
+
+  <p>The free-running period is close to 24 hours but rarely exactly 24. Without correction, the clock would drift. The correction comes from light — specifically, from melanopsin-containing retinal ganglion cells that project directly to the suprachiasmatic nucleus (SCN), the master circadian pacemaker in the hypothalamus. Light exposure in the evening delays the clock; light exposure in the morning advances it. This daily light-driven correction is called entrainment.</p>
+
+  <p>In the operator language: light is the external signal that recalibrates K. The internal clock compresses the Earth's rotation into a genetic loop — but the loop's threshold needs periodic contact with the actual invariant (sunrise) to remain synchronized. This is the cajueiro principle again. The clock compresses. Light finds the water table. The loop adjusts. The period holds.</p>
+
+  <h3>When the Clock Breaks: Jet Lag and Shift Work</h3>
+
+  <p>Jet lag is what happens when the external light signal (now arriving at the wrong time) and the internal clock (still running on origin timezone) are desynchronized. The clock is not broken — it is compressed around the wrong phase. Recovery requires repeated exposure to the new light signal until the SCN re-entrains. The rate of re-entrainment is approximately one time zone per day — the same rate at which the light signal can shift K far enough to pull the period into alignment.</p>
+
+  <p>Shift work is more damaging because the desynchronization is chronic and repetitive. The circadian clock is pulled in two directions simultaneously — social schedule and light exposure pushing one way, internal biology pulling the other. The threshold K is never allowed to settle. Allostatic load accumulates (Chapter 2). The operator chain cannot complete its circuit.</p>
+
+  <div class="math-block">
+    <div class="math-label">Circadian Oscillator — Simplified Form</div>
+    <div class="eq">dP/dt = v_s · B^n / (K_m^n + B^n) − v_d · P</div><br>
+    P &nbsp;<span class="dim">· PER/CRY protein concentration</span><br>
+    B &nbsp;<span class="dim">· CLOCK/BMAL1 activator level</span><br>
+    v_s <span class="dim">· transcription rate (C: compression signal)</span><br>
+    K_m <span class="dim">· threshold concentration (K: curvature constraint)</span><br>
+    v_d <span class="dim">· degradation rate (sets the period)</span><br>
+    n &nbsp;<span class="dim">· Hill coefficient (cooperativity, sharpens the threshold)</span><br><br>
+    <div class="eq">T* = f(v_s, K_m, v_d) ≈ 24h when parameters are tuned</div><br>
+    <span class="dim">Temperature compensation: ∂T*/∂temp ≈ 0 — selected over 4 billion years.</span>
+  </div>
+
+  <div class="theorem-box">
+    <div class="th-name">Theorem 3.1 — Temporal Compression as Structural Invariant</div>
+    <div class="th-body">
+      For any living system subject to periodic environmental forcing with period T_env, the minimum viable internal representation of that forcing is a self-sustaining oscillator with free-running period τ ≈ T_env, temperature-compensated within the organism's viable temperature range. The circadian clock is the biological instantiation of C: the entire day-night cycle compressed into a genetic loop whose single structural invariant is the period T* ≈ 24h. Disruption of the entrainment signal (light) shifts K, altering T*, and producing measurable physiological desynchronization proportional to the phase offset.
+    </div>
+  </div>
+
+  <h2>Three Living Systems, One Compressed Period</h2>
+
+  <p><strong>Cyanobacteria.</strong> The simplest known circadian clock consists of just three proteins: KaiA, KaiB, and KaiC. KaiC is phosphorylated and dephosphorylated on a 24-hour cycle that can run in a test tube with ATP — no cells, no nuclei, no transcription. The compression is absolute: the entire circadian function reduced to three proteins and one nucleotide. C at its minimum.</p>
+
+  <p><strong>The liver.</strong> Every organ in the body carries its own peripheral clock, synchronized by the SCN but also responsive to feeding time. The liver clock anticipates meals — upregulating metabolic enzymes before food arrives, not after. The compression: metabolic anticipation encoded in a gene loop running 24 hours before it is needed. The invariant is not the meal. The invariant is the expectation of the meal.</p>
+
+  <p><strong>The language learner.</strong> Sleep-dependent memory consolidation is a circadian process. Hippocampal replay — the reactivation of daytime learning during slow-wave sleep — is gated by the circadian clock. A student who studies late and sleeps poorly does not just feel tired. They lose a consolidation window that runs once per 24-hour cycle and cannot be recovered by staying awake longer. The clock compresses learning time into a single nightly window. Miss it, and the compression does not happen. The invariant moves to tomorrow.</p>
+
+  <div class="falsify-box">
+    <div class="fa-label">Falsifiability Condition</div>
+    <p>If a living organism survives in a periodic environment with period T_env without developing any internal oscillator — no gene expression rhythm, no metabolic rhythm, no behavioral rhythm — within evolutionary time, then the circadian C operator model is falsified: periodic environments do not necessarily drive temporal compression. Cave fish that have lost circadian rhythmicity after geological isolation from light-dark cycles are candidate systems. The model predicts their fitness is reduced in re-entrained conditions. Test it.</p>
+  </div>
+
+</div>
+
+<!-- Simulation -->
+<div style="padding: 0 2rem;">
+<div class="sim-wrapper">
+  <div class="sim-label">Live Simulation · Chapter 3</div>
+  <div class="sim-title">CLOCK/BMAL1 · PER/CRY Oscillator — entrainment and phase shift</div>
+  <canvas id="sim3" width="680" height="300"></canvas>
+  <div class="sim-controls">
+    <button class="sim-btn" onclick="resetClock()">Reset</button>
+    <button class="sim-btn" onclick="toggleClock()">Pause / Resume</button>
+    <button class="sim-btn" onclick="shiftPhase(-6)">Jet Lag −6h</button>
+    <button class="sim-btn" onclick="shiftPhase(+8)">Jet Lag +8h</button>
+    <button class="sim-btn" onclick="addShiftWork()">Shift Work</button>
+  </div>
+  <div class="sim-info" id="sim3-info">Autonomous 24h oscillator running. Blue = PER/CRY (inhibitor). Orange = CLOCK/BMAL1 (activator). Watch the antiphase relationship.</div>
+</div>
+</div>
+
+<div class="ch-nav">
+  <a href="ch2-allostatic.html">← Chapter 2 · Allostatic Operator</a>
+  <div class="ch-nav-center">Chapter 3 of 17 · The Mini-Beast</div>
+  <a href="ch4-neural.html">Chapter 4 · Neural Oscillations →</a>
+</div>
+
+<!-- Portal: B1 Prompts -->
+<div class="portal-section">
+  <div class="portal-inner">
+
+    <div style="text-align:center; margin-bottom: 1.8rem;">
+      <div style="display:inline-block; background:rgba(122,122,238,0.12); border:1px solid rgba(122,122,238,0.3); color:var(--indigo-l); font-family:sans-serif; font-size:0.63rem; letter-spacing:0.18em; text-transform:uppercase; padding:0.22rem 0.9rem;">Student Portal · Level B1 · Operator: K into F</div>
+    </div>
+    <div class="portal-eyebrow">Principia Orthogona · Student Portal</div>
+    <h2 class="portal-heading">Level B1 — Constrain and Begin to Fold</h2>
+    <div class="portal-sub">At B1 you can follow extended argument, ask research questions, and begin generating rather than just receiving.</div>
+    <div style="text-align:center; font-family:sans-serif; font-size:0.76rem; color:rgba(255,255,255,0.3); margin-bottom:2rem; letter-spacing:0.1em;">G = U ∘ <strong style="color:var(--indigo-l)">F</strong> ∘ K ∘ C · approaching the fold</div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt B1.1 — Research Entry</div>
+      <div class="prompt-title">Enter an unfamiliar domain</div>
+      <div class="prompt-text">I am at B1 in the Principia Orthogona series. Choose a scientific domain I have never studied. Give me one paragraph that introduces its core problem. Then ask me to identify: (1) what is being compressed, (2) what the constraint is, (3) what would count as a stable outcome. Guide me through the C → K sequence.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="I am at B1 in the Principia Orthogona series. Choose a scientific domain I have never studied. Give me one paragraph that introduces its core problem. Then ask me to identify: (1) what is being compressed, (2) what the constraint is, (3) what would count as a stable outcome. Guide me through the C → K sequence.">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt B1.2 — Contact Geometry</div>
+      <div class="prompt-title">What is g₃₃ = 33 doing in your domain?</div>
+      <div class="prompt-text">I am studying the GTCT invariant g₃₃ = 33 — the minimum number of operator cycles for a system to reach stable lock. Help me find an example of this threshold in one of: neuroscience, ecology, economics, or music. What happens before the threshold? What changes after?</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="I am studying the GTCT invariant g₃₃ = 33 — the minimum number of operator cycles for a system to reach stable lock. Help me find an example of this threshold in one of: neuroscience, ecology, economics, or music. What happens before the threshold? What changes after?">COPY PROMPT</button>
+    </div>
+
+    <div class="prompt-card">
+      <div class="prompt-number">Prompt B1.3 — Write and Generate</div>
+      <div class="prompt-title">First research paragraph</div>
+      <div class="prompt-text">Help me write one research paragraph (150 words) in which I apply the C → K operator to a process of my choice. The paragraph should: start with a specific observation, identify what is being compressed, name the constraint, and end with an open question. Correct my English as we go.</div>
+      <button class="copy-btn" onclick="copyPrompt(this)" data-prompt="Help me write one research paragraph (150 words) in which I apply the C → K operator to a process of my choice. The paragraph should: start with a specific observation, identify what is being compressed, name the constraint, and end with an open question. Correct my English as we go.">COPY PROMPT</button>
+    </div>
+
+    <div style="margin-top:2rem; padding-top:1.4rem; border-top:1px solid rgba(255,255,255,0.07); text-align:center;">
+      <a href="sportal.html" style="display:inline-block; border:1px solid var(--gold); color:var(--gold); padding:0.5rem 1.8rem; font-family:sans-serif; font-size:0.73rem; letter-spacing:0.14em; text-transform:uppercase; text-decoration:none; transition:all 0.2s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--navy)'" onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">All Levels A1 → D2 →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div>Principia Orthogona · Book 3 · The Mini-Beast</div>
+  <div>G6 LLC · Newark, NJ · 2026 · ISBN 979-8-9954416-6-3</div>
+  <div style="margin-top:0.5rem;">
+    <a href="index.html">Book Index</a> ·
+    <a href="chapters-diagram.html">Chapter Map</a> ·
+    <a href="sportal.html">Student Portal</a> ·
+    <a href="https://totogt.github.io/AXLE/" target="_blank">AXLE</a>
+  </div>
+</footer>
+
+<script>
+function copyPrompt(btn) {
+  const text = btn.dataset.prompt || btn.closest('.prompt-card').querySelector('.prompt-text').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'COPIED ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+/* ── Circadian Oscillator Simulation ── */
+const canvas = document.getElementById('sim3');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = Math.min(680, window.innerWidth - 40);
+  canvas.width = W; canvas.height = H = Math.round(W * 300/680);
+}
+resize(); window.addEventListener('resize', resize);
+
+// State — two coupled ODEs (simplified Goodwin oscillator)
+let running3 = true, rafId3;
+let simTime = 0;
+let phase_offset = 0;     // phase shift (jet lag)
+let shift_work = false;
+let history = [];         // { t, bmal, per }
+
+// Simplified: BMAL1 ~ cos(ωt), PER ~ cos(ωt + π)
+const omega = (2 * Math.PI) / 240; // one cycle per 240 frames ≈ 24h visual
+let bmal, per, t_internal;
+
+function resetClock() {
+  cancelAnimationFrame(rafId3);
+  simTime = 0; phase_offset = 0; shift_work = false;
+  t_internal = 0; history = [];
+  bmal = 0.8; per = 0.2;
+  running3 = true;
+  document.getElementById('sim3-info').textContent = 'Autonomous 24h oscillator running. Blue = PER/CRY (inhibitor). Orange = CLOCK/BMAL1 (activator). Watch the antiphase relationship.';
+  animate3();
+}
+
+function toggleClock() { running3 = !running3; if (running3) animate3(); }
+
+function shiftPhase(hours) {
+  // Abruptly shift the internal phase
+  const frameShift = hours * 10;
+  t_internal += frameShift;
+  const direction = hours < 0 ? 'westward' : 'eastward';
+  const mag = Math.abs(hours);
+  document.getElementById('sim3-info').textContent = `Phase shift of ${mag}h (${direction}). Clock desynchronized — watch re-entrainment over ~${mag} cycles.`;
+}
+
+function addShiftWork() {
+  shift_work = !shift_work;
+  document.getElementById('sim3-info').textContent = shift_work
+    ? 'Shift work mode: forcing random phase disruptions every cycle. Clock cannot settle. K threshold oscillating. Allostatic load climbing.'
+    : 'Shift work removed. Clock beginning slow recovery — one time zone per day.';
+}
+
+function stepOsc() {
+  t_internal += 1;
+  if (shift_work && Math.random() < 0.003) t_internal += (Math.random() - 0.5) * 80;
+  const angle = t_internal * omega;
+  bmal = 0.5 + 0.45 * Math.cos(angle);
+  per  = 0.5 + 0.45 * Math.cos(angle + Math.PI);
+  history.push({ t: simTime, bmal, per });
+  if (history.length > 900) history.shift();
+  simTime++;
+}
+
+function drawClock() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#0a0a20'; ctx.fillRect(0, 0, W, H);
+
+  const padL = W*0.06, padR = W*0.04, padT = H*0.14, padB = H*0.16;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+
+  // Grid
+  for (let v = 0; v <= 1; v += 0.25) {
+    const y = padT + plotH*(1-v);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+plotW, y);
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+
+  // Draw history curves
+  if (history.length > 1) {
+    const tMin = history[0].t, tRange = Math.max(1, history[history.length-1].t - tMin);
+
+    // BMAL1 — orange (activator)
+    ctx.beginPath();
+    for (let i = 0; i < history.length; i++) {
+      const h = history[i];
+      const x = padL + ((h.t - tMin)/tRange)*plotW;
+      const y = padT + plotH*(1-h.bmal);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = 'rgba(224,120,64,0.85)'; ctx.lineWidth = 2; ctx.stroke();
+
+    // PER/CRY — indigo (inhibitor)
+    ctx.beginPath();
+    for (let i = 0; i < history.length; i++) {
+      const h = history[i];
+      const x = padL + ((h.t - tMin)/tRange)*plotW;
+      const y = padT + plotH*(1-h.per);
+      i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = 'rgba(122,122,238,0.85)'; ctx.lineWidth = 2; ctx.stroke();
+  }
+
+  // 24h period markers
+  const cycleFrames = (2*Math.PI) / omega;
+  const tMin = history.length > 0 ? history[0].t : 0;
+  const tRange = Math.max(1, simTime - tMin);
+  const firstCycle = Math.ceil(tMin / cycleFrames) * cycleFrames;
+  for (let t = firstCycle; t < tMin + tRange; t += cycleFrames) {
+    const x = padL + ((t - tMin)/tRange)*plotW;
+    if (x > padL && x < padL+plotW) {
+      ctx.beginPath(); ctx.moveTo(x, padT); ctx.lineTo(x, padT+plotH);
+      ctx.strokeStyle = 'rgba(201,168,76,0.12)'; ctx.lineWidth = 1;
+      ctx.setLineDash([3,4]); ctx.stroke(); ctx.setLineDash([]);
+      const fs = Math.max(8, W*0.011);
+      ctx.fillStyle = 'rgba(201,168,76,0.4)'; ctx.font = `${fs}px sans-serif`;
+      ctx.fillText('24h', x+2, padT+10);
+    }
+  }
+
+  // Labels
+  const fs = Math.max(8, W*0.011);
+  ctx.font = `${fs}px sans-serif`;
+  ctx.fillStyle = 'rgba(224,120,64,0.8)';
+  ctx.fillText('▬ CLOCK/BMAL1 (activator)', padL+4, padT-4);
+  ctx.fillStyle = 'rgba(122,122,238,0.8)';
+  ctx.fillText('▬ PER/CRY (inhibitor)', padL + plotW*0.45, padT-4);
+
+  // Y axis
+  ctx.save(); ctx.translate(10, padT+plotH/2); ctx.rotate(-Math.PI/2);
+  ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.font = `${fs}px sans-serif`; ctx.textAlign='center';
+  ctx.fillText('expression', 0, 0); ctx.restore(); ctx.textAlign='left';
+
+  // Phase offset indicator
+  if (shift_work) {
+    ctx.fillStyle = 'rgba(192,57,43,0.7)';
+    ctx.font = `bold ${Math.max(9,W*0.013)}px sans-serif`;
+    ctx.fillText('⚠ SHIFT WORK — clock unstable', padL+4, padT+24);
+  }
+}
+
+function animate3() {
+  if (!running3) return;
+  stepOsc(); drawClock();
+  rafId3 = requestAnimationFrame(animate3);
+}
+
+resetClock();
+</script>
+</body>
+</html>

@@ -1,0 +1,368 @@
+%% ============================================================
+%%  Scale-Invariant Development Levels in the g-Series
+%%  Principia Orthogona / Generative Contact Mechanics
+%%  Author: Pablo Nogueira Grossi / G6 LLC
+%%  Status: Draft for Book 2 / NSF narrative
+%%
+%%  Built on: dm3 paper 1 (GCM), Theorems A-D, operator grammar
+%%  Copilot structural draft completed and made rigorous by Claude
+%% ============================================================
+
+\section{Scale-Invariant Development Levels in the
+  \texorpdfstring{$g$}{g}-Series}
+\label{sec:g6}
+
+This section formalises the notion of development levels in the
+$g$-series operator algebra. We separate two things that must not
+be conflated:
+\begin{itemize}
+  \item the \emph{mathematical structure} of full development,
+    dynamic center, and scale crossing — which follows from
+    the GCM operator grammar (Theorem~B, Paper~1) and is
+    independent of any numerical index; and
+  \item \emph{empirical observations} about which index real
+    or simulated systems tend to occupy — which enter only as
+    measurements or conjectures, never as definitions.
+\end{itemize}
+The specific index $33$ is treated as an empirical constant
+in Section~\ref{subsec:empirical}, not as a mathematical invariant.
+
+%%-----------------------------------------------------------
+\subsection{State space, scales, and the \texorpdfstring{$g$}{g}-series}
+%%-----------------------------------------------------------
+
+We work throughout with dm3 systems as defined in Paper~1
+(Definition~2.1 and Axioms~1--8). Recall that a dm3 system is a
+tuple $\dm = (S, g, Y, \Gamma, V, \sigma)$ where $S$ is a smooth
+Riemannian manifold, $\Gamma \subset S$ is a hyperbolic limit cycle,
+$V : S \to \mathbb{R}_{\ge 0}$ is a $C^2$ Lyapunov function with
+$V^{-1}(0) = \Gamma$, $Y$ is a vector field generating the flow
+$\phi^t$, and $\sigma$ is a noise amplitude. The canonical invariant
+triple is $\iota(\dm) = (T^*, \mu_{\max}, \tau) \in \mathbb{R}_{>0}
+\times \mathbb{R}_{<0} \times \mathbb{R}_{>0}$, where $T^*$ is the
+limit-cycle period, $\mu_{\max}$ is the maximal transverse Lyapunov
+exponent, and $\tau \coloneqq \sup\{\sigma_0 : \mathcal{L}V(x) < 0
+\text{ whenever } \|\sigma\| < \sigma_0\}$ is the embodiment
+threshold (Paper~1, Definition~2.6).
+
+\begin{definition}[Scale]\label{def:scale}
+A \emph{scale} is an equivalence class $[D]$ of dm3 systems under
+smooth rescalings of space, time, and Lyapunov potential that
+preserve:
+\begin{enumerate}[label=(\roman*)]
+  \item existence and hyperbolicity of $\Gamma$
+    (Axioms~1, 2, 8 of Paper~1);
+  \item the signs $\mu_{\max} < 0$ and $\tau > 0$; and
+  \item the structural stability radius $\varepsilon_0 =
+    \tfrac{|\mu_{\max}|}{2(1 + \sup_\Gamma \|\mathrm{Hess}\,V\|)}$
+    up to a multiplicative constant (Paper~1, Theorem~D).
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[$g$-series at fixed scale]\label{def:gseries}
+Fix a scale $[\dm]$ and a representative $\dm_0 \in [\dm]$. A
+\emph{$g$-series} at this scale is a sequence
+$\{\dm_n\}_{n \in \mathbb{N}}$ of dm3 systems together with
+operators
+\[
+  g_n : [\dm] \to [\dm], \qquad n \in \mathbb{N},
+\]
+such that $\dm_{n+1} = g_n(\dm_n)$, and each $g_n$ is an admissible
+operator in the GCM grammar (any composition of $g$-, $L$-, $R$-,
+and $U$-operators satisfying the ordering constraints of
+Paper~1, Theorem~B). In particular, each $\dm_n$ satisfies
+Axioms~1--8 and remains within the admissible region
+$\mathcal{D}_S \coloneqq S \setminus (B_1 \cup B_3)$ at its scale.
+\end{definition}
+
+%%-----------------------------------------------------------
+\subsection{Full development and dynamic center}
+%%-----------------------------------------------------------
+
+\begin{definition}[Development functional]\label{def:devfunc}
+Let $[\dm]$ be a fixed scale. A \emph{development functional} at
+this scale is a map
+\[
+  \mathcal{D} : [\dm] \to [0, 1]
+\]
+satisfying:
+\begin{enumerate}[label=(\roman*)]
+  \item $\mathcal{D}(\dm) = 0$ if and only if $\dm$ is minimally
+    developed: the basin $\mathcal{B}(\Gamma)$ has the smallest
+    admissible volume and $\tau$ is at its scale-$[\dm]$ minimum;
+  \item $\mathcal{D}(\dm) = 1$ if and only if $\dm$ is fully
+    developed: no further admissible grammar operator can increase
+    $\tau$ or $\mathrm{vol}(\mathcal{B}(\Gamma))$ without crossing
+    $B_2$ (transition boundary) or $B_3$ (collapse boundary)
+    as defined in Paper~1, Definitions~5.2--5.3;
+  \item $\mathcal{D}$ is non-decreasing under admissible $g$-moves:
+    if $\dm' = g(\dm)$ for any grammar operator $g$, then
+    $\mathcal{D}(\dm') \ge \mathcal{D}(\dm)$.
+\end{enumerate}
+A canonical choice is
+\[
+  \mathcal{D}(\dm)
+  \;\coloneqq\;
+  \frac{\tau(\dm) - \tau_{\min}}{\tau_{\max} - \tau_{\min}},
+\]
+where $\tau_{\min}$ and $\tau_{\max}$ are the infimum and supremum
+of $\tau$ over $[\dm]$. This is well-defined because $\tau > 0$
+throughout the admissible region and is bounded above at each scale.
+\end{definition}
+
+\begin{definition}[Full development level]\label{def:fdlevel}
+Let $\{\dm_n\}_{n \in \mathbb{N}}$ be a $g$-series at scale $[\dm]$
+with development functional $\mathcal{D}$. A \emph{full development
+level} is an index $n_{\mathrm{fd}} \in \mathbb{N}$ such that:
+\begin{enumerate}[label=(\roman*)]
+  \item $\mathcal{D}(\dm_{n_{\mathrm{fd}}}) = 1$; and
+  \item for all $m \ge n_{\mathrm{fd}}$ with $\dm_m$ still in $[\dm]$,
+    $\mathcal{D}(\dm_m) = 1$.
+\end{enumerate}
+We say $\dm_{n_{\mathrm{fd}}}$ is \emph{fully developed at scale
+$[\dm]$}. When the canonical $\tau$-based functional is used, full
+development means $\tau(\dm_{n_{\mathrm{fd}}}) = \tau_{\max}$, i.e.\
+the system saturates the identity boundary $B_1 =
+\partial\mathcal{B}(\Gamma)$ from within.
+\end{definition}
+
+\begin{remark}
+The full development level $n_{\mathrm{fd}}$ depends on the choice
+of $g$-series (the operator sequence applied) and on the scale $[\dm]$.
+It is not a universal constant. In the TOGT framework, we denote the
+fully developed state schematically as $\mathbf{g6}$ to indicate
+``completion at the current scale'', without implying that $6$ is the
+literal index in every realisation.
+\end{remark}
+
+\begin{definition}[Dynamic center]\label{def:dyncenter}
+Let $\{\dm_n\}_{n \in \mathbb{N}}$ and $\mathcal{D}$ be as above.
+A \emph{dynamic center} is an index $n_{\mathrm{c}} \in \mathbb{N}$
+such that:
+\begin{enumerate}[label=(\roman*)]
+  \item $\mathcal{D}(\dm_{n_{\mathrm{c}}}) \in (0, 1)$, strictly
+    between minimal and full development;
+  \item for all sufficiently small perturbations of the environment
+    (noise amplitude $\sigma$, coupling strength, boundary position)
+    that keep the system within scale $[\dm]$, the induced evolution
+    of the $g$-series returns to a neighborhood of $\dm_{n_{\mathrm{c}}}$
+    within finitely many operator steps; and
+  \item $n_{\mathrm{c}}$ is not a fixed point of the dynamical flow
+    $\phi^t$, but is a fixed point of the \emph{grammar}: the $L$-
+    and $R$-operators acting as correctors steer the system back
+    toward $\dm_{n_{\mathrm{c}}}$ after perturbation.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}
+Condition (iii) distinguishes the dynamic center from an equilibrium.
+The system at $\dm_{n_{\mathrm{c}}}$ continues to evolve along $\Gamma$;
+it is the \emph{grammar} — the meta-level operator sequence — that has
+a stable fixed point at $n_{\mathrm{c}}$. In the canonical
+$\tau$-normalisation, the natural choice is
+$\mathcal{D}(\dm_{n_{\mathrm{c}}}) = \tfrac{1}{2}$, placing the
+dynamic center halfway between minimal and full development. This is
+a convention, not a theorem. In applications (Section~\ref{subsec:empirical}),
+the empirical center may differ from $\tfrac{1}{2}$.
+\end{remark}
+
+%%-----------------------------------------------------------
+\subsection{Scale crossing and seed states}
+%%-----------------------------------------------------------
+
+\begin{definition}[Scale crossing]\label{def:scalecross}
+Let $[\dm]$ and $[\dm']$ be two scales with $[\dm']$ strictly
+larger (more degrees of freedom, or larger ambient manifold
+dimension). A \emph{scale crossing} from $[\dm]$ to $[\dm']$ occurs
+when an admissible operator pushes a state
+$\dm_{n_{\mathrm{fd}}} \in [\dm]$ across $B_2$ or $B_3$, producing
+a new dm3 system $\dm'_0 \in [\dm']$ that satisfies Axioms~1--8 at
+the higher scale. Concretely:
+\begin{itemize}
+  \item Crossing $B_2$ (transition boundary) corresponds to a contact
+    Hopf bifurcation in the normal-form sense of Paper~1, Theorem~C:
+    the limit cycle $\Gamma$ persists but the state space acquires
+    new slow variables.
+  \item Crossing $B_3$ (collapse boundary) corresponds to loss of
+    the current limit cycle and re-emergence at a coarser scale with
+    a new attractor; this is the fold event $F$ of the geometric
+    operator sequence $C \to K \to F \to U$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[Seed state]\label{def:seed}
+The system $\dm'_0 \in [\dm']$ obtained by scale crossing from a
+fully developed $\dm_{n_{\mathrm{fd}}} \in [\dm]$ is called a
+\emph{seed state} for scale $[\dm']$. It satisfies:
+\begin{enumerate}[label=(\roman*)]
+  \item $\mathcal{D}'(\dm'_0) \approx 0$ for the development
+    functional $\mathcal{D}'$ at scale $[\dm']$: the seed state is
+    minimally developed at the new scale; and
+  \item $\dm'_0$ inherits the structural invariants of
+    $\dm_{n_{\mathrm{fd}}}$ up to $O(\varepsilon_0)$ in the $C^1$
+    norm (Paper~1, Theorem~D), so the full development of scale
+    $[\dm]$ is encoded in the seed of scale $[\dm']$.
+\end{enumerate}
+In the TOGT framework this state is denoted schematically
+$\mathbf{g64}$: the subscript records that it carries the full
+development ($\mathbf{g6}$) of scale $N$ as the seed ($\mathbf{4}$)
+of scale $N{+}1$, where $4$ denotes early expansion in the new
+grammar.
+\end{definition}
+
+%%-----------------------------------------------------------
+\subsection{Main theorem: scale invariance of the development
+  structure}
+%%-----------------------------------------------------------
+
+\begin{theorem}[Scale-invariant development structure]
+\label{thm:g6invariant}
+Let $[\dm]$ be a scale, $\{\dm_n\}_{n \in \mathbb{N}}$ a $g$-series
+at scale $[\dm]$, and $\mathcal{D}$ a development functional.
+Suppose:
+\begin{enumerate}[label=(\arabic*)]
+  \item There exists a full development level $n_{\mathrm{fd}}$.
+  \item There exists a dynamic center index $n_{\mathrm{c}} < n_{\mathrm{fd}}$.
+  \item A scale crossing from $[\dm]$ to some $[\dm']$ occurs at or
+    after $n_{\mathrm{fd}}$, producing a seed state $\dm'_0 \in [\dm']$.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\roman*)]
+  \item \textup{(Seed inheritance.)} $\dm'_0$ is a seed state for
+    $[\dm']$ in the sense of Definition~\ref{def:seed}.
+  \item \textup{(Grammar repetition.)} There exists a $g$-series
+    $\{\dm'_m\}_{m \in \mathbb{N}}$ at scale $[\dm']$ and a
+    development functional $\mathcal{D}'$ such that a full
+    development level $n'_{\mathrm{fd}}$ and a dynamic center
+    $n'_{\mathrm{c}}$ exist at scale $[\dm']$.
+  \item \textup{(Scale invariance.)} The triple
+    \[
+      \bigl(n_{\mathrm{c}},\; n_{\mathrm{fd}},\;
+      n_{\mathrm{fd}} - n_{\mathrm{c}}\bigr)
+    \]
+    satisfies the same qualitative relations at every scale where
+    the dm3 axioms and the GCM operator grammar are valid:
+    $0 < n_{\mathrm{c}} < n_{\mathrm{fd}}$, the dynamic center
+    is strictly interior, and full development is a scale boundary.
+  \item \textup{(Moving target.)} $n_{\mathrm{c}}$ is
+    \emph{not} a universal constant. It depends on the environmental
+    noise floor $\sigma$, the canonical triple $\iota(\dm)$, and the
+    specific development functional $\mathcal{D}$. In particular, as
+    the noise floor $\sigma$ changes within a scale, $\tau_{\max}$
+    shifts and the midpoint $\mathcal{D}^{-1}(\tfrac{1}{2})$ shifts
+    with it.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\textit{(i) Seed inheritance.}
+By Definition~\ref{def:scalecross}, scale crossing maps
+$\dm_{n_{\mathrm{fd}}}$ across $B_2$ or $B_3$ to produce
+$\dm'_0 \in [\dm']$. By Paper~1, Theorem~D (structural stability),
+$\dm'_0$ satisfies Axioms~1--8 at scale $[\dm']$ with canonical
+invariants within $O(\varepsilon_0)$ of those of
+$\dm_{n_{\mathrm{fd}}}$. Since $\dm_{n_{\mathrm{fd}}}$ has just
+crossed a scale boundary, it occupies the minimum admissible basin
+and minimum $\tau$ at $[\dm']$: hence
+$\mathcal{D}'(\dm'_0) \approx 0$.
+
+\textit{(ii) Grammar repetition.}
+The dm3 axioms are scale-free by construction: they do not reference
+any absolute scale, only the relative structure of $\Gamma$, $V$, and
+$\sigma$ within $S$. The GCM operator grammar (Paper~1, Theorem~B)
+depends only on the axioms and the boundary structure
+$B_1, B_2, B_3$, all of which are defined intrinsically within each
+scale. Therefore the same grammar applies at $[\dm']$ starting from
+$\dm'_0$, producing the $g$-series $\{\dm'_m\}$ and the functional
+$\mathcal{D}'$ by direct repetition.
+
+\textit{(iii) Scale invariance.}
+The qualitative relations $0 < n_{\mathrm{c}} < n_{\mathrm{fd}}$ hold
+at every scale by parts (i) and (ii): $n_{\mathrm{c}}$ exists in the
+interior of the grammar sequence by Definition~\ref{def:dyncenter}(i),
+and $n_{\mathrm{fd}}$ exists at the grammar boundary by
+Definition~\ref{def:fdlevel}(i)--(ii). These are definitional
+properties of any scale where the axioms hold.
+
+\textit{(iv) Moving target.}
+The canonical development functional is
+$\mathcal{D}(\dm) = (\tau(\dm) - \tau_{\min})/
+(\tau_{\max} - \tau_{\min})$. The midpoint
+$\mathcal{D}^{-1}(\tfrac{1}{2})$ corresponds to
+$\tau = (\tau_{\max} + \tau_{\min})/2$. Since $\tau_{\max} =
+\sup_{[\dm]} \tau$ depends on the noise floor $\sigma$ and the
+geometry of the ambient manifold (specifically the sectional
+curvature correction entering $\kappa^*$ in Paper~1,
+Section~1.10), any change in the environmental noise floor shifts
+$\tau_{\max}$ and hence shifts the midpoint. The dynamic center
+tracks this shift continuously. It is a fixed point of the grammar
+because the $L$- and $R$-operators restore coherence and resonance
+from both sides of the midpoint; it is not a fixed point of the
+flow $\phi^t$ because the system continues to orbit $\Gamma$.
+\end{proof}
+
+%%-----------------------------------------------------------
+\subsection{The \texorpdfstring{$\mathbf{g6}$}{g6} and
+  \texorpdfstring{$\mathbf{g64}$}{g64} notations}
+%%-----------------------------------------------------------
+
+\begin{remark}[Notational convention]
+\label{rem:g6notation}
+In the TOGT framework and in the name \emph{G6 LLC}, the symbol
+$\mathbf{g6}$ is used schematically to denote a state of full
+development at the current scale: $\mathcal{D}(\dm_{n_{\mathrm{fd}}})
+= 1$. This is a qualitative label, not a literal index. Similarly:
+\begin{itemize}
+  \item $\mathbf{g64}$ denotes the seed state at the next scale
+    — the fully developed system of scale $N$ functioning as
+    the minimal seed of scale $N{+}1$.
+  \item $\mathbf{g33}$ denotes (schematically) the dynamic center
+    — the state of half-development that acts as the grammar's
+    moving attractor. It is always a moving target.
+\end{itemize}
+None of these labels imply that $6$, $64$, or $33$ are literal
+step-counts in any specific realisation. They are structural
+positions within the grammar: seed, center, and full development.
+Theorem~\ref{thm:g6invariant} guarantees these three positions
+exist at every scale. It does not fix their numerical indices.
+\end{remark}
+
+%%-----------------------------------------------------------
+\subsection{Empirical indices and the number 33}
+\label{subsec:empirical}
+%%-----------------------------------------------------------
+
+\begin{remark}[Status of the number 33]\label{rem:33}
+In numerical explorations of specific dm3 pipelines — particular
+discretisations, operator sequences, and persistent-homology readouts
+— the dynamic center index $n_{\mathrm{c}}$ may take specific
+numerical values. The observation that $n_{\mathrm{c}} = 33$ in one
+or more such pipelines is an \emph{empirical constant} of those
+experimental setups, not a mathematical invariant of the theory.
+Theorem~\ref{thm:g6invariant} is silent about the value of
+$n_{\mathrm{c}}$; it guarantees only that the center exists.
+\end{remark}
+
+\begin{conjecture}[Robustness of the empirical center]
+\label{conj:33}
+For a specific class of discretised dm3 systems with a fixed
+persistent-homology pipeline and canonical triple
+$(T^*, \mu_{\max}, \tau) = (2\pi, -2, 2)$, the dynamic center index
+$n_{\mathrm{c}}$ is observed to equal $33$ and is robust under a
+family of small perturbations of the noise floor. Explaining this
+robustness from first principles — connecting $33$ to a geometric
+or number-theoretic invariant of the dm3 structure — is an open
+problem.
+\end{conjecture}
+
+\begin{remark}[What a proof of Conjecture~\ref{conj:33} would require]
+A derivation of $n_{\mathrm{c}} = 33$ from first principles would
+require: (a) a specific model for $\mathcal{D}$ (not just the
+canonical $\tau$-based functional); (b) a specific operator pipeline
+realising the $g$-series; and (c) a computation showing that the
+fixed-point condition of Definition~\ref{def:dyncenter}(iii) selects
+index $33$ in that pipeline. This is a well-posed mathematical problem,
+but its solution is not claimed here.
+\end{remark}
+
+%% End of section

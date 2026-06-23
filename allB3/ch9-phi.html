@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 9 · φ — The Subcritical Approach · Principia Orthogona</title>
+<style>
+  :root {
+    --gold:        #c9a84c;
+    --gold-bright: #e8c96a;
+    --gold-dim:    #8a6f2e;
+    --dark:        #070d0a;
+    --navy:        #070d0a;
+    --navy-mid:    #0d1810;
+    --navy-light:  #132018;
+    --surface:     #0f1a13;
+    --surface2:    #162019;
+    --cream:       #f0ede5;
+    --cream-dim:   #c8c4bc;
+    --text:        #e8e4d8;
+    --text-dim:    #9994a0;
+    --f-color:     #50c878;
+    --f-dim:       #2d7a47;
+    --k-color:     #e05a3a;
+    --c-color:     #4a9eff;
+    --u-color:     #c084fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 18px;
+    line-height: 1.8;
+  }
+
+  /* ── NAV ─────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(7,13,10,0.97);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0.6rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .series { font-size: 0.78rem; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; font-family: Georgia, serif; }
+  .chapter-nav { display: flex; gap: 1.2rem; font-size: 0.78rem; flex-wrap: wrap; }
+  .chapter-nav a { color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em; transition: color 0.2s; }
+  .chapter-nav a:hover { color: var(--gold-bright); }
+
+  /* ── HERO ─────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative; overflow: hidden;
+    min-height: 480px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 2rem 5rem;
+    background: linear-gradient(160deg, #070d0a 0%, #0d1810 60%, #070d0a 100%);
+    border-bottom: 1px solid rgba(80,200,120,0.12);
+  }
+  .hero-canvas {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; opacity: 0.55;
+  }
+  .hero-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.3em; color: var(--gold-dim);
+    text-transform: uppercase; margin-bottom: 1.5rem;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300;
+    letter-spacing: 0.06em; color: var(--cream);
+    margin-bottom: 0.6rem; position: relative; z-index: 1;
+  }
+  .hero h2 {
+    font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: 300;
+    color: var(--cream-dim); margin-bottom: 2rem;
+    font-style: italic; position: relative; z-index: 1; max-width: 640px;
+  }
+  .hero-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 2rem; position: relative; z-index: 1;
+  }
+  .hero-epigraph {
+    font-size: 0.92rem; color: var(--cream-dim); font-style: italic;
+    max-width: 520px; line-height: 1.6; position: relative; z-index: 1;
+  }
+  .hero-epigraph cite { display: block; margin-top: 0.5rem; color: var(--gold-dim); font-style: normal; font-size: 0.82rem; letter-spacing: 0.08em; }
+  .operator-chain {
+    font-family: 'Courier New', monospace; font-size: 1rem;
+    letter-spacing: 0.15em; color: var(--text-dim);
+    margin: 1.5rem 0 0; position: relative; z-index: 1;
+  }
+  .operator-chain .active { color: var(--f-color); font-weight: bold; text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ── BODY ────────────────────────────────────────────────────────── */
+  .chapter-body { max-width: 780px; margin: 0 auto; padding: 4rem 2rem 5rem; }
+
+  h2 {
+    font-size: 1.35rem; font-weight: 400; color: var(--gold-bright);
+    margin: 3.5rem 0 1rem; letter-spacing: 0.06em;
+    padding-bottom: 0.4rem; border-bottom: 1px solid rgba(201,168,76,0.15);
+  }
+  h3 { font-size: 1.05rem; font-weight: 600; color: var(--cream); margin: 2rem 0 0.7rem; }
+  p { margin-bottom: 1.3rem; color: var(--cream); }
+  .gold-rule { border: none; border-top: 1px solid var(--gold-dim); margin: 3rem 0; opacity: 0.3; }
+
+  /* ── COMPONENTS ──────────────────────────────────────────────────── */
+  .theorem {
+    background: rgba(80,200,120,0.04); border-left: 3px solid var(--f-color);
+    padding: 1.5rem 1.8rem; margin: 2.5rem 0; border-radius: 0 4px 4px 0;
+  }
+  .theorem-label { font-size: 0.7rem; letter-spacing: 0.22em; color: var(--f-color); text-transform: uppercase; margin-bottom: 0.6rem; }
+  .theorem-body { font-style: italic; color: var(--cream); line-height: 1.75; }
+  .theorem-proof { margin-top: 1rem; font-size: 0.88rem; color: var(--cream-dim); font-style: normal; }
+
+  .insight-box {
+    background: rgba(201,168,76,0.05); border: 1px solid rgba(201,168,76,0.2);
+    padding: 1.3rem 1.6rem; margin: 2rem 0; border-radius: 4px;
+  }
+  .insight-label { font-size: 0.68rem; letter-spacing: 0.22em; color: var(--gold); text-transform: uppercase; margin-bottom: 0.5rem; }
+
+  .math-block {
+    background: var(--surface2); border: 1px solid rgba(80,200,120,0.12);
+    padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+    font-family: 'Courier New', monospace; font-size: 0.88rem;
+    color: var(--f-color); border-radius: 4px; overflow-x: auto;
+    line-height: 1.7;
+  }
+
+  .op-tag {
+    display: inline-block; font-family: 'Courier New', monospace;
+    font-size: 0.72rem; letter-spacing: 0.08em;
+    padding: 0.12rem 0.45rem; border-radius: 2px; vertical-align: middle;
+  }
+  .op-k { background: rgba(224,90,58,0.15); color: var(--k-color); border: 1px solid rgba(224,90,58,0.3); }
+  .op-c { background: rgba(74,158,255,0.15); color: var(--c-color); border: 1px solid rgba(74,158,255,0.3); }
+  .op-f { background: rgba(80,200,120,0.15); color: var(--f-color); border: 1px solid rgba(80,200,120,0.3); }
+  .op-u { background: rgba(192,132,252,0.15); color: var(--u-color); border: 1px solid rgba(192,132,252,0.3); }
+
+  .falsify-box {
+    background: rgba(224,90,58,0.04); border-left: 3px solid var(--k-color);
+    padding: 1.3rem 1.6rem; margin: 2rem 0; border-radius: 0 4px 4px 0;
+  }
+  .falsify-label { font-size: 0.68rem; letter-spacing: 0.22em; color: var(--k-color); text-transform: uppercase; margin-bottom: 0.5rem; }
+
+  /* ── FIBONACCI TABLE ─────────────────────────────────────────────── */
+  .fib-diagram {
+    background: var(--surface2); border: 1px solid rgba(80,200,120,0.12);
+    border-radius: 6px; padding: 1.8rem; margin: 2.5rem 0;
+  }
+  .fib-title { font-size: 0.72rem; letter-spacing: 0.2em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 1.4rem; text-align: center; }
+  .fib-row { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.55rem; flex-wrap: wrap; }
+  .fib-bar {
+    background: rgba(80,200,120,0.12); border: 1px solid rgba(80,200,120,0.3);
+    border-radius: 2px; padding: 0.3rem 0.7rem;
+    font-family: 'Courier New', monospace; font-size: 0.8rem;
+    color: var(--f-color); min-width: 60px; text-align: right;
+  }
+  .fib-label { font-size: 0.8rem; color: var(--cream-dim); flex: 1; }
+  .fib-ratio { font-family: 'Courier New', monospace; font-size: 0.75rem; color: var(--gold); }
+  .fib-note { text-align: center; margin-top: 1.2rem; font-size: 0.75rem; color: var(--text-dim); font-family: 'Courier New', monospace; }
+
+  /* ── SECTION CARDS ───────────────────────────────────────────────── */
+  .section-card {
+    background: var(--surface2); border: 1px solid rgba(80,200,120,0.1);
+    border-radius: 4px; padding: 1.3rem 1.6rem; margin: 1rem 0;
+  }
+  .section-tag { font-size: 0.68rem; letter-spacing: 0.2em; color: var(--f-color); text-transform: uppercase; margin-bottom: 0.5rem; font-family: 'Courier New', monospace; }
+  .section-rule { font-size: 0.88rem; color: var(--cream-dim); margin-top: 0.4rem; }
+
+  /* ── MACHINE ─────────────────────────────────────────────────────── */
+  .machine-wrap {
+    background: var(--surface2); border: 1px solid rgba(80,200,120,0.15);
+    border-radius: 6px; margin: 3rem 0; overflow: hidden;
+  }
+  .machine-header {
+    padding: 1rem 1.5rem; border-bottom: 1px solid rgba(80,200,120,0.1);
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .machine-title { font-size: 0.75rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; flex: 1; }
+  .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .btn {
+    background: rgba(80,200,120,0.1); border: 1px solid rgba(80,200,120,0.28);
+    color: var(--f-color); padding: 0.32rem 0.8rem; font-size: 0.73rem;
+    letter-spacing: 0.08em; cursor: pointer; border-radius: 2px;
+    font-family: 'Courier New', monospace; transition: all 0.2s;
+  }
+  .btn:hover { background: rgba(80,200,120,0.22); }
+  .btn.gold { background: rgba(201,168,76,0.1); border-color: rgba(201,168,76,0.3); color: var(--gold); }
+  .btn.gold:hover { background: rgba(201,168,76,0.22); }
+  .btn.red { background: rgba(224,90,58,0.1); border-color: rgba(224,90,58,0.3); color: var(--k-color); }
+  .btn.red:hover { background: rgba(224,90,58,0.22); }
+  .machine-canvas-wrap { background: #060c09; }
+  .machine-label {
+    padding: 0.7rem 1.5rem; font-family: 'Courier New', monospace; font-size: 0.75rem;
+    color: var(--text-dim); border-top: 1px solid rgba(80,200,120,0.1);
+    display: flex; gap: 2rem; flex-wrap: wrap;
+  }
+  .label-item { }
+  .label-val { color: var(--f-color); font-weight: bold; }
+  .label-val.gold { color: var(--gold); }
+
+  /* ── PORTAL ──────────────────────────────────────────────────────── */
+  .portal-section {
+    background: linear-gradient(160deg, #070d0a 0%, #0d1810 100%);
+    border: 1px solid rgba(80,200,120,0.2); border-radius: 6px;
+    margin: 3rem 0; overflow: hidden;
+  }
+  .portal-header {
+    background: rgba(80,200,120,0.05); border-bottom: 1px solid rgba(80,200,120,0.12);
+    padding: 1.3rem 1.8rem;
+  }
+  .portal-level { font-size: 0.68rem; letter-spacing: 0.2em; color: var(--f-color); text-transform: uppercase; margin-bottom: 0.3rem; }
+  .portal-heading { font-size: 1.1rem; color: var(--cream); font-weight: 400; }
+  .portal-desc { font-size: 0.88rem; color: var(--cream-dim); margin-top: 0.4rem; }
+  .prompt-card { padding: 1.5rem 1.8rem; border-bottom: 1px solid rgba(80,200,120,0.07); }
+  .prompt-card:last-of-type { border-bottom: none; }
+  .prompt-num { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--f-color); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .prompt-title { font-size: 1rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .prompt-text {
+    background: var(--surface2); border: 1px solid rgba(80,200,120,0.1);
+    border-radius: 4px; padding: 1rem 1.2rem;
+    font-family: 'Courier New', monospace; font-size: 0.82rem;
+    color: var(--cream); line-height: 1.65; margin: 0.7rem 0;
+  }
+  .copy-btn {
+    background: rgba(80,200,120,0.08); border: 1px solid rgba(80,200,120,0.22);
+    color: var(--f-color); padding: 0.28rem 0.7rem; font-size: 0.72rem;
+    letter-spacing: 0.08em; cursor: pointer; border-radius: 2px;
+    font-family: 'Courier New', monospace; transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(80,200,120,0.2); }
+  .copy-btn.copied { color: var(--gold); border-color: rgba(201,168,76,0.35); }
+  .portal-footer { padding: 1rem 1.8rem; border-top: 1px solid rgba(80,200,120,0.08); font-size: 0.78rem; color: var(--text-dim); text-align: center; }
+  .portal-footer a { color: var(--f-color); text-decoration: none; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────── */
+  footer {
+    text-align: center; padding: 2.5rem 2rem;
+    font-size: 0.72rem; letter-spacing: 0.12em; color: var(--text-dim);
+    border-top: 1px solid rgba(80,200,120,0.1);
+  }
+  footer .nav-links { display: flex; justify-content: center; gap: 2.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  footer a { color: var(--gold); text-decoration: none; }
+  footer a:hover { color: var(--gold-bright); }
+  footer .series-mark { font-size: 0.68rem; margin-top: 1rem; opacity: 0.55; }
+
+  @media (max-width: 600px) {
+    .chapter-body { padding: 3rem 1.2rem; }
+    nav { padding: 0.6rem 1rem; }
+    .fib-row { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────────── -->
+<nav>
+  <span class="series">Principia Orthogona · G6 LLC</span>
+  <div class="chapter-nav">
+    <a href="living-book.html">☰ All Chapters</a>
+    <a href="ch8-meru.html">← Ch. 8</a>
+    <a href="#9-1">9.1</a>
+    <a href="#9-2">9.2</a>
+    <a href="#9-3">9.3</a>
+    <a href="#9-4">9.4</a>
+    <a href="ch10-lyapunov.html">Ch. 10 →</a>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-eyebrow">Principia Orthogona · Book 3 · Chapter 9</div>
+  <h1>φ — The Subcritical Approach</h1>
+  <h2>The Fibonacci sequence never reaches the golden ratio. It approaches it forever. Results that are honest work the same way.</h2>
+  <div class="hero-divider"></div>
+  <div class="hero-epigraph">
+    "The golden ratio is a reminder that the most profound truths are approached asymptotically — never seized, only neared."
+    <cite>— Principia Orthogona, Book 3</cite>
+  </div>
+  <div class="operator-chain">G = U ∘ <span class="active">F</span> ∘ K ∘ C &nbsp;·&nbsp; Operator: F → The Fold &nbsp;·&nbsp; Week 11 · C1 → D1</div>
+</section>
+
+<!-- ── BODY ──────────────────────────────────────────────────────────── -->
+<main class="chapter-body">
+
+<!-- 9.1 ──────────────────────────────────────────────────────────────── -->
+<section id="9-1">
+<h2>9.1 — What the Sequence Cannot Say</h2>
+
+<div class="fib-diagram">
+  <div class="fib-title">Fibonacci Ratios Converging to φ = 1.6180339…</div>
+  <div class="fib-row"><div class="fib-bar">1/1</div><div class="fib-label">= 1.000000</div><div class="fib-ratio">error: 38.2%</div></div>
+  <div class="fib-row"><div class="fib-bar">2/1</div><div class="fib-label">= 2.000000</div><div class="fib-ratio">error: 23.6%</div></div>
+  <div class="fib-row"><div class="fib-bar">3/2</div><div class="fib-label">= 1.500000</div><div class="fib-ratio">error: 7.3%</div></div>
+  <div class="fib-row"><div class="fib-bar">5/3</div><div class="fib-label">= 1.666667</div><div class="fib-ratio">error: 3.0%</div></div>
+  <div class="fib-row"><div class="fib-bar">8/5</div><div class="fib-label">= 1.600000</div><div class="fib-ratio">error: 1.1%</div></div>
+  <div class="fib-row"><div class="fib-bar">13/8</div><div class="fib-label">= 1.625000</div><div class="fib-ratio">error: 0.45%</div></div>
+  <div class="fib-row"><div class="fib-bar">21/13</div><div class="fib-label">= 1.615385</div><div class="fib-ratio">error: 0.16%</div></div>
+  <div class="fib-row"><div class="fib-bar">34/21</div><div class="fib-label">= 1.619048</div><div class="fib-ratio">error: 0.06%</div></div>
+  <div class="fib-row"><div class="fib-bar">55/34</div><div class="fib-label">= 1.617647</div><div class="fib-ratio">error: 0.02%</div></div>
+  <div class="fib-row" style="opacity:0.55">
+    <div class="fib-bar" style="border-color:rgba(201,168,76,0.4);color:var(--gold)">∞/∞</div>
+    <div class="fib-label">→ φ = 1.618034…</div>
+    <div class="fib-ratio" style="color:var(--f-color)">error: 0</div>
+  </div>
+  <div class="fib-note">Each row is F applied once. φ is the fixed point. You can only approach it — never write it down exactly.</div>
+</div>
+
+<p>The Fibonacci sequence produces 1, 1, 2, 3, 5, 8, 13, 21, 34, 55… Each term is the sum of the two before it. If you divide any term by the one before it, you get a ratio that approaches φ — the golden ratio, 1.6180339… — but never arrives. The ratio 55/34 is closer than 34/21. The ratio 89/55 is closer still. The sequence is an infinite process of approaching a limit it cannot state.</p>
+
+<p>This is <span class="op-tag op-f">F</span> in its mathematical form: the fold that brings a system toward a fixed point without collapsing into it. The Fibonacci sequence is subcritical — it has crossed <span class="op-tag op-k">K</span> (it is generating real structure, not noise), but it has not yet reached <span class="op-tag op-u">U</span> (the final unfolding, the complete circuit). It is in permanent productive approach.</p>
+
+<p>A Results section works the same way. It does not reach the conclusion. It approaches it, measurably, term by term, without collapsing into interpretation. The Discussion section is the next operator — the one that asks what the approach means. But the Results section itself must remain subcritical. If it interprets, it has jumped operators. If it only lists, it has not yet crossed K. The fold requires both: structured approach without premature arrival.</p>
+</section>
+
+<!-- 9.2 ──────────────────────────────────────────────────────────────── -->
+<section id="9-2">
+<h2>9.2 — Three Structures of φ</h2>
+
+<h3>1. Phyllotaxis — F as the Packing Operator</h3>
+
+<p>A sunflower has 34 spirals running clockwise and 55 running counterclockwise. A pinecone has 8 and 13. A pineapple has 8, 13, and 21. These are consecutive Fibonacci numbers, and they appear because plants grow new elements at the golden angle — 137.5°, which is 360° × (1 − 1/φ). At this angle, each new leaf or seed is maximally separated from all previous ones. The plant is performing a packing optimization that no integer ratio can achieve — only the irrational φ.</p>
+
+<div class="math-block">Golden angle θ_g = 360° × (2 − φ) = 360° / φ² ≈ 137.508°
+
+For any rational approximation p/q to φ:
+  → packing creates p or q visible spirals (Fibonacci numbers)
+  → error in packing = |p/q − φ| → 0 as generation → ∞
+
+The plant is running F: folding each new element
+into the existing structure at the optimal angle.
+The result is never finished — it is always a living ratio.</div>
+
+<p>The operator <span class="op-tag op-f">F</span> is not a completed action. It is a continuously applied fold. Each new seed in the sunflower head is another application of F. The spiral count you see — 34 and 55 — is the visible signature of how many times F has been applied. This is why the Results section has sections: each paragraph is one more application, one more term in the sequence.</p>
+
+<h3>2. The Fixed Point — φ as Attractor</h3>
+
+<p>φ satisfies φ² = φ + 1. This is not a coincidence — it is the definition. If you take any positive number and repeatedly apply the map x → 1 + 1/x, it converges to φ regardless of where you start. φ is the fixed point of this iteration: the value that maps to itself. A system that keeps folding on itself — <span class="op-tag op-f">F</span> applied repeatedly — converges to a fixed structure even from arbitrary initial conditions.</p>
+
+<div class="math-block">Fixed point equation:  x = 1 + 1/x  →  x² = x + 1  →  x = φ
+
+Starting from x₀ = 1:
+  x₁ = 1 + 1/1     = 2.000000
+  x₂ = 1 + 1/2     = 1.500000
+  x₃ = 1 + 1/1.5   = 1.666667
+  x₄ = 1 + 1/1.667 = 1.600000
+  x₅ = 1 + 1/1.600 = 1.625000
+  ...
+  x_∞ → φ = 1.618034…
+
+F is the map. φ is what F converges to.
+The Discussion section is the statement of the attractor.</div>
+
+<h3>3. Subcritical Growth — Approaching Without Claiming</h3>
+
+<p>The most important property of the Fibonacci approach to φ is this: each ratio is a genuine, exact result. 55/34 is exactly 1.617647… It is not approximate — it is precise. But it is not φ. The researcher who writes a Results section is doing the same thing: producing exact statements (this was measured, that was observed, p = 0.034) that are precise but not yet interpreted. The precision is real. The incompleteness is also real. Both are required.</p>
+
+<p>The error in the sequence alternates: 3/2 undershoots φ, 5/3 overshoots, 8/5 undershoots, 13/8 overshoots. The results of an experiment do the same: some point toward the hypothesis, some cut against it. A Results section that only reports confirming evidence is not a Results section — it is advocacy dressed as data. The alternation is the honesty. The fold requires it.</p>
+
+<div class="theorem">
+  <div class="theorem-label">Theorem 9.1 — The Subcritical Principle</div>
+  <div class="theorem-body">Let R be a finite sequence of empirical results {r₁, r₂, …, rₙ} and let C* be the claim the researcher intends to support. Then a valid Results section satisfies: (1) each rᵢ is stated without reference to C*, (2) the sequence {rᵢ} approaches C* in the sense that each rᵢ constrains the space of possible interpretations, and (3) no rᵢ asserts C* directly. The Discussion section begins at the first statement that makes the approach explicit. The boundary is not stylistic — it is logical.</div>
+  <div class="theorem-proof"><strong>Proof sketch:</strong> If any rᵢ asserts C* directly, it is an interpretation, not a result, and belongs in the Discussion. If no rᵢ constrains the space of interpretations, the Results section contains noise, not evidence. The Fibonacci analogy holds: each term is exact, directed, and subcritical. The limit (the claim) is stated once — in Discussion — not embedded in each term. □</div>
+</div>
+</section>
+
+<!-- 9.3 ──────────────────────────────────────────────────────────────── -->
+<section id="9-3">
+<h2>9.3 — Writing the Results Section</h2>
+
+<div class="section-card">
+  <div class="section-tag">Operator F · Results · What the data showed</div>
+  <p style="margin:0.6rem 0 0.4rem;font-size:0.92rem"><strong>The rule:</strong> State what happened. Do not say what it means.</p>
+  <div class="section-rule">Present tense for general findings. Past tense for specific observations. No interpretive verbs (suggests, indicates, shows that X is true). Use: was observed, was recorded, increased, decreased, differed significantly from, did not differ from.</div>
+</div>
+
+<div class="section-card">
+  <div class="section-tag">Operator U · Discussion · What the data means</div>
+  <p style="margin:0.6rem 0 0.4rem;font-size:0.92rem"><strong>The rule:</strong> State what the approach means. Do not overclaim the arrival.</p>
+  <div class="section-rule">Connect findings to your Week 5 claim. Acknowledge what the results do not show. State one limitation explicitly. End with one implication — the single strongest thing you can say without overstating the evidence.</div>
+</div>
+
+<div class="insight-box" style="margin-top:1.5rem">
+  <div class="insight-label">Insight — The Overclaim as Operator Error</div>
+  <p style="margin:0">Overclaiming in a Discussion section is the academic equivalent of writing "φ = 55/34." It is not wrong in the right direction — it is wrong in kind. 55/34 is a number. φ is a limit. A Discussion that says "these results prove that X" has confused a Fibonacci term with the fixed point it approaches. The correct statement is always: "these results are consistent with X," or "these results constrain the alternatives to X," or "these results increase the prior probability of X." The approach is real. The arrival is not yet warranted. That hedging is not weakness — it is mathematical precision applied to language.</p>
+</div>
+
+<!-- ── MACHINE: Fibonacci Convergence ─────────────────────────────── -->
+<div class="machine-wrap">
+  <div class="machine-header">
+    <div class="machine-title">Machine · Fibonacci Convergence &amp; Golden Angle Packing</div>
+    <div class="btn-row">
+      <button class="btn" onclick="simReset()">Reset</button>
+      <button class="btn" onclick="simStep()">+ One Term</button>
+      <button class="btn gold" onclick="simRun()">Run to n=50</button>
+      <button class="btn" onclick="simToggleMode()">Toggle View</button>
+      <button class="btn red" onclick="simOvershoot()">Overclaim</button>
+    </div>
+  </div>
+  <div class="machine-canvas-wrap">
+    <canvas id="simCanvas" width="700" height="320" style="max-width:100%"></canvas>
+  </div>
+  <div class="machine-label">
+    <span class="label-item">n: <span class="label-val" id="statN">2</span></span>
+    <span class="label-item">F(n)/F(n−1): <span class="label-val" id="statRatio">1.000000</span></span>
+    <span class="label-item">Error from φ: <span class="label-val" id="statError">38.20%</span></span>
+    <span class="label-item">φ = <span class="label-val gold">1.618034…</span></span>
+    <span class="label-item">Mode: <span class="label-val" id="statMode">Convergence</span></span>
+  </div>
+</div>
+
+<hr class="gold-rule">
+
+<h2>What Would Break the Model</h2>
+
+<div class="falsify-box">
+  <div class="falsify-label">Falsifiability Condition</div>
+  <p>If there exists a research domain in which the logical distinction between Results (subcritical approach) and Discussion (attractor statement) produces no improvement in peer review outcomes, reproducibility rates, or reader comprehension compared to mixed Results-Discussion sections — then Theorem 9.1 is descriptive only, not normative, and the structural distinction is a convention rather than a logical necessity.</p>
+  <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--cream-dim)">Current evidence: Studies in scientific communication (Hartley 2012; Sollaci &amp; Pereira 2004) show IMRaD structure correlates with faster reader comprehension and higher citation rates. The distinction is not merely stylistic. The model survives — but is not proven to be universal across all discourse communities.</p>
+</div>
+</section>
+
+<!-- 9.4 ──────────────────────────────────────────────────────────────── -->
+<section id="9-4">
+<h2>9.4 — Exercises</h2>
+
+<p><strong>9.1</strong> — The Fibonacci sequence alternates between undershooting and overshooting φ. Write a 150-word Results paragraph about a finding in your field that does the same: one piece of evidence that undershoots your claim (points toward it but doesn't confirm) and one that overshoots (is stronger than you can safely interpret). State both without interpreting either.</p>
+
+<p><strong>9.2</strong> — Find the phrase "the results suggest that" in any paper you have read. Replace it with a version that states only what was observed, moving the interpretation to a separate sentence. Which version is more honest? Which is more readable? Are these the same thing?</p>
+
+<p><strong>9.3</strong> — Write a 100-word Discussion paragraph using the fixed-point model: one sentence connecting your result to your Week 5 claim (stating the approach), one sentence naming the limitation (the error term), and one sentence stating the implication (approaching the attractor without claiming arrival). Use the vocabulary: consistent with, does not exclude, increases the plausibility of, future work should test.</p>
+
+<p><strong>9.4</strong> — The golden angle (137.5°) is irrational — it cannot be expressed as a fraction. A conclusion that fully closes an argument is also irrational in this sense: no finite evidence gets you there exactly. Write one sentence that acknowledges this honestly — the single strongest implication of your research that you can state without overclaiming. This sentence is your φ.</p>
+
+<!-- ── PORTAL ──────────────────────────────────────────────────────── -->
+<div class="portal-section">
+  <div class="portal-header">
+    <div class="portal-level">Student Portal · Level C1 → D1 · Operator: F → U · Week 11</div>
+    <div class="portal-heading">Results and Discussion — The Fibonacci Fold</div>
+    <div class="portal-desc">You have reached the fold. Use these prompts to write your Results and Discussion sections — then audit them for overclaiming. Prompts 4.3 and 5.1 from the full course map.</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 4.3 · Course Week 11</div>
+    <div class="prompt-title">Results Without Interpretation</div>
+    <div class="prompt-text" id="p1text">Here is my Results section draft: [paste your Results section, 200–300 words]. For each sentence, tell me: (1) does this sentence state a finding or interpret it? If it interprets, flag it and suggest a version that states only what was observed. (2) Are my verbs correct — past tense for specific observations, present for general patterns? (3) Is there any sentence that makes a causal claim before the Discussion? If so, move it to Discussion. Return my Results section with only the corrections — no additions, no new content. The section should approach the conclusion, not state it.</div>
+    <button class="copy-btn" onclick="copyPrompt('p1text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 5.1 · Course Week 11</div>
+    <div class="prompt-title">Overclaim Audit</div>
+    <div class="prompt-text" id="p2text">Here is my Discussion section: [paste your Discussion, 300–400 words]. Identify any sentences where I claim more than my evidence supports — where I have written φ when I should have written 55/34. For each overclaim: (1) quote the sentence, (2) explain what evidence would be needed to justify it fully, (3) suggest a hedged rewrite using language such as 'consistent with', 'does not exclude', 'increases the plausibility of', or 'future work should test whether'. Finally: what is the single strongest implication I can state without overclaiming? That sentence is my φ — the attractor I am approaching but cannot claim to have reached.</div>
+    <button class="copy-btn" onclick="copyPrompt('p2text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Extension Prompt · Chapter 9</div>
+    <div class="prompt-title">The Fibonacci Check</div>
+    <div class="prompt-text" id="p3text">I have just read Chapter 9 of Book 3 of the Principia Orthogona Series, which uses the Fibonacci convergence to φ as a model for how Results sections should work — precise, directed, subcritical, alternating between over- and undershooting the conclusion. I want to apply this to my own paper. Here are three findings from my Results section: (1) [finding 1], (2) [finding 2], (3) [finding 3]. For each finding, tell me: does it overshoot my central claim, undershoot it, or is it exactly on target? Then: do the three together form a coherent approach to my conclusion — a sequence that constrains the space of interpretations the way Fibonacci terms constrain the approach to φ? What is missing?</div>
+    <button class="copy-btn" onclick="copyPrompt('p3text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="portal-footer">
+    All 21 prompts across levels A1 → D2 available at <a href="Sportal.html">Sportal</a> &nbsp;·&nbsp; <a href="living-book.html">← All Chapters</a>
+  </div>
+</div>
+</section>
+
+</main>
+
+<footer>
+  <div class="nav-links">
+    <a href="living-book.html">← All Chapters</a>
+    <a href="ch8-meru.html">← Chapter 8 · The Mountain and the Serpent</a>
+    <a href="ch10-lyapunov.html">Chapter 10 · Lyapunov →</a>
+  </div>
+  <div>Principia Orthogona Series · G6 LLC · Newark NJ</div>
+  <div>ISBN 979-8-9954416-1-8</div>
+  <div class="series-mark">© 2026 Pablo Nogueira Grossi · Sri Brodananda · All rights reserved</div>
+</footer>
+
+<!-- ── HERO CANVAS: φ-spiral animation ─────────────────────────────── -->
+<script>
+(function(){
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  const GOLD_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  let t = 0, seeds = [], animId;
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    const w = c.offsetWidth, h = c.offsetHeight;
+    c.width = w * dpr; c.height = h * dpr;
+    c.style.width = w + 'px'; c.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw(){
+    const W = c.offsetWidth, H = c.offsetHeight;
+    ctx.clearRect(0, 0, W, H);
+    const cx = W * 0.5, cy = H * 0.5;
+    const maxR = Math.min(W, H) * 0.46;
+    const N = 200;
+    for(let i = 0; i < N; i++){
+      const angle = i * GOLD_ANGLE + t * 0.003;
+      const frac = i / N;
+      const r = maxR * Math.sqrt(frac);
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      const alpha = 0.15 + frac * 0.55;
+      const green = Math.floor(60 + frac * 140);
+      const size = 1.2 + frac * 3.5;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${Math.floor(20 + frac*40)},${green},${Math.floor(50 + frac*80)},${alpha})`;
+      ctx.fill();
+    }
+    t++;
+    animId = requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>
+
+<!-- ── SIM CANVAS: Fibonacci convergence machine ───────────────────── -->
+<script>
+(function(){
+  const canvas = document.getElementById('simCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const LW = 700, LH = 320;
+  canvas.width = LW * dpr; canvas.height = LH * dpr;
+  canvas.style.width = LW + 'px'; canvas.style.height = LH + 'px';
+  canvas.style.maxWidth = '100%'; canvas.style.display = 'block';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const PHI = (1 + Math.sqrt(5)) / 2;
+  const GOLD_ANGLE = Math.PI * (3 - Math.sqrt(5));
+
+  let fibs = [1,1], ratios = [1.0], mode = 'convergence';
+  let spiralCount = 1, running = false, overclaimActive = false, animId;
+
+  function updateStatus(){
+    const r = ratios[ratios.length-1];
+    const err = Math.abs(r - PHI) / PHI * 100;
+    document.getElementById('statN').textContent = fibs.length;
+    document.getElementById('statRatio').textContent = r.toFixed(6);
+    document.getElementById('statError').textContent = err.toFixed(2) + '%';
+    document.getElementById('statMode').textContent = mode === 'convergence' ? 'Convergence' : 'Golden Spiral';
+  }
+
+  function nextFib(){
+    if(fibs.length >= 80) return;
+    const n = fibs.length;
+    fibs.push(fibs[n-1] + fibs[n-2]);
+    ratios.push(fibs[n] / fibs[n-1]);
+    spiralCount++;
+  }
+
+  function drawConvergence(){
+    const W = LW, H = LH;
+    ctx.fillStyle = '#060c09'; ctx.fillRect(0,0,W,H);
+    const pad = {l:58,r:28,t:28,b:44};
+    const pw = W-pad.l-pad.r, ph = H-pad.t-pad.b;
+
+    // φ line
+    const phiY = pad.t + ph*(1-(PHI-1)/1.5);
+    ctx.strokeStyle='rgba(201,168,76,0.45)'; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+    ctx.beginPath(); ctx.moveTo(pad.l,phiY); ctx.lineTo(W-pad.r,phiY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(201,168,76,0.65)'; ctx.font='9px monospace';
+    ctx.fillText('φ = 1.6180…', W-pad.r-70, phiY-4);
+
+    // curve
+    if(ratios.length > 1){
+      for(let i=1; i<ratios.length; i++){
+        const x0 = pad.l+(i-1)/Math.max(ratios.length-1,1)*pw;
+        const x1 = pad.l+i/Math.max(ratios.length-1,1)*pw;
+        const y0 = pad.t+ph*(1-(ratios[i-1]-1)/1.5);
+        const y1 = pad.t+ph*(1-(ratios[i]-1)/1.5);
+        ctx.strokeStyle = ratios[i] > PHI ? 'rgba(224,90,58,0.85)' : 'rgba(80,200,120,0.85)';
+        ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+      }
+      for(let i=0; i<ratios.length; i++){
+        const x=pad.l+i/Math.max(ratios.length-1,1)*pw;
+        const y=pad.t+ph*(1-(ratios[i]-1)/1.5);
+        ctx.fillStyle=ratios[i]>PHI?'#e05a3a':'#50c878';
+        ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    if(overclaimActive){
+      ctx.fillStyle='rgba(224,90,58,0.1)'; ctx.fillRect(0,0,W,H);
+      ctx.fillStyle='#e05a3a'; ctx.font='bold 13px Georgia'; ctx.textAlign='center';
+      ctx.fillText('"These results PROVE that φ = 55/34."', W/2, H/2-10);
+      ctx.font='10px monospace'; ctx.fillStyle='rgba(224,90,58,0.8)';
+      ctx.fillText('Operator error: 55/34 ≠ φ. The approach is not the arrival.', W/2, H/2+16);
+      ctx.textAlign='left';
+    }
+
+    // axes
+    ctx.strokeStyle='rgba(42,58,48,0.7)'; ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+ph);
+    ctx.moveTo(pad.l,pad.t+ph); ctx.lineTo(W-pad.r,pad.t+ph);
+    ctx.stroke();
+    ctx.fillStyle='rgba(153,160,155,0.55)'; ctx.font='9px monospace';
+    ctx.fillText('1.0', pad.l-26, pad.t+ph+2);
+    ctx.fillText('2.0', pad.l-26, pad.t+8);
+    ctx.fillText('n →', W-pad.r-18, pad.t+ph+14);
+  }
+
+  function drawSpiral(){
+    const W = LW, H = LH;
+    ctx.fillStyle='#060c09'; ctx.fillRect(0,0,W,H);
+    const cx=W/2, cy=H/2, maxR=Math.min(W,H)*0.43;
+    for(let i=0; i<spiralCount; i++){
+      const angle=i*GOLD_ANGLE;
+      const r=maxR*Math.sqrt(i/Math.max(spiralCount-1,1));
+      const x=cx+r*Math.cos(angle), y=cy+r*Math.sin(angle);
+      const frac=i/spiralCount;
+      const g=Math.floor(70+frac*130);
+      ctx.fillStyle=`rgba(${Math.floor(20+frac*40)},${g},${Math.floor(50+frac*70)},${0.5+frac*0.5})`;
+      ctx.beginPath(); ctx.arc(x,y,2+frac*4,0,Math.PI*2); ctx.fill();
+    }
+    ctx.fillStyle='rgba(201,168,76,0.45)'; ctx.font='9px monospace'; ctx.textAlign='center';
+    ctx.fillText('Golden angle: 137.508° · Each seed maximally separated from all previous', cx, H-10);
+    ctx.textAlign='left';
+  }
+
+  function drawFrame(){ 
+    if(mode==='convergence') drawConvergence(); else drawSpiral(); 
+    updateStatus(); 
+  }
+
+  window.simReset=function(){ fibs=[1,1]; ratios=[1.0]; spiralCount=1; running=false; overclaimActive=false; if(animId){cancelAnimationFrame(animId);animId=null;} drawFrame(); };
+  window.simStep=function(){ nextFib(); overclaimActive=false; drawFrame(); };
+  window.simRun=function(){
+    running=true; overclaimActive=false;
+    function tick(){ if(fibs.length<52&&running){ nextFib(); drawFrame(); animId=requestAnimationFrame(tick); } else running=false; }
+    tick();
+  };
+  window.simToggleMode=function(){ mode=mode==='convergence'?'spiral':'convergence'; drawFrame(); };
+  window.simOvershoot=function(){ overclaimActive=true; mode='convergence'; drawFrame(); setTimeout(()=>{ overclaimActive=false; drawFrame(); },3500); };
+
+  drawFrame();
+})();
+</script>
+
+<script>
+function copyPrompt(id, btn){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    btn.textContent='Copied ✓'; btn.classList.add('copied');
+    setTimeout(()=>{ btn.textContent='Copy Prompt'; btn.classList.remove('copied'); },2000);
+  });
+}
+</script>
+
+</body>
+</html>

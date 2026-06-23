@@ -1,0 +1,209 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath, amssymb, amsthm, graphicx, geometry}
+\geometry{margin=1in}
+
+\maketitle
+\author{Pablo Nogueira Grossi}
+\date{March 2026}
+
+\maketitle\section{Scale-Invariant Development Levels in the \texorpdfstring{$g$}{g}-Series}
+
+In this section we formalise the notion of development levels in the
+$g$–series operator algebra, without committing to any specific
+numerical index such as $33$. The goal is to separate (i) the
+\emph{mathematical structure} of development levels from (ii) any
+\emph{empirical} observation about which index real systems tend to
+occupy.
+
+\subsection{State space, scales, and the \texorpdfstring{$g$}{g}-series}
+
+\begin{definition}[dm3 state space]
+A \emph{dm3 system} is a triple
+
+
+\[
+D = (M, \Gamma, V)
+\]
+
+
+where $M$ is a smooth Riemannian $3$–manifold, $\Gamma \subset M$ is a
+hyperbolic limit cycle, and $V : M \to \mathbb{R}$ is a $C^2$ Lyapunov
+function satisfying the eight dm3 axioms of Generative Contact
+Mechanics (existence of $\Gamma$, orbital stability, stochastic
+stability, etc.).
+\end{definition}
+
+\begin{definition}[Scale]
+A \emph{scale} is an equivalence class of dm3 systems under smooth
+rescalings of space, time, and Lyapunov potential that preserve:
+\begin{enumerate}
+  \item the existence and hyperbolicity of $\Gamma$,
+  \item the sign of the Lyapunov exponent $\mu_{\max}$,
+  \item the sign of the noise threshold $\tau$.
+\end{enumerate}
+We write $[D]$ for the scale containing a dm3 system $D$.
+\end{definition}
+
+\begin{definition}[$g$–series at fixed scale]
+Fix a scale $[D]$ and choose a representative $D_0 \in [D]$. A
+\emph{$g$–series} at this scale is a sequence
+
+
+\[
+\{D_n\}_{n \in \mathbb{N}}, \qquad D_n \in [D],
+\]
+
+
+together with operators
+
+
+\[
+g_n : [D] \to [D], \qquad n \in \mathbb{N},
+\]
+
+
+such that $D_{n+1} = g_n(D_n)$ and each $g_n$ is built from the
+GCM operator grammar (compositions of $g$–, $L$–, $R$–, and $U$–operators)
+and preserves the dm3 axioms.
+\end{definition}
+
+\subsection{Full development and dynamic center}
+
+We now define two structural notions: full development at a given
+scale, and the dynamic center of that scale. Neither involves any
+specific numerical index.
+
+\begin{definition}[Development functional]
+Let $[D]$ be a fixed scale. A \emph{development functional} at this
+scale is a map
+
+
+\[
+\mathcal{D} : [D] \to [0,1]
+\]
+
+
+such that:
+\begin{enumerate}
+  \item $\mathcal{D}(D) = 0$ if and only if $D$ is minimally developed
+  (e.g.\ smallest admissible basin, smallest admissible $\tau$);
+  \item $\mathcal{D}(D) = 1$ if and only if $D$ is maximally developed
+  at this scale (no further admissible operator in the grammar can
+  increase $\tau$ or the basin without crossing a boundary $B_2$ or
+  $B_3$);
+  \item $\mathcal{D}$ is non-decreasing under admissible $g$–moves:
+  if $D' = g(D)$ for some grammar operator $g$, then
+  $\mathcal{D}(D') \geq \mathcal{D}(D)$.
+\end{enumerate}
+\end{definition}
+
+\begin{definition}[Full development level]
+Let $\{D_n\}_{n \in \mathbb{N}}$ be a $g$–series at scale $[D]$ and
+$\mathcal{D}$ a development functional. A \emph{full development level}
+is an index $n_{\mathrm{fd}} \in \mathbb{N}$ such that:
+\begin{enumerate}
+  \item $\mathcal{D}(D_{n_{\mathrm{fd}}}) = 1$;
+  \item for all $m \geq n_{\mathrm{fd}}$ with $D_m$ still in the same
+  scale $[D]$, we have $\mathcal{D}(D_m) = 1$.
+\end{enumerate}
+We then say that $D_{n_{\mathrm{fd}}}$ is \emph{fully developed at
+scale $[D]$}.
+\end{definition}
+
+\begin{definition}[Dynamic center]
+Let $\{D_n\}_{n \in \mathbb{N}}$ and $\mathcal{D}$ be as above. A
+\emph{dynamic center} index $n_{\mathrm{c}}$ is an index such that:
+\begin{enumerate}
+  \item $\mathcal{D}(D_{n_{\mathrm{c}}}) \in (0,1)$;
+  \item for all sufficiently small perturbations of the environment
+  (noise level, coupling strength) that keep the system within the
+  same scale $[D]$, the induced evolution of the $g$–series returns
+  to a neighborhood of $D_{n_{\mathrm{c}}}$;
+  \item $n_{\mathrm{c}}$ is not a fixed point of the dynamical flow in
+  state space, but is a fixed point of the \emph{grammar}: the local
+  operator choices that restore coherence and prevent collapse
+  (the $L$– and $R$–operators) tend to steer the system back toward
+  $D_{n_{\mathrm{c}}}$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark}
+In applications, one often normalises $\mathcal{D}$ so that
+$\mathcal{D}(D_{n_{\mathrm{c}}}) = \tfrac{1}{2}$, i.e.\ the dynamic
+center sits halfway between minimal and full development at the
+current scale. This is a choice of scale for $\mathcal{D}$, not a
+mathematical necessity.
+\end{remark}
+
+\subsection{Scale crossing and seed states}
+
+\begin{definition}[Scale crossing]
+Let $[D]$ and $[D']$ be two scales with $[D']$ strictly larger (in the
+sense of additional degrees of freedom or larger ambient manifold).
+A \emph{scale crossing} from $[D]$ to $[D']$ occurs when an admissible
+operator in the grammar pushes a fully developed state
+$D_{n_{\mathrm{fd}}} \in [D]$ across a boundary $B_2$ or $B_3$,
+producing a new dm3 system $D'_0 \in [D']$ that satisfies the eight
+axioms at the higher scale.
+\end{definition}
+
+\begin{definition}[Seed state at higher scale]
+The system $D'_0 \in [D']$ obtained by scale crossing from a fully
+developed $D_{n_{\mathrm{fd}}} \in [D]$ is called a \emph{seed state}
+for scale $[D']$. It is minimally developed at $[D']$ in the sense that
+$\mathcal{D}'(D'_0)$ is close to $0$ for any development functional
+$\mathcal{D}'$ at scale $[D']$.
+\end{definition}
+
+\begin{proposition}[Scale-invariant development structure]
+Let $[D]$ be a scale, $\{D_n\}_{n \in \mathbb{N}}$ a $g$–series at this
+scale, and $\mathcal{D}$ a development functional. Assume:
+\begin{enumerate}
+  \item There exists a full development level $n_{\mathrm{fd}}$.
+  \item There exists a dynamic center index $n_{\mathrm{c}}$.
+  \item A scale crossing from $[D]$ to some $[D']$ occurs at or after
+  $n_{\mathrm{fd}}$.
+\end{enumerate}
+Then:
+\begin{enumerate}
+  \item The image of $D_{n_{\mathrm{fd}}}$ under scale crossing is a
+  seed state $D'_0 \in [D']$.
+  \item There exists a $g$–series $\{D'_m\}_{m \in \mathbb{N}}$ at
+  scale $[D']$ and a development functional $\mathcal{D}'$ such that
+  the same qualitative structure holds: a full development level
+  $n'_{\mathrm{fd}}$ and a dynamic center $n'_{\mathrm{c}}$.
+\end{enumerate}
+In particular, the notions of full development and dynamic center are
+\emph{scale-invariant}: they recur at every scale where the dm3 axioms
+and the operator grammar are valid.
+\end{proposition}
+
+\begin{proof}
+The existence of $D'_0$ as a seed state follows from the definition of
+scale crossing and the dm3 axioms at the higher scale. The construction
+of $\{D'_m\}$ and $\mathcal{D}'$ repeats the same operator grammar and
+development functional construction at $[D']$, using the fact that the
+axioms are scale-free. The qualitative properties of full development
+and dynamic center are preserved by construction. 
+\end{proof}
+
+\subsection{Empirical indices and the number \texorpdfstring{$33$}{33}}
+
+\begin{remark}[Empirical development index]
+In numerical experiments, one may observe that for a particular
+discretisation, operator pipeline, and persistent-homology readout,
+the dynamic center index $n_{\mathrm{c}}$ takes a specific value (for
+example $n_{\mathrm{c}} = 33$). This is an \emph{empirical constant}
+of that experimental setup, not a mathematical invariant of the
+theory. The formalism above deliberately avoids baking any such
+numerical value into the definitions.
+\end{remark}
+
+\begin{conjecture}[Example of an empirical pattern]
+For a specific class of discretised dm3 systems and a fixed
+persistent-homology pipeline, the dynamic center index
+$n_{\mathrm{c}}$ is observed to be $33$ and is robust under a family
+of perturbations. Explaining this robustness from first principles
+is an open problem.
+\end{conjecture}

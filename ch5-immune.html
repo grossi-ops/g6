@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 5 — Immune Adaptation | Book 3: The Mini-Beast</title>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-dim: #8a6f2e;
+    --dark: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --text: #e8e4d8;
+    --text-dim: #9994a0;
+    --k-color: #e05a3a;
+    --c-color: #4a9eff;
+    --f-color: #50c878;
+    --u-color: #c084fc;
+    --t-color: #f9c74f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.96);
+    border-bottom: 1px solid var(--gold-dim);
+    padding: 0.6rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  .nav-logo {
+    font-family: 'Georgia', serif;
+    font-size: 0.85rem; letter-spacing: 0.18em;
+    color: var(--gold); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 1.5rem; font-size: 0.8rem; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none; letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  .chapter-hero {
+    background: linear-gradient(160deg, #0d0d18 0%, #131320 60%, #0f0a14 100%);
+    border-bottom: 1px solid #2a2a3a;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-letter {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 22rem; font-weight: 900;
+    color: rgba(224,90,58,0.04);
+    user-select: none; pointer-events: none;
+    font-family: 'Georgia', serif; line-height: 1;
+  }
+  .chapter-tag {
+    font-size: 0.72rem; letter-spacing: 0.25em;
+    color: var(--k-color); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .chapter-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 400; letter-spacing: 0.04em;
+    color: var(--text); margin-bottom: 1rem;
+    position: relative;
+  }
+  .chapter-subtitle {
+    font-size: 1.1rem; color: var(--text-dim);
+    max-width: 600px; margin: 0 auto 2rem;
+    font-style: italic;
+  }
+  .operator-chain {
+    font-family: 'Courier New', monospace;
+    font-size: 1.05rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .operator-chain .active {
+    color: var(--k-color);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: bold;
+  }
+  .chapter-meta {
+    display: flex; gap: 2rem; justify-content: center;
+    flex-wrap: wrap; margin-top: 1.5rem;
+    font-size: 0.78rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+  }
+  .meta-badge {
+    background: rgba(224,90,58,0.1);
+    border: 1px solid rgba(224,90,58,0.3);
+    padding: 0.3rem 0.9rem; border-radius: 2px;
+    color: var(--k-color);
+  }
+
+  .content-wrap {
+    max-width: 780px; margin: 0 auto; padding: 3rem 2rem 4rem;
+  }
+  h2 {
+    font-size: 1.4rem; font-weight: 400;
+    color: var(--gold); margin: 3rem 0 1rem;
+    letter-spacing: 0.06em;
+  }
+  h3 {
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--text); margin: 2rem 0 0.7rem;
+  }
+  p { margin-bottom: 1.2rem; }
+
+  .gold-rule {
+    border: none; border-top: 1px solid var(--gold-dim);
+    margin: 2.5rem 0; opacity: 0.4;
+  }
+
+  .theorem-box {
+    background: rgba(224,90,58,0.06);
+    border-left: 3px solid var(--k-color);
+    padding: 1.5rem 1.8rem;
+    margin: 2rem 0; border-radius: 0 4px 4px 0;
+  }
+  .theorem-label {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .theorem-body { font-style: italic; color: var(--text); }
+  .theorem-proof {
+    margin-top: 1rem; font-size: 0.9rem;
+    color: var(--text-dim); font-style: normal;
+  }
+
+  .insight-box {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 4px;
+  }
+  .insight-label {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--gold); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+
+  .math-block {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    padding: 1.2rem 1.5rem; margin: 1.5rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem; color: var(--k-color);
+    border-radius: 4px; overflow-x: auto;
+  }
+
+  .op-tag {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    padding: 0.15rem 0.5rem; border-radius: 2px;
+    vertical-align: middle;
+  }
+  .op-k { background: rgba(224,90,58,0.15); color: var(--k-color); border: 1px solid rgba(224,90,58,0.3); }
+  .op-c { background: rgba(74,158,255,0.15); color: var(--c-color); border: 1px solid rgba(74,158,255,0.3); }
+  .op-f { background: rgba(80,200,120,0.15); color: var(--f-color); border: 1px solid rgba(80,200,120,0.3); }
+  .op-u { background: rgba(192,132,252,0.15); color: var(--u-color); border: 1px solid rgba(192,132,252,0.3); }
+
+  .falsify-box {
+    background: rgba(80,200,120,0.06);
+    border-left: 3px solid var(--f-color);
+    padding: 1.2rem 1.5rem; margin: 2rem 0; border-radius: 0 4px 4px 0;
+  }
+  .falsify-label {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--f-color); text-transform: uppercase; margin-bottom: 0.4rem;
+  }
+
+  .commit-diagram {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 6px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+  }
+  .commit-title {
+    font-size: 0.72rem; letter-spacing: 0.2em;
+    color: var(--text-dim); text-transform: uppercase;
+    margin-bottom: 1.2rem; text-align: center;
+  }
+  .commit-row {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 0.8rem; flex-wrap: wrap;
+  }
+  .commit-node {
+    background: var(--surface);
+    border: 1px solid #2a2a3a;
+    border-radius: 4px;
+    padding: 0.5rem 0.9rem;
+    font-size: 0.82rem; color: var(--text);
+    flex: 1; min-width: 120px; text-align: center;
+  }
+  .commit-node.active-k {
+    border-color: rgba(224,90,58,0.5);
+    background: rgba(224,90,58,0.08);
+    color: var(--k-color);
+  }
+  .commit-arrow {
+    color: var(--k-color); font-size: 1.2rem;
+    font-family: 'Courier New', monospace;
+  }
+  .commit-label {
+    font-size: 0.7rem; color: var(--text-dim);
+    font-family: 'Courier New', monospace;
+    text-align: center; margin-top: 0.3rem;
+  }
+
+  .sim-section {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 6px; margin: 3rem 0; overflow: hidden;
+  }
+  .sim-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #2a2a3a;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .sim-title {
+    font-size: 0.78rem; letter-spacing: 0.15em;
+    color: var(--text-dim); text-transform: uppercase; flex: 1;
+  }
+  .sim-controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .sim-btn {
+    background: rgba(224,90,58,0.12);
+    border: 1px solid rgba(224,90,58,0.3);
+    color: var(--k-color);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem; letter-spacing: 0.08em;
+    cursor: pointer; border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    transition: all 0.2s;
+  }
+  .sim-btn:hover { background: rgba(224,90,58,0.25); }
+  .sim-btn.gold {
+    background: rgba(201,168,76,0.12);
+    border-color: rgba(201,168,76,0.35);
+    color: var(--gold);
+  }
+  .sim-btn.gold:hover { background: rgba(201,168,76,0.25); }
+  .sim-btn.green {
+    background: rgba(80,200,120,0.12);
+    border-color: rgba(80,200,120,0.35);
+    color: var(--f-color);
+  }
+  canvas { display: block; width: 100%; background: #080810; }
+  .sim-status {
+    padding: 0.8rem 1.5rem;
+    font-family: 'Courier New', monospace; font-size: 0.78rem;
+    display: flex; gap: 2rem; flex-wrap: wrap;
+    border-top: 1px solid #2a2a3a;
+  }
+  .status-item { color: var(--text-dim); }
+  .status-val { color: var(--k-color); font-weight: bold; }
+  .status-val.committed { color: var(--f-color); }
+
+  .portal-section {
+    background: linear-gradient(160deg, #0d0a18 0%, #130d20 100%);
+    border: 1px solid rgba(224,90,58,0.25);
+    border-radius: 6px; margin: 3rem 0; overflow: hidden;
+  }
+  .portal-header {
+    background: rgba(224,90,58,0.08);
+    border-bottom: 1px solid rgba(224,90,58,0.2);
+    padding: 1.2rem 1.8rem;
+  }
+  .portal-level {
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase; margin-bottom: 0.3rem;
+  }
+  .portal-heading { font-size: 1.15rem; color: var(--text); font-weight: 400; }
+  .portal-desc { font-size: 0.88rem; color: var(--text-dim); margin-top: 0.4rem; }
+  .prompt-card {
+    padding: 1.5rem 1.8rem;
+    border-bottom: 1px solid rgba(224,90,58,0.1);
+  }
+  .prompt-card:last-child { border-bottom: none; }
+  .prompt-num {
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--k-color); text-transform: uppercase; margin-bottom: 0.5rem;
+  }
+  .prompt-title { font-size: 1rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .prompt-text {
+    background: var(--surface2);
+    border: 1px solid #2a2a3a;
+    border-radius: 4px; padding: 1rem 1.2rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem; color: var(--text);
+    line-height: 1.6; margin: 0.7rem 0;
+  }
+  .copy-btn {
+    background: rgba(224,90,58,0.1);
+    border: 1px solid rgba(224,90,58,0.25);
+    color: var(--k-color);
+    padding: 0.3rem 0.7rem; font-size: 0.72rem;
+    letter-spacing: 0.08em; cursor: pointer;
+    border-radius: 2px; font-family: 'Courier New', monospace;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { background: rgba(224,90,58,0.22); }
+  .copy-btn.copied { color: var(--f-color); border-color: rgba(80,200,120,0.35); }
+  .portal-footer {
+    padding: 1rem 1.8rem; border-top: 1px solid rgba(224,90,58,0.15);
+    font-size: 0.78rem; color: var(--text-dim); text-align: center;
+  }
+  .portal-footer a { color: var(--k-color); text-decoration: none; }
+
+  .chapter-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 2rem; border-top: 1px solid #2a2a3a;
+    max-width: 780px; margin: 0 auto;
+  }
+  .chapter-nav a {
+    color: var(--gold); text-decoration: none;
+    font-size: 0.85rem; letter-spacing: 0.08em;
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 0.5rem 1rem; border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .chapter-nav a:hover { background: rgba(201,168,76,0.08); }
+
+  footer {
+    text-align: center; padding: 2rem;
+    font-size: 0.72rem; letter-spacing: 0.12em;
+    color: var(--text-dim);
+    border-top: 1px solid #1a1a24;
+  }
+  footer .fleur-footer { color: var(--gold-dim); margin: 0 0.5rem; }
+
+  @media (max-width: 600px) {
+    .hero-letter { font-size: 10rem; }
+    .commit-row { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="impa-portal.html" class="nav-logo">⚜ PRINCIPIA ORTHOGONA ⚜</a>
+  <div class="nav-links">
+    <a href="chapters-diagram.html">All Chapters</a>
+    <a href="course-16weeks.html">Course</a>
+    <a href="Sportal.html">Portal</a>
+    <a href="trilogy-sale.html">Get the Book</a>
+  </div>
+</nav>
+
+<section class="chapter-hero">
+  <div class="hero-letter">K</div>
+  <div class="chapter-tag">Chapter 5 · Week 6 · CEFR B1</div>
+  <h1 class="chapter-title">Immune Adaptation</h1>
+  <p class="chapter-subtitle">The threshold is not the moment of danger. It is the moment the system commits to a new orbit.</p>
+  <div class="operator-chain">G = U ∘ F ∘ <span class="active">K</span> ∘ C</div>
+  <div class="chapter-meta">
+    <span class="meta-badge">Operator: K · Commitment</span>
+    <span style="color:var(--text-dim)">Week 6</span>
+    <span style="color:var(--text-dim)">CEFR B1 → B2</span>
+    <span style="color:var(--text-dim)">Affinity · Clonal Expansion · Memory</span>
+  </div>
+</section>
+
+<div class="content-wrap">
+
+<div class="commit-diagram">
+  <div class="commit-title">Immune Response as Operator Chain</div>
+  <div class="commit-row">
+    <div class="commit-node">
+      <strong>Antigen arrives</strong>
+      <div class="commit-label"><span class="op-tag op-c">C — detection</span></div>
+    </div>
+    <div class="commit-arrow">→</div>
+    <div class="commit-node">
+      <strong>B-cell tests binding</strong>
+      <div class="commit-label"><span class="op-tag op-c">C — compression</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:0.6rem 0;font-size:0.8rem;color:var(--text-dim)">↓ affinity rising through affinity maturation</div>
+  <div class="commit-row">
+    <div class="commit-node active-k">
+      <strong>Affinity threshold K*</strong>
+      <div class="commit-label"><span class="op-tag op-k">K — commitment fires</span></div>
+    </div>
+    <div class="commit-arrow">→</div>
+    <div class="commit-node active-k">
+      <strong>Clonal expansion begins</strong>
+      <div class="commit-label"><span class="op-tag op-k">K → F transition</span></div>
+    </div>
+  </div>
+  <div style="text-align:center;padding:0.6rem 0;font-size:0.8rem;color:var(--k-color)">↓ K crossed → system commits to this orbit irreversibly</div>
+  <div class="commit-row">
+    <div class="commit-node">
+      <strong>Plasma cells + Memory B-cells</strong>
+      <div class="commit-label"><span class="op-tag op-f">F — fold: permanent record</span></div>
+    </div>
+    <div class="commit-arrow">→</div>
+    <div class="commit-node">
+      <strong>Antibody production</strong>
+      <div class="commit-label"><span class="op-tag op-u">U — unfolding output</span></div>
+    </div>
+  </div>
+</div>
+
+<h2>The Moment Before Commitment</h2>
+
+<p>Something enters the body. A protein fragment from a bacterium — an antigen — drifts through the lymph until it meets a B-cell whose receptor happens to fit. The fit is not perfect. It never is, at first. The B-cell begins to test the antigen, reshaping its receptor slightly with each cycle of division, selecting for better binding with each generation. This process — affinity maturation — is evolution running inside a single organism over the course of days.</p>
+
+<p>But at some point, something else happens. The affinity crosses a threshold. The B-cell stops testing and commits. It differentiates: some daughter cells become plasma cells that flood the bloodstream with antibodies, others become memory B-cells that will survive for decades, ready to fire the moment the same antigen appears again. The system does not negotiate after that point. It has entered a new orbit.</p>
+
+<p>That commitment threshold is <span class="op-tag op-k">K</span>. It is the exact point at which compression (measuring, sampling, testing the antigen) becomes structure (a committed immune response with permanent memory). Below K: the body is still deciding. Above K: the body has chosen, and the choice is written into long-lived cells.</p>
+
+<h2>Three Forms of Immune K</h2>
+
+<h3>1. Affinity Maturation — K as the Binding Threshold</h3>
+
+<p>In the germinal center of a lymph node, B-cells compete for survival. Those whose receptors bind antigen with insufficient affinity are eliminated by apoptosis. Those with slightly higher affinity receive survival signals and divide. Point mutations accumulate in the receptor's variable regions with each generation. The process is a hill-climbing algorithm, but the hill has a cliff: below affinity threshold K*, the cell dies; above K*, the cell is selected and may differentiate.</p>
+
+<div class="math-block">
+Let A(t) = affinity of B-cell receptor at generation t.
+Let K* = minimum affinity for positive selection.
+
+A(t) &lt; K*  →  apoptosis — cell eliminated (C remains, no commitment)
+A(t) ≥ K*  →  positive selection → irreversible differentiation
+               Plasma cell:    immediate antibody output     (F)
+               Memory B-cell:  long-term record, decades     (U)
+
+A(t+1) = A(t) + ΔA   where ΔA ~ N(0, σ²)   [somatic hypermutation]
+Selection rule: survive iff A(t+1) ≥ K*
+K* rises over the course of infection — later clones must be better.
+</div>
+
+<p>The threshold K* is not fixed. It rises as the immune response matures — early in an infection, the bar is lower; by day 10, only high-affinity clones survive. This dynamic threshold is K adapting its own position in response to information already processed. The operator learns where to draw the line.</p>
+
+<h3>2. Clonal Expansion — K as the Amplification Gate</h3>
+
+<p>Once a B-cell crosses K*, it divides rapidly — one cell becomes thousands in 48 hours. This clonal expansion is not gradual. It is a switch. Below K*: one cell, dividing slowly, still in the testing phase. Above K*: explosive replication, differentiation, specialization. The exponential is gated by the threshold. Nothing happens slowly in the immune response once K fires.</p>
+
+<p>This is the key structural difference between K and C. Compression is continuous — it can be 10% complete, 50% complete. Commitment is binary in its consequence: either the clone expands or it does not. You can feel when the immune system's K has fired. It is called fever.</p>
+
+<h3>3. Immunological Memory — K as the Permanent Record</h3>
+
+<p>Memory B-cells and memory T-cells are the immune system's U operator. They sit in bone marrow and lymph nodes in a state of compressed readiness — the same state the cajueiro's root system occupies between dry seasons. But the moment they detect the same antigen, they respond with a recall response: rapid expansion, immediate high-affinity antibody production, barrier deployment within hours rather than days.</p>
+
+<p>Immunological memory is why a second infection is milder than the first. The K threshold has already been crossed. The system does not need to run the full affinity maturation hill-climb again. The orbit was committed to in the first exposure and has been held ever since.</p>
+
+<div class="theorem-box">
+  <div class="theorem-label">Theorem 5.1 — The Commitment Threshold</div>
+  <div class="theorem-body">Let S be a biological system receiving repeated signal inputs of intensity I(t). Define K* as the minimum signal threshold for irreversible state transition. Then: for all I(t) &lt; K*, the system remains in the compression phase — testing, sampling, reversible. For I(t) ≥ K* sustained over interval τ_min, the system undergoes irreversible differentiation into a new stable orbit. The fold operator F becomes active. Compression (C) terminates.</div>
+  <div class="theorem-proof"><strong>Proof sketch:</strong> The transition is modeled by a bistable potential V(x) with two wells separated by a barrier at K*. Below K*, thermal fluctuations keep the system in the C-well. At K*, the barrier height falls to zero and the system escapes irreversibly into the F-well. The memory cell is the new well — Lyapunov stable by the construction of the germinal center selection process. □</div>
+</div>
+
+<div class="insight-box">
+  <div class="insight-label">Insight — Argument as Immune Commitment</div>
+  <p>Chapter 5 sits at the exact point in the course where you transition from describing to arguing. The immune system's K threshold is the biological model for what happens when a writer stops surveying the literature and commits to a claim. Before K: "Several studies suggest that…" After K: "The evidence shows that X, and the following prediction follows." The Toulmin model — claim, evidence, warrant, backing, rebuttal — is the argument architecture you build after K fires. You cannot build it before. If you have not yet committed to a falsifiable claim, you are still in affinity maturation. That is not a failure. It is the correct phase. But it must end.</p>
+</div>
+
+<hr class="gold-rule">
+
+<h2>What Would Break the Model</h2>
+
+<div class="falsify-box">
+  <div class="falsify-label">Falsifiability Condition</div>
+  <p>If a system exists in which immunological commitment (clonal expansion, memory cell formation) can be fully reversed after crossing K* — without structural destruction of the committed cells — then Theorem 5.1 is false and K is not the correct model for biological commitment. The system would need to demonstrate reversible dedifferentiation of memory B-cells back to naive B-cells under physiologically realistic conditions.</p>
+  <p style="margin-top:0.8rem;font-size:0.88rem;color:var(--text-dim)">Current evidence: dedifferentiation of memory B-cells to naive B-cells has not been demonstrated under physiological conditions. Engineered reversal requires genetic reprogramming (iPSC technology), confirming that K is a genuine threshold, not a gradient. The model survives.</p>
+</div>
+
+<h2>Exercises</h2>
+
+<p><strong>5.1</strong> — A researcher reads five papers on a topic before deciding what to argue. Using the affinity maturation model, identify: (a) what the antigen is in this analogy, (b) what affinity maturation corresponds to in the research process, and (c) what happens the moment they write a falsifiable claim. At what point does K fire?</p>
+
+<p><strong>5.2</strong> — The math block above shows affinity maturation as a threshold-gated random walk. Identify the C operator (what is being compressed), the K* threshold (what condition triggers the transition), and the F operator (what the system produces after commitment). Write one sentence per operator.</p>
+
+<p><strong>5.3</strong> — Write a 200-word argument paragraph about a claim in your field using the Toulmin model: state the claim, give evidence, identify the warrant (the implicit assumption connecting evidence to claim), name one possible rebuttal, and end with a concession. This is your K fire in academic writing.</p>
+
+<p><strong>5.4</strong> — The immune system raises K* over the course of an infection to ensure only high-affinity clones survive. How might a researcher raise their own K* threshold for what counts as sufficient evidence before committing to a claim? What is the cost of setting K* too high?</p>
+
+</div>
+
+<div class="content-wrap" style="padding-top:0">
+<div class="sim-section">
+  <div class="sim-header">
+    <div class="sim-title">Live Simulation — Affinity Maturation &amp; K* Commitment Threshold</div>
+    <div class="sim-controls">
+      <button class="sim-btn" onclick="simReset()">Reset</button>
+      <button class="sim-btn" onclick="simAddAntigen()">Antigen Pulse</button>
+      <button class="sim-btn gold" onclick="simRaiseKstar()">↑ Raise K*</button>
+      <button class="sim-btn" onclick="simSuppressResponse()">Suppress</button>
+      <button class="sim-btn green" onclick="simSecondExposure()">2nd Exposure</button>
+    </div>
+  </div>
+  <canvas id="simCanvas" height="280"></canvas>
+  <div class="sim-status">
+    <div class="status-item">Max affinity: <span class="status-val" id="statAffinity">0.10</span></div>
+    <div class="status-item">K* threshold: <span class="status-val" id="statKstar">0.65</span></div>
+    <div class="status-item">Clone count: <span class="status-val" id="statClones">1</span></div>
+    <div class="status-item">Status: <span class="status-val" id="statStatus">C — testing</span></div>
+    <div class="status-item">Memory cells: <span class="status-val" id="statMemory">0</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+const canvas = document.getElementById('simCanvas');
+const ctx = canvas.getContext('2d');
+
+let kstar = 0.65;
+const KSTAR_MAX = 0.92;
+let t = 0;
+let committed = false;
+let suppressed = false;
+let secondExposure = false;
+let memoryCells = 0;
+let antigenLevel = 0;
+let clones = [{ affinity: 0.08 + Math.random() * 0.1, alive: true, committed: false }];
+let historyAffinity = [], historyKstar = [], historyClones = [];
+const HISTORY_LEN = 400;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = 280;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function step() {
+  t += 0.016;
+  if (antigenLevel > 0) antigenLevel = Math.max(0, antigenLevel - 0.003);
+
+  const newClones = [];
+  clones = clones.filter(c => c.alive);
+
+  clones.forEach(clone => {
+    if (clone.committed) return;
+    const delta = (Math.random() - 0.45) * 0.04 * (antigenLevel > 0.1 ? 2.5 : 1.0);
+    clone.affinity = Math.max(0, Math.min(1, clone.affinity + delta));
+    if (!suppressed && clone.affinity < kstar * 0.45 && Math.random() < 0.012) {
+      clone.alive = false; return;
+    }
+    if (!suppressed && clone.affinity >= kstar) {
+      clone.committed = true;
+      committed = true;
+      const n = secondExposure ? 8 : 4;
+      for (let i = 0; i < n; i++) {
+        newClones.push({ affinity: clone.affinity + (Math.random() - 0.5) * 0.05, alive: true, committed: false });
+      }
+      memoryCells += secondExposure ? 3 : 1;
+    }
+  });
+
+  if (clones.length + newClones.length < 30) clones.push(...newClones);
+  if (antigenLevel > 0.3 && clones.length < 15 && Math.random() < 0.02) {
+    clones.push({ affinity: 0.05 + Math.random() * 0.15, alive: true, committed: false });
+  }
+  if (clones.length === 0) {
+    clones = [{ affinity: 0.08 + Math.random() * 0.1, alive: true, committed: false }];
+    committed = false;
+  }
+
+  const liveClones = clones.filter(c => c.alive);
+  const maxAff = Math.max(...liveClones.map(c => c.affinity), 0);
+  historyAffinity.push(maxAff);
+  historyKstar.push(kstar);
+  historyClones.push(Math.min(liveClones.length, 30));
+  if (historyAffinity.length > HISTORY_LEN) {
+    historyAffinity.shift(); historyKstar.shift(); historyClones.shift();
+  }
+  return { maxAff, count: liveClones.length };
+}
+
+function draw({ maxAff, count }) {
+  const W = canvas.width, H = canvas.height;
+  const laneH = H / 3;
+  ctx.fillStyle = '#080810';
+  ctx.fillRect(0, 0, W, H);
+
+  if (antigenLevel > 0.05) {
+    ctx.fillStyle = `rgba(249,199,79,${antigenLevel * 0.18})`;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(249,199,79,0.7)';
+    ctx.font = '9px monospace';
+    ctx.fillText('▲ ANTIGEN', W - 82, 16);
+  }
+
+  ctx.font = '10px monospace';
+  ctx.fillStyle = 'rgba(153,148,160,0.6)';
+  ctx.fillText('Max clone affinity', 8, 16);
+  ctx.fillText('K* threshold', 8, laneH + 16);
+  ctx.fillText('Clone population', 8, 2 * laneH + 16);
+
+  // K* line on affinity lane
+  const kLineY = laneH * 0.88 - kstar * (laneH * 0.80);
+  ctx.strokeStyle = 'rgba(224,90,58,0.45)';
+  ctx.lineWidth = 1; ctx.setLineDash([6, 4]);
+  ctx.beginPath(); ctx.moveTo(0, kLineY); ctx.lineTo(W, kLineY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(224,90,58,0.7)'; ctx.font = '9px monospace';
+  ctx.fillText('K* = ' + kstar.toFixed(2), W - 75, kLineY - 3);
+
+  // Affinity curve
+  if (historyAffinity.length > 1) {
+    const s = W / HISTORY_LEN;
+    ctx.lineWidth = 2; ctx.beginPath();
+    for (let i = 0; i < historyAffinity.length; i++) {
+      const x = i * s;
+      const y = laneH * 0.88 - historyAffinity[i] * (laneH * 0.80);
+      const above = historyAffinity[i] >= kstar;
+      ctx.strokeStyle = above ? '#50c878' : '#4a9eff';
+      if (i === 0) { ctx.moveTo(x, y); continue; }
+      const prevAbove = historyAffinity[i - 1] >= kstar;
+      if (above !== prevAbove) { ctx.stroke(); ctx.beginPath(); ctx.strokeStyle = above ? '#50c878' : '#4a9eff'; ctx.moveTo(x, y); }
+      ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // K* history
+  if (historyKstar.length > 1) {
+    const s = W / HISTORY_LEN;
+    ctx.strokeStyle = 'rgba(224,90,58,0.7)'; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i = 0; i < historyKstar.length; i++) {
+      const x = i * s;
+      const y = laneH + laneH * 0.88 - historyKstar[i] * (laneH * 0.80);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Clone count
+  if (historyClones.length > 1) {
+    const s = W / HISTORY_LEN;
+    ctx.strokeStyle = 'rgba(201,168,76,0.8)'; ctx.lineWidth = 1.8; ctx.beginPath();
+    for (let i = 0; i < historyClones.length; i++) {
+      const x = i * s;
+      const y = 2 * laneH + laneH * 0.88 - (historyClones[i] / 30) * (laneH * 0.80);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  if (committed) { ctx.fillStyle = 'rgba(80,200,120,0.03)'; ctx.fillRect(0, 0, W, H); }
+
+  ctx.strokeStyle = 'rgba(42,42,58,0.8)'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, laneH); ctx.lineTo(W, laneH);
+  ctx.moveTo(0, 2 * laneH); ctx.lineTo(W, 2 * laneH);
+  ctx.stroke();
+
+  document.getElementById('statAffinity').textContent = maxAff.toFixed(2);
+  document.getElementById('statKstar').textContent = kstar.toFixed(2);
+  document.getElementById('statClones').textContent = count;
+  document.getElementById('statMemory').textContent = memoryCells;
+  const el = document.getElementById('statStatus');
+  if (suppressed) { el.textContent = '⚠ suppressed'; el.className = 'status-val'; el.style.color = '#e05a3a'; }
+  else if (committed) { el.textContent = '✓ K fired — committed'; el.className = 'status-val committed'; el.style.color = ''; }
+  else { el.textContent = 'C — testing affinity'; el.className = 'status-val'; el.style.color = ''; }
+}
+
+function loop() { const s = step(); draw(s); requestAnimationFrame(loop); }
+
+function simReset() {
+  kstar = 0.65; t = 0; committed = false; suppressed = false;
+  secondExposure = false; memoryCells = 0; antigenLevel = 0;
+  clones = [{ affinity: 0.08 + Math.random() * 0.1, alive: true, committed: false }];
+  historyAffinity = []; historyKstar = []; historyClones = [];
+  document.querySelectorAll('.sim-btn.green')[0].textContent = '2nd Exposure';
+  document.querySelectorAll('.sim-btn')[3].textContent = 'Suppress';
+}
+function simAddAntigen() { antigenLevel = 0.92; }
+function simRaiseKstar() { kstar = Math.min(kstar + 0.08, KSTAR_MAX); committed = false; }
+function simSuppressResponse() {
+  suppressed = !suppressed;
+  document.querySelectorAll('.sim-btn')[3].textContent = suppressed ? 'Suppressed ✓' : 'Suppress';
+}
+function simSecondExposure() {
+  if (memoryCells === 0) { alert('No memory cells yet — run Antigen Pulse first to build memory.'); return; }
+  secondExposure = true; antigenLevel = 0.95; committed = false;
+  clones = Array.from({ length: Math.min(memoryCells, 6) }, () => ({
+    affinity: 0.52 + Math.random() * 0.15, alive: true, committed: false
+  }));
+  document.querySelectorAll('.sim-btn.green')[0].textContent = '2nd Exposure ✓';
+}
+
+loop();
+</script>
+
+<script>
+function copyPrompt(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied ✓'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Prompt'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+<div class="content-wrap" style="padding-top:0">
+<div class="portal-section">
+  <div class="portal-header">
+    <div class="portal-level">Student Portal · Level B1–B2 · Operator: K · Week 6</div>
+    <div class="portal-heading">The Argument Threshold — From Claim to Structure</div>
+    <div class="portal-desc">You have read the chapter. Use these prompts to cross your own K threshold: from surveying the literature to committing to an argument. Corresponds to Prompts 2.2 and 2.3 in the full course map.</div>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 2.2 · Course Week 6</div>
+    <div class="prompt-title">Toulmin Warrant Audit</div>
+    <div class="prompt-text" id="p1text">Here is my argument paragraph: [paste your 150–250 word argument paragraph]. Identify: (1) the claim — what I am asserting, (2) the evidence cited — what sources or data I have used, (3) the implicit warrant connecting them — the unstated assumption that makes the evidence support the claim. Is the warrant stated or assumed? What would a reviewer ask about the warrant? Finally, suggest one sentence that would make the warrant explicit and academically defensible.</div>
+    <button class="copy-btn" onclick="copyPrompt('p1text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Prompt 2.3 · Course Week 6</div>
+    <div class="prompt-title">Hedging Language Rewrite</div>
+    <div class="prompt-text" id="p2text">Here is one sentence from my argument paragraph that I want to improve: [paste your sentence]. The sentence currently sounds too absolute / too weak / too vague (choose one). Please: (1) identify the hedging problem — is it overclaiming, underclaiming, or vague agency?, (2) rewrite it using precise academic hedging language such as 'the evidence suggests that', 'it may be argued that', or 'one interpretation is', and (3) explain why the rewrite is more defensible in a peer-reviewed context. Target level: B2 academic English.</div>
+    <button class="copy-btn" onclick="copyPrompt('p2text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="prompt-num">Extension Prompt · Chapter 5</div>
+    <div class="prompt-title">Your Commitment Threshold</div>
+    <div class="prompt-text" id="p3text">I have just read Chapter 5 of Book 3: The Mini-Beast, which argues that the immune system's affinity maturation process is a model for the K operator — the threshold that separates testing from commitment. I want to apply this to my own research writing process. My current claim or research question is: [paste your claim or question]. Please help me identify: (1) am I still in the affinity maturation phase — still testing whether this claim is defensible — or have I crossed K* and committed to this argument?, (2) what evidence would I need to see to raise my own K* threshold and require stronger proof before committing?, and (3) write a one-sentence falsifiability condition for my claim — the specific condition under which I would abandon it.</div>
+    <button class="copy-btn" onclick="copyPrompt('p3text', this)">Copy Prompt</button>
+  </div>
+
+  <div class="portal-footer">
+    All 21 prompts across levels A1 → D2 available at <a href="Sportal.html">sportal.html</a>
+  </div>
+</div>
+</div>
+
+<div class="chapter-nav">
+  <a href="ch4-neural.html">← Chapter 4: Neural Oscillations</a>
+  <a href="ch6-resonant.html">Ch6 · Resonance →</a>
+</div>
+
+<footer>
+  <span class="fleur-footer">⚜</span>
+  Book 3: The Mini-Beast &nbsp;·&nbsp; G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; Chapter 5 of 17
+  <span class="fleur-footer">⚜</span>
+</footer>
+
+</body>
+</html>

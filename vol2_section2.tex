@@ -1,0 +1,228 @@
+%% ============================================================
+%%  Principia Orthogona, Volume Two
+%%  Section 2: Contact Realization of the Fold Operator
+%% ============================================================
+
+\section{Contact Realization of the Fold Operator}
+\label{sec:contact-realization}
+
+This section constructs an explicit contact-geometric realization
+of the fold operator $F$ introduced abstractly in Volume
+One~\cite{PrincipiaI}, and shows how it arises naturally within
+the dm3 framework of Generative Contact
+Mechanics~\cite{Paper1,Paper2}. The goal is not to re-derive
+the singularity-theoretic properties of folding, but to demonstrate
+how the geometric fold appears as a contact-Hamiltonian
+discontinuity whose regularized dynamics are governed by the dm3
+equations.
+
+Throughout, we assume the existence of the operator sequence
+\[
+  C \;\to\; K \;\to\; F \;\to\; U
+\]
+acting on trajectories in a Riemannian manifold $(X,g)$, as
+established in Volume One~\cite{PrincipiaI}. In particular, we
+take as given: the curvature threshold $\kappa^*$ defined by the
+focal radius and corrected by the Rauch comparison theorem; the
+fold operator $F$ producing rank-1 loss of injectivity at
+$\kappa^*$; and the post-fold stabilization map $U$ defined by
+gradient descent on a Morse stability functional. The purpose of
+the present work is not to re-derive these structures, but to
+construct their contact-geometric realization and to show that
+they are dynamically stable within the dm3 framework.
+
+%% ------------------------------------------------------------
+\subsection{From Hamiltonian Phase Space to Contact Extension}
+\label{subsec:contactification}
+
+In Volume One, the fold is realized in the Hamiltonian phase
+space $T^*X$ as a symplectic discontinuity produced by a
+distributional term in the action functional. At a fold point
+$s_0$, the momentum undergoes an impulsive jump
+\[
+  p(s_0^+) - p(s_0^-) = \mu\,n(s_0),
+\]
+where $n(s_0)$ is the unit normal to the compressed trajectory
+at the critical curvature point. The fold map
+\[
+  \mathcal{F} : (\gamma,p) \mapsto (\gamma, p + \mu n)
+\]
+preserves the canonical symplectic form $\omega = d\gamma\wedge dp$
+(Volume One, Theorem on Symplectic Preservation).
+
+However, the Hamiltonian framework alone cannot describe the
+post-fold attracting dynamics selected by the unfolding operator
+$U$: symplectic flows on compact phase spaces are volume-preserving
+and therefore forbid attractors. To capture both the impulsive
+fold and the subsequent stabilization in a unified geometric
+structure, we pass to the \emph{contact extension}
+\[
+  M \;=\; X \times \mathbb{R},
+\]
+with coordinate $z\in\mathbb{R}$ (the action variable) and
+contact form
+\[
+  \alpha \;=\; dz - \lambda,
+\]
+where $\lambda\in\Omega^1(X)$ satisfies $d\lambda=\omega$. This
+is the contactification construction of~\cite{Paper1}, \S6.
+
+%% ------------------------------------------------------------
+\subsection{The Fold as a Contact Discontinuity}
+\label{subsec:contact-fold}
+
+Within the contact manifold $(M,\alpha)$, the Hamiltonian fold
+of Volume One appears as a singular limit of a smooth contact
+Hamiltonian vector field. The precise statement is as follows.
+
+The distributional generator of the fold,
+\[
+  S(\gamma) \;=\; \mu\,\Theta\!\bigl(\kappa(\gamma)-\kappa^*\bigr),
+\]
+where $\Theta$ is the Heaviside function, induces the momentum
+jump $p^+=p^-+\partial S/\partial\gamma$ in the variational
+sense (Volume One, \S12). In the contact extension $M=X\times\R$,
+this distributional generator admits a one-parameter family of
+smooth regularizations
+\[
+  H_{\mathrm{diss}}^\beta(x,z)
+  \;=\; -\gamma\,V(x)\,e^{-\beta z}, \quad \beta>0,
+\]
+where $V\colon X\to\R_{\ge 0}$ is a smooth Lyapunov function
+whose zero set $\{V=0\}$ is the post-fold invariant set $\Gamma$.
+
+\begin{proposition}[Regularization of the fold generator]
+\label{prop:regularization}
+In the limit $\beta\to\infty$ and $z\to 0^+$ with $\gamma\beta$
+fixed, the contact Hamiltonian correction $H_{\mathrm{diss}}^\beta$
+reduces to a first-order impulse in the transverse direction,
+recovering the momentum jump $p^+-p^-=\mu n$ of the fold map.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+At $z=0^+$ and large $\beta$: $e^{-\beta z}\approx 1-\beta z$.
+The contact equations give transverse velocity correction
+$-\nabla_x H_{\mathrm{diss}}^\beta = \gamma e^{-\beta z}\nabla V
+\approx \gamma\nabla V$, which in the normal direction near
+$\{V=0\}$ is $\gamma\,\|\nabla V\|\,n = \mu n$ upon identifying
+$\mu = \gamma\|\nabla V\|$. As $\beta\to\infty$, the correction
+is concentrated at $z=0$, recovering the distributional impulse
+of the Heaviside generator $S$.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:regularization} should be understood as
+a structural correspondence, not an exact limit in the functional-
+analytic sense. The precise statement is: the family
+$H_{\mathrm{diss}}^\beta$ interpolates between the smooth
+contact dynamics (finite $\beta$) and the impulsive fold
+map ($\beta\to\infty$). The dm3 framework operates at finite
+$\beta$, where all dynamics are smooth.
+\end{remark}
+
+The regularized Hamiltonian $H_{\mathrm{diss}}^\beta$ has three
+structural properties that make it the correct contact-geometric
+continuation of the fold:
+\begin{enumerate}[label=(\roman*)]
+  \item $H_{\mathrm{diss}}|_\Gamma = 0$: the invariant set
+        $\Gamma=\{V=0\}$ is preserved,
+  \item $H_{\mathrm{diss}} < 0$ off $\Gamma$: contraction
+        toward $\Gamma$ is enforced,
+  \item the factor $e^{-\beta z}$ weakens dissipation as
+        action $z$ accumulates, encoding the embodiment
+        threshold.
+\end{enumerate}
+
+Thus the Hamiltonian impulse at $\kappa=\kappa^*$ and the contact
+dissipation governing post-fold attraction are two aspects of the
+same geometric mechanism: rank-1 injectivity loss followed by
+contact stabilization.
+
+%% ------------------------------------------------------------
+\subsection{Relation to the dm3 Equations}
+\label{subsec:dm3-relation}
+
+Near the stabilized orbit $\Gamma$, Paper~1 (Theorem~C,
+\cite{Paper1}) proves that every dm3 system is locally
+contact-diffeomorphic to the normal form
+\begin{align}
+  \dot\rho &= \mu_{\max}(1-e^{-\beta z})\rho + O(\rho^2),
+    \label{eq:nf-rho}\\
+  \dot\theta &= \omega + O(\rho),
+    \label{eq:nf-theta}\\
+  \dot z &= \omega - |\mu_{\max}|\rho^2 e^{-\beta z} + O(\rho^3),
+    \label{eq:nf-z}
+\end{align}
+where $\rho$ measures transverse deviation from $\Gamma$,
+$\omega=2\pi/T^*$ is the angular frequency, and
+$(\mu_{\max},\omega,\beta)$ are the canonical invariant
+parameters~\cite{Paper1}.
+
+This normal form can be interpreted directly in terms of the
+generative transition sequence $C\to K\to F\to U$:
+\begin{itemize}[leftmargin=*]
+  \item the approach $\rho\to 0$ under~\eqref{eq:nf-rho}
+        corresponds to the unfolding operator $U$: post-fold
+        stabilization by gradient descent;
+  \item the negativity of $\mu_{\max}$ is the dynamical imprint
+        of having passed the geometric threshold $\kappa^*$: the
+        fold has occurred and the system is now in the attracting
+        regime;
+  \item the contact variable $z$ records accumulated dissipation
+        generated by folding: the system's history is encoded
+        in $z$, and the embodiment threshold $\tau$ measures
+        the noise amplitude below which this history stabilizes
+        the orbit.
+\end{itemize}
+
+In this sense, the dm3 flow is not a separate construction
+but the smooth contact-geometric continuation of the fold
+dynamics of Volume One. The explicit verification of this
+correspondence in the toy model is given in Paper~2~\cite{Paper2},
+where the equations~\eqref{eq:nf-rho}--\eqref{eq:nf-z} are
+derived by direct Taylor expansion at $r=1$.
+
+%% ------------------------------------------------------------
+\subsection{Conceptual Correspondence}
+\label{subsec:correspondence-table}
+
+The correspondence established in this section is summarized
+in Table~\ref{tab:correspondence}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{ll}
+\toprule
+\emph{Volume One (geometric)} & \emph{Volume Two / GCM (contact)} \\
+\midrule
+Curvature threshold $\kappa^*$ & Onset of transverse contraction \\
+Fold impulse $p^+-p^-=\mu n$ & Contact Hamiltonian correction
+  $H_{\mathrm{diss}}$ \\
+Rank-1 Jacobian loss at $F$ & Dissipative contact normal form \\
+Unfolding $U$ & Attraction to dm3 orbit $\Gamma$ \\
+Symplectic preservation & Contact structure on $M=X\times\R$ \\
+$A_1$--$A_3$ singularities & Four dm3 bifurcations (Theorem~C,
+  \cite{Paper2}) \\
+\bottomrule
+\end{tabular}
+\caption{Correspondence between the geometric framework of
+  Volume One and the contact-geometric framework of
+  GCM~\cite{Paper1,Paper2}.}
+\label{tab:correspondence}
+\end{table}
+
+The fold operator $F$ is thus the geometric progenitor of the
+dm3 dynamics: singular in the Hamiltonian picture, regularized
+and stabilized in the contact picture.
+
+%% ------------------------------------------------------------
+\subsection{Role in the Trilogy}
+\label{subsec:trilogy-role}
+
+This section completes the conceptual task left intentionally
+open in Volume One: it shows how a purely geometric fold becomes
+a dissipative, structurally stable process once contact geometry
+is introduced. The next section establishes the quantitative
+equivalence between the curvature threshold $\kappa^*$ and the
+embodiment threshold $\tau$ — the central bridge theorem of this
+volume.

@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch13 · The Nirvana Machine — Revision as Annealing · Book 3</title>
+<style>
+  /* ── Nirvana palette — ice / void / absolute zero ─────────── */
+  :root {
+    --n-color:  #67e8f9;
+    --n-dim:    #0891b2;
+    --n-glow:   rgba(103, 232, 249, 0.14);
+    --bg:       #000c10;
+    --bg2:      #00131a;
+    --bg3:      #001c26;
+    --text:     #dff6ff;
+    --muted:    #5a8a99;
+    --gold:     #c9a84c;
+    --border:   rgba(103, 232, 249, 0.20);
+    --c-color:  #4a9eff;
+    --k-color:  #e05a3a;
+    --f-color:  #50c878;
+    --u-color:  #c084fc;
+    --g-color:  #f59e0b;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: linear-gradient(160deg, var(--bg) 0%, var(--bg2) 50%, var(--bg3) 100%);
+    color: var(--text);
+    font-family: Georgia, 'Times New Roman', serif;
+    min-height: 100vh;
+    line-height: 1.75;
+  }
+
+  nav.top {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    padding: .75rem 1.5rem;
+    background: rgba(0,12,16,.88);
+    border-bottom: 1px solid var(--border);
+    font-family: 'Courier New', monospace; font-size: .78rem;
+  }
+  nav.top a {
+    color: var(--n-color); text-decoration: none;
+    padding: .2rem .6rem;
+    border: 1px solid var(--border); border-radius: 4px;
+    transition: background .2s;
+  }
+  nav.top a:hover { background: var(--n-glow); }
+
+  /* ── Hero ────────────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 40%,
+      rgba(103,232,249,.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .operator-badge {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: .8rem; font-weight: 700; letter-spacing: .12em;
+    color: var(--bg);
+    background: var(--n-color);
+    padding: .25rem .9rem; border-radius: 3px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-letter {
+    font-size: clamp(5rem, 16vw, 11rem);
+    font-style: italic;
+    color: var(--n-color);
+    line-height: 1;
+    text-shadow: 0 0 60px rgba(103,232,249,.40);
+    margin-bottom: .5rem;
+    letter-spacing: -.02em;
+  }
+  .hero h1 {
+    font-size: clamp(1.4rem, 3.5vw, 2.4rem);
+    font-weight: 400; color: var(--text); margin-bottom: .5rem;
+  }
+  .hero .subtitle {
+    font-size: 1rem; color: var(--muted);
+    font-style: italic; margin-bottom: 1rem;
+  }
+  .meta-row {
+    display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    font-family: 'Courier New', monospace; font-size: .8rem; color: var(--muted);
+  }
+  .meta-row span { color: var(--n-color); }
+
+  /* ── Section containers ─────────────────── */
+  .section {
+    max-width: 860px; margin: 0 auto 2.5rem; padding: 0 1.5rem;
+  }
+  .section h2 {
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--n-color);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .4rem; margin-bottom: 1.2rem;
+  }
+  .section p { margin-bottom: 1rem; color: var(--text); }
+  .section em { color: var(--n-color); font-style: normal; }
+
+  /* ── Math block ──────────────────────────── */
+  .math-block {
+    background: rgba(103,232,249,.05);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--n-color);
+    border-radius: 6px;
+    padding: 1.4rem 1.6rem;
+    margin: 1.4rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: .93rem; line-height: 2;
+    overflow-x: auto;
+  }
+  .math-block .label {
+    font-size: .72rem; letter-spacing: .1em;
+    color: var(--n-color); text-transform: uppercase;
+    margin-bottom: .5rem;
+  }
+
+  /* ── Temperature cards ───────────────────── */
+  .temp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem; margin: 1.4rem 0;
+  }
+  .t-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.1rem;
+  }
+  .t-card .tc-val {
+    font-family: 'Courier New', monospace;
+    font-size: 1.25rem; margin-bottom: .4rem;
+  }
+  .t-card .tc-label {
+    font-size: .72rem; letter-spacing: .08em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: .4rem;
+  }
+  .t-card .tc-desc { font-size: .87rem; color: var(--text); }
+  .t-card.hot    { border-color: #f87171; }
+  .t-card.hot    .tc-val { color: #f87171; }
+  .t-card.warm   { border-color: var(--gold); }
+  .t-card.warm   .tc-val { color: var(--gold); }
+  .t-card.cool   { border-color: var(--n-color); }
+  .t-card.cool   .tc-val { color: var(--n-color); }
+  .t-card.zero   { border-color: #e2e8f0; }
+  .t-card.zero   .tc-val { color: #e2e8f0; }
+
+  /* ── Nirvana checklist ───────────────────── */
+  .nirvana-list {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px; padding: 1.4rem 1.6rem;
+    margin: 1.4rem 0;
+  }
+  .nirvana-list .nl-title {
+    font-family: 'Courier New', monospace;
+    font-size: .75rem; letter-spacing: .1em;
+    color: var(--n-color); text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .nl-item {
+    display: flex; align-items: flex-start; gap: .9rem;
+    margin-bottom: .8rem; font-size: .9rem;
+  }
+  .nl-item .check {
+    font-family: 'Courier New', monospace;
+    font-size: .78rem; padding: .2rem .5rem;
+    border: 1px solid; border-radius: 3px;
+    white-space: nowrap; flex-shrink: 0; margin-top: .1rem;
+  }
+  .check-ch { color: #50c878; border-color: #50c878; }
+  .check-sp { color: var(--n-color); border-color: var(--n-color); }
+  .check-ly { color: var(--u-color); border-color: var(--u-color); }
+  .check-fp { color: var(--g-color); border-color: var(--g-color); }
+  .nl-item .nl-desc { color: var(--text); }
+  .nl-item .nl-ref   { font-family: 'Courier New', monospace; font-size: .75rem; color: var(--muted); }
+
+  /* ── Theorem box ─────────────────────────── */
+  .theorem {
+    background: rgba(103,232,249,.07);
+    border: 1px solid rgba(103,232,249,.30);
+    border-radius: 8px; padding: 1.4rem 1.6rem; margin: 1.6rem 0;
+  }
+  .theorem .thm-label {
+    font-family: 'Courier New', monospace;
+    font-size: .75rem; letter-spacing: .1em;
+    color: var(--n-color); text-transform: uppercase; margin-bottom: .6rem;
+  }
+  .theorem .thm-body { color: var(--text); line-height: 1.9; }
+  .theorem code   { font-family: 'Courier New', monospace; color: var(--n-color); }
+  .theorem strong { color: var(--n-color); }
+
+  /* ── Insight box ─────────────────────────── */
+  .insight {
+    background: rgba(201,168,76,.06);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px; padding: 1rem 1.4rem; margin: 1.4rem 0;
+    font-style: italic; color: #f0dda8; font-size: .95rem;
+  }
+
+  /* ── Response letter anatomy ─────────────── */
+  .letter-table {
+    width: 100%; border-collapse: collapse;
+    font-size: .88rem; margin: 1.4rem 0;
+  }
+  .letter-table th {
+    text-align: left; color: var(--n-color);
+    border-bottom: 1px solid var(--border);
+    padding: .5rem .8rem;
+    font-family: 'Courier New', monospace;
+    font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+  }
+  .letter-table td {
+    padding: .55rem .8rem;
+    border-bottom: 1px solid rgba(103,232,249,.08);
+    vertical-align: top;
+  }
+  .letter-table .move { font-family: 'Courier New', monospace; color: var(--n-color); }
+  .letter-table .hot-err { color: #f87171; }
+  .letter-table .cold-ok { color: #50c878; }
+
+  /* ── Canvas panel ────────────────────────── */
+  .canvas-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem;
+    margin: 1.6rem auto 2rem; max-width: 860px;
+  }
+  .canvas-panel h3 {
+    font-size: 1rem; font-weight: 400;
+    color: var(--n-color); margin-bottom: .8rem;
+    font-family: 'Courier New', monospace;
+  }
+  canvas {
+    display: block;
+    width: 100%; max-width: 760px; height: 320px;
+    background: #000c10;
+    border-radius: 6px;
+    border: 1px solid rgba(103,232,249,.15);
+    margin: 0 auto .8rem;
+    cursor: crosshair;
+  }
+  .sim-info {
+    display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap;
+    margin: .5rem 0;
+    font-family: 'Courier New', monospace; font-size: .82rem;
+  }
+  .sim-cell {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px; padding: .4rem .9rem; text-align: center;
+    min-width: 90px;
+  }
+  .sim-cell .sc-label { color: var(--n-color); font-size: .68rem; margin-bottom: .2rem; }
+
+  .btn-row {
+    display: flex; flex-wrap: wrap; gap: .5rem;
+    justify-content: center; margin-top: .6rem;
+  }
+  .sim-btn {
+    font-family: 'Courier New', monospace; font-size: .78rem;
+    padding: .4rem 1rem; border-radius: 4px; cursor: pointer;
+    border: 1px solid; background: transparent;
+    transition: background .2s;
+  }
+  .btn-slow  { color: var(--n-color);  border-color: var(--n-color); }
+  .btn-slow:hover  { background: var(--n-glow); }
+  .btn-fast  { color: var(--gold);     border-color: var(--gold); }
+  .btn-fast:hover  { background: rgba(201,168,76,.12); }
+  .btn-quench{ color: #f87171;         border-color: #f87171; }
+  .btn-quench:hover{ background: rgba(248,113,113,.12); }
+  .btn-reset { color: var(--muted);    border-color: rgba(90,138,153,.3); }
+  .btn-reset:hover { background: rgba(90,138,153,.1); }
+
+  .canvas-status {
+    text-align: center; font-family: 'Courier New', monospace;
+    font-size: .8rem; color: var(--muted);
+    margin-top: .4rem; min-height: 1.2em;
+  }
+
+  /* ── Prompt portal ───────────────────────── */
+  .prompt-portal {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.6rem;
+    margin: 2rem auto; max-width: 860px;
+  }
+  .prompt-portal h3 {
+    font-size: 1.1rem; font-weight: 400;
+    color: var(--n-color); margin-bottom: 1rem;
+    font-family: 'Courier New', monospace;
+  }
+  .prompt-card {
+    background: var(--bg3);
+    border: 1px solid rgba(103,232,249,.2);
+    border-radius: 7px; padding: 1rem 1.2rem; margin-bottom: 1rem;
+  }
+  .prompt-card .p-id {
+    font-family: 'Courier New', monospace;
+    font-size: .72rem; color: var(--n-color);
+    letter-spacing: .1em; margin-bottom: .4rem;
+  }
+  .prompt-card .p-title {
+    font-size: .95rem; font-weight: 600;
+    color: var(--text); margin-bottom: .5rem;
+  }
+  .prompt-card .p-text {
+    font-size: .85rem; color: var(--muted);
+    line-height: 1.6; margin-bottom: .8rem;
+  }
+  .copy-btn {
+    font-family: 'Courier New', monospace; font-size: .72rem;
+    padding: .3rem .8rem;
+    border: 1px solid rgba(103,232,249,.3); border-radius: 4px;
+    background: transparent; color: var(--n-color); cursor: pointer;
+  }
+  .copy-btn:hover { background: var(--n-glow); }
+
+  /* ── Chapter nav ─────────────────────────── */
+  .chapter-nav {
+    display: flex; justify-content: space-between;
+    max-width: 860px; margin: 2rem auto;
+    padding: 0 1.5rem 3rem;
+  }
+  .chapter-nav a {
+    color: var(--n-color); text-decoration: none;
+    font-family: 'Courier New', monospace; font-size: .82rem;
+    padding: .5rem 1rem;
+    border: 1px solid var(--border); border-radius: 5px;
+    transition: background .2s;
+  }
+  .chapter-nav a:hover { background: var(--n-glow); }
+
+  footer {
+    text-align: center; padding: 1.5rem;
+    color: var(--muted); font-size: .78rem;
+    font-family: 'Courier New', monospace;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .hero-letter { font-size: 5rem; }
+    .temp-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <a href="impa-portal.html">⬡ AXLE Portal</a>
+  <a href="chapters-diagram.html">Map</a>
+  <a href="course-16weeks.html">16 Weeks</a>
+  <a href="Sportal.html">S-Portal</a>
+  <a href="trilogy-sale.html">Trilogy</a>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────── -->
+<div class="hero">
+  <div class="operator-badge">NIRVANA MACHINE · CHAPTER 13</div>
+  <div class="hero-letter">β→∞</div>
+  <h1>The Nirvana Machine — Revision as Annealing</h1>
+  <p class="subtitle">As inverse temperature β → ∞, only the ground state survives. As revision deepens, only x* survives.</p>
+  <div class="meta-row">
+    <div>Week <span>16</span></div>
+    <div>Level <span>D2</span></div>
+    <div>Machine <span>Simulated Annealing</span></div>
+    <div>Focus <span>Revision Strategy · Reviewer Response · Submission</span></div>
+  </div>
+</div>
+
+<!-- ── Section 1: Energy Landscape ───────────── -->
+<div class="section">
+  <h2>§1 · The Energy Landscape of a Paper</h2>
+  <p>
+    Every draft of a paper occupies a position on an <em>energy landscape</em> —
+    a surface E(θ) where θ represents all the paper's structural parameters
+    (argument structure, claim scope, evidence selection, framing).
+    The global minimum of E is x*, the Conclusion reached in Chapter 12.
+    Revision is the process of descending this landscape.
+  </p>
+
+  <div class="math-block">
+    <div class="label">Energy of a Draft</div>
+    E(θ)  =  ‖θ − x*‖²  +  V(θ)
+    <br><br>
+    θ  =  current draft parameters
+    x* =  fixed-point Conclusion  (Ch12)
+    V(θ) =  reviewer-visible error potential  (local bumps and ridges)
+    <br><br>
+    Revision gradient:  &nbsp;&nbsp; Δθ  =  −η · ∇E(θ)
+    <br><br>
+    η = learning rate:
+    &nbsp;&nbsp;η too large → overshooting, oscillating revisions
+    &nbsp;&nbsp;η too small → revision too timid, convergence too slow
+    &nbsp;&nbsp;η optimal &nbsp;→ stable descent, each round measurably closer to x*
+    <br><br>
+    Local minima:  "good enough" papers that pass review
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  but are not the global x*
+    Global minimum: the paper that could not be improved by any revision
+  </div>
+
+  <p>
+    The landscape has two kinds of trouble:
+    <em>local minima</em> (a paper that passes review but is not x*)
+    and <em>saddle points</em> (contradictory reviewer demands that pull in opposite directions).
+    A naive revision strategy — always move downhill — gets trapped in local minima.
+    The Nirvana Machine is the protocol that escapes them.
+  </p>
+</div>
+
+<!-- ── Section 2: Simulated Annealing ────────── -->
+<div class="section">
+  <h2>§2 · Simulated Annealing — The Nirvana Machine</h2>
+  <p>
+    In 1983, Kirkpatrick, Gelatt and Vecchi borrowed a concept from metallurgy:
+    metals cooled slowly settle into a crystalline ground state;
+    metals quenched suddenly freeze into disordered local configurations.
+    <em>Simulated annealing</em> is the algorithm that finds global minima
+    by starting at high temperature and cooling slowly —
+    allowing occasional uphill moves early on to escape local traps.
+  </p>
+
+  <div class="math-block">
+    <div class="label">The Metropolis–Hastings Accept / Reject Rule</div>
+    Propose a revision:  θ' = θ + δ   (a change to the paper)
+    <br><br>
+    Compute  ΔE = E(θ') − E(θ)
+    <br><br>
+    Accept if  ΔE &lt; 0  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [improvement — always accept]
+    Accept if  ΔE ≥ 0  with probability  e^(−ΔE / kT)  [uphill — sometimes accept]
+    <br><br>
+    Boltzmann factor: &nbsp; P(accept uphill) = e^(−ΔE/kT)
+    <br><br>
+    β = 1/kT  (inverse temperature)
+    <br><br>
+    β → 0  (high T):  almost all moves accepted  [exploration]
+    β → ∞  (T → 0):  only downhill moves accepted  [exploitation → nirvana]
+  </div>
+
+  <p>
+    The key insight: at high temperature, the machine accepts restructuring —
+    radical changes that feel like making things worse.
+    At low temperature, it accepts only polishing.
+    A paper revised only at low temperature (pure polishing from draft 1)
+    almost always gets trapped in a local minimum.
+  </p>
+
+  <div class="temp-grid">
+    <div class="t-card hot">
+      <div class="tc-label">High T · Early revision</div>
+      <div class="tc-val">β ≈ 0.1</div>
+      <div class="tc-desc">Accept restructuring, reframing, new sections, changed argument order. Discomfort is expected — you are escaping local traps.</div>
+    </div>
+    <div class="t-card warm">
+      <div class="tc-label">Medium T · Mid revision</div>
+      <div class="tc-val">β ≈ 1</div>
+      <div class="tc-desc">Accept paragraph-level changes. Rewrite transitions, sharpen claims, cut redundant results. No new sections.</div>
+    </div>
+    <div class="t-card cool">
+      <div class="tc-label">Low T · Late revision</div>
+      <div class="tc-val">β ≈ 10</div>
+      <div class="tc-desc">Accept sentence-level changes only. Precision of hedging, citation placement, final spectral audit (Ch11). No structural moves.</div>
+    </div>
+    <div class="t-card zero">
+      <div class="tc-label">T = 0 · Nirvana</div>
+      <div class="tc-val">β → ∞</div>
+      <div class="tc-desc">No change improves the paper. All four nirvana tests pass. Submit.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Section 3: Protein folding ─────────────── -->
+<div class="section">
+  <h2>§3 · Protein Folding — Biological Nirvana</h2>
+  <p>
+    A protein is a string of amino acids that must fold into a precise
+    three-dimensional conformation to function.
+    The space of possible conformations is astronomically large —
+    Levinthal's paradox (1969) shows that random search would take
+    longer than the age of the universe.
+    Yet proteins fold in microseconds to milliseconds.
+  </p>
+  <p>
+    The resolution: evolution has shaped the energy landscape into a funnel.
+    The landscape is not random — it has a clear global minimum (the native state)
+    and is designed so that almost every path leads downhill toward it.
+    Protein folding is biological simulated annealing run on an
+    evolution-optimised energy surface.
+  </p>
+
+  <div class="math-block">
+    <div class="label">Folding Funnel — Anfinsen's Thermodynamic Hypothesis (1973)</div>
+    Native state  =  global minimum of free energy G = H − TS
+    <br><br>
+    H  =  enthalpy  (bond formation, hydrophobic collapse)
+    T  =  temperature  (thermal fluctuations assist search)
+    S  =  entropy  (conformational freedom)
+    <br><br>
+    At physiological T:  folding is spontaneous  (ΔG &lt; 0)
+    Misfolded protein:  kinetically trapped local minimum
+    Chaperone proteins:  inject energy δ to escape local traps
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  (biological equivalent of high-T annealing)
+    <br><br>
+    Alzheimer's, Parkinson's, Prion diseases:
+    &nbsp;&nbsp; misfolded protein stuck in local minimum  (L ≥ 1 from Ch12)
+  </div>
+
+  <div class="insight">
+    A paper written by a skilled researcher folds quickly to x* because
+    years of training have shaped the energy landscape — like evolution
+    shaping the protein folding funnel.
+    A first-time author's landscape is rough and random: many local minima,
+    no clear funnel. The Nirvana Machine — systematic annealing through
+    peer review — provides the chaperone function that guides folding to x*.
+  </div>
+</div>
+
+<!-- ── Section 4: Reviewer response letter ──────── -->
+<div class="section">
+  <h2>§4 · The Response Letter as Annealing Schedule</h2>
+  <p>
+    A response to reviewers is not an apology — it is a <em>proof of descent</em>.
+    Each response demonstrates that the revision moved the paper toward lower energy
+    (closer to x*) along the dimension the reviewer identified.
+    The letter's structure is the annealing schedule made explicit.
+  </p>
+
+  <table class="letter-table">
+    <thead>
+      <tr>
+        <th>Move</th>
+        <th>Temperature</th>
+        <th>Function</th>
+        <th>Error to Avoid</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="move">R1 · Classify</td>
+        <td>Any T</td>
+        <td>Sort reviewer comments by ΔE magnitude: major structural (high ΔE) → minor local (low ΔE)</td>
+        <td class="hot-err">Addressing style before structure</td>
+      </tr>
+      <tr>
+        <td class="move">R2 · Acknowledge</td>
+        <td>Any T</td>
+        <td>"The reviewer correctly identifies that…" — confirm the gradient direction</td>
+        <td class="hot-err">Defensiveness; arguing the gradient is wrong</td>
+      </tr>
+      <tr>
+        <td class="move">R3 · Show ΔE</td>
+        <td>Any T</td>
+        <td>State precisely what changed and where (page/line). Prove E decreased.</td>
+        <td class="hot-err">"We have revised accordingly." (no proof of descent)</td>
+      </tr>
+      <tr>
+        <td class="move">R4 · Scope dissent</td>
+        <td>Low T only</td>
+        <td>For requests that would increase E: explain why the proposed change moves away from x*, with evidence</td>
+        <td class="hot-err">Ignoring reviewer without explanation</td>
+      </tr>
+      <tr>
+        <td class="move">R5 · Certify β</td>
+        <td>Final round</td>
+        <td>State that all four nirvana tests now pass; no further descent is possible</td>
+        <td class="hot-err">Promising future improvements that are not in the submission</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="theorem">
+    <div class="thm-label">Theorem 13.1 — The Nirvana Criterion</div>
+    <div class="thm-body">
+      A paper has reached <strong>nirvana</strong> (the submission-ready ground state x*)
+      if and only if all four conditions hold simultaneously:
+      <br><br>
+      <code>1. T(paper) = paper</code>
+      &nbsp;&nbsp; [Fixed-point test — Ch12: conclusion survives re-application of argument]
+      <br>
+      <code>2. ρ(claims) ≤ 1</code>
+      &nbsp;&nbsp; [Spectral test — Ch11: no claim reaches beyond its evidence]
+      <br>
+      <code>3. λ(argument) &lt; 0</code>
+      &nbsp;&nbsp; [Lyapunov test — Ch10: argument stable under removal of any single eᵢ]
+      <br>
+      <code>4. β → ∞</code>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; [Annealing test — Ch13: no proposed revision decreases E further]
+      <br><br>
+      If all four hold: submit. If any fails: identify the failing condition
+      and apply the corresponding operator to repair it.
+    </div>
+  </div>
+</div>
+
+<!-- ── Canvas: Annealing Simulation ───────────── -->
+<div class="canvas-panel">
+  <h3>▶ Simulated Annealing · Energy Landscape</h3>
+
+  <div class="sim-info">
+    <div class="sim-cell">
+      <div class="sc-label">SCHEDULE</div>
+      <div id="sched-label">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">TEMPERATURE T</div>
+      <div id="T-display">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">ENERGY E</div>
+      <div id="E-display">—</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">STEPS</div>
+      <div id="step-display">0</div>
+    </div>
+    <div class="sim-cell">
+      <div class="sc-label">STATUS</div>
+      <div id="status-display" style="color:var(--muted)">—</div>
+    </div>
+  </div>
+
+  <canvas id="annealCanvas" width="760" height="320"></canvas>
+
+  <div class="btn-row">
+    <button class="sim-btn btn-slow"   onclick="startAnneal('slow')">Slow Cool · Finds x*</button>
+    <button class="sim-btn btn-fast"   onclick="startAnneal('fast')">Fast Cool · May miss</button>
+    <button class="sim-btn btn-quench" onclick="startAnneal('quench')">Quench · Local trap</button>
+    <button class="sim-btn btn-reset"  onclick="resetSim()">Reset</button>
+  </div>
+  <div class="canvas-status" id="simStatus">
+    Click a schedule to watch the paper descend toward x*.
+  </div>
+</div>
+
+<!-- ── Prompt Portal ───────────────────────────── -->
+<div class="prompt-portal">
+  <h3>⬡ LLM Prompt Portal · Chapter 13</h3>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 7.2 · ANNEALING TRIAGE</div>
+    <div class="p-title">Temperature-Ordered Revision Plan</div>
+    <div class="p-text">
+      List all reviewer comments from your most recent review round.
+      For each comment, estimate the energy change ΔE if the comment is addressed:
+      large ΔE (&gt; 0.5) = high-temperature structural revision needed;
+      medium ΔE (0.1–0.5) = paragraph-level rewrite;
+      small ΔE (&lt; 0.1) = sentence-level polish.<br>
+      Sort the list from largest ΔE to smallest. This is your annealing schedule —
+      address them in order. Flag any comment where implementing it would increase E
+      (move away from x*), and draft a scoped dissent response for those.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p72', this)">Copy Prompt 7.2</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">PROMPT 7.3 · NIRVANA CHECK</div>
+    <div class="p-title">Four-Test Submission Readiness</div>
+    <div class="p-text">
+      Apply all four nirvana tests to your current draft:<br>
+      Test 1 (Fixed point — Ch12): Read your Conclusion. Apply your paper's argument to it one more time. Does the Conclusion change?<br>
+      Test 2 (Spectral — Ch11): Run Prompt 5.2. Are all claim reaches ρ ≤ 1?<br>
+      Test 3 (Lyapunov — Ch10): Run Prompt 5.3. Does the argument survive removal of any single piece of evidence?<br>
+      Test 4 (Annealing — Ch13): Can you propose a concrete revision that would reduce E? If yes, make it. If no — you are at nirvana.<br>
+      Report results as: Test 1: PASS/FAIL · Test 2: PASS/FAIL · Test 3: PASS/FAIL · Test 4: PASS/FAIL.
+      All four PASS = submit.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('p73', this)">Copy Prompt 7.3</button>
+  </div>
+
+  <div class="prompt-card">
+    <div class="p-id">EXTENSION · LOCAL MINIMUM DIAGNOSIS</div>
+    <div class="p-title">Why Does a "Done" Paper Still Get Rejected?</div>
+    <div class="p-text">
+      If your paper passes internal review but is repeatedly rejected externally,
+      you may be in a local minimum — a configuration that is locally optimal
+      but not the global x*. Diagnose by asking:<br>
+      (a) Do all rejections share a common theme? (Identifies the energy ridge you cannot cross.)<br>
+      (b) What is the highest-T revision you have not yet tried?
+      (Restructuring the argument, changing the framing, targeting a different audience.)<br>
+      (c) Who is your "chaperone" — a senior colleague who can inject energy into the revision
+      by identifying the local trap from outside?<br>
+      Describe the local minimum your paper may be in, and propose one high-T revision that could escape it.
+    </div>
+    <button class="copy-btn" onclick="copyPrompt('ext', this)">Copy Extension</button>
+  </div>
+</div>
+
+<!-- ── Nirvana Checklist ───────────────────────── -->
+<div class="section">
+  <div class="nirvana-list">
+    <div class="nl-title">⬡ The Four Nirvana Tests · β → ∞ Submission Checklist</div>
+    <div class="nl-item">
+      <span class="check check-fp">Ch12</span>
+      <div>
+        <div class="nl-desc"><strong>Fixed-point test:</strong> T(Conclusion) = Conclusion. Re-reading the paper does not change what the Conclusion should be.</div>
+        <div class="nl-ref">→ Prompt 6.3 · Prompt 7.1</div>
+      </div>
+    </div>
+    <div class="nl-item">
+      <span class="check check-sp">Ch11</span>
+      <div>
+        <div class="nl-desc"><strong>Spectral test:</strong> ρ(cᵢ) ≤ 1 for every Discussion claim. No claim reaches beyond the evidence that produced it.</div>
+        <div class="nl-ref">→ Prompt 5.2 · AXLE Verification 6.2</div>
+      </div>
+    </div>
+    <div class="nl-item">
+      <span class="check check-ly">Ch10</span>
+      <div>
+        <div class="nl-desc"><strong>Lyapunov test:</strong> λ(argument) &lt; 0. The argument survives removal of any single piece of evidence — no single point of failure.</div>
+        <div class="nl-ref">→ Prompt 5.3 · Revision Verification 6.1</div>
+      </div>
+    </div>
+    <div class="nl-item">
+      <span class="check check-ch">Ch13</span>
+      <div>
+        <div class="nl-desc"><strong>Annealing test:</strong> β → ∞. No concrete revision decreases E further. The paper is at its ground state.</div>
+        <div class="nl-ref">→ Prompt 7.3 · Annealing Triage 7.2</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Chapter nav ─────────────────────────────── -->
+<div class="chapter-nav">
+  <a href="ch12-conclusion.html">← Ch12 · Fixed Point</a>
+  <a href="ch14-axle.html">Ch14 · AXLE →</a>
+</div>
+
+<footer>
+  Chapter 13 of 17 &nbsp;·&nbsp; Book 3: The Mini-Beast &nbsp;·&nbsp;
+  G = U ∘ F ∘ K ∘ C &nbsp;·&nbsp; © G6 LLC
+</footer>
+
+<script>
+/* ──────────────────────────────────────────────────────────────
+   Simulated Annealing on a 2-D Energy Landscape
+   Domain: [-1, 1] × [-1, 1]
+   Global minimum near (0.55, 0.55)
+   Several local minima from the sinusoidal ripple
+──────────────────────────────────────────────────────────────── */
+
+const canvas = document.getElementById('annealCanvas');
+const ctx    = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+// Energy function
+function energy(x, y) {
+  const bowl   = 1.8*(x - 0.55)**2 + 1.8*(y - 0.55)**2;
+  const ripple = 0.9 * Math.sin(3.8*x + 0.3) * Math.cos(3.5*y - 0.2);
+  const tilt   = 0.15*x - 0.1*y;
+  return bowl + ripple + tilt;
+}
+
+// Precompute heatmap grid
+const GRID = 140;
+let heatmap = null;
+let eMin = Infinity, eMax = -Infinity;
+
+function buildHeatmap() {
+  heatmap = new Float32Array(GRID * GRID);
+  for (let j = 0; j < GRID; j++) {
+    for (let i = 0; i < GRID; i++) {
+      const x = -1 + (i / (GRID-1)) * 2;
+      const y = -1 + (j / (GRID-1)) * 2;
+      const e = energy(x, y);
+      heatmap[j*GRID + i] = e;
+      if (e < eMin) eMin = e;
+      if (e > eMax) eMax = e;
+    }
+  }
+}
+buildHeatmap();
+
+// Map energy to colour: cold (deep blue) → warm (cyan) → hot (white)
+function energyColor(e) {
+  const t = Math.max(0, Math.min(1, (e - eMin) / (eMax - eMin)));
+  // 0 = coldest (ground state) → deep blue
+  // 1 = hottest               → bright white
+  if (t < 0.33) {
+    const s = t / 0.33;
+    return `rgb(${Math.round(s*0)},${Math.round(s*80)},${Math.round(60 + s*120)})`;
+  } else if (t < 0.66) {
+    const s = (t - 0.33) / 0.33;
+    return `rgb(${Math.round(s*40)},${Math.round(80 + s*120)},${Math.round(180 + s*50)})`;
+  } else {
+    const s = (t - 0.66) / 0.34;
+    return `rgb(${Math.round(40 + s*215)},${Math.round(200 + s*55)},${Math.round(230 + s*25)})`;
+  }
+}
+
+// Draw background heatmap
+function drawHeatmap(PAD, plotW, plotH) {
+  const cellW = plotW / GRID;
+  const cellH = plotH / GRID;
+  for (let j = 0; j < GRID; j++) {
+    for (let i = 0; i < GRID; i++) {
+      const e = heatmap[j*GRID + i];
+      ctx.fillStyle = energyColor(e);
+      ctx.fillRect(
+        PAD + i * cellW,
+        PAD + j * cellH,
+        Math.ceil(cellW) + 1,
+        Math.ceil(cellH) + 1
+      );
+    }
+  }
+}
+
+// Convert domain coords to canvas coords
+function domToCanvas(x, y, PAD, plotW, plotH) {
+  const cx = PAD + ((x + 1) / 2) * plotW;
+  const cy = PAD + ((1 - y) / 2) * plotH;   // y-axis flipped
+  return { cx, cy };
+}
+
+// Global minimum annotation
+const GM_X = 0.55, GM_Y = 0.55;
+
+// ── Simulation state ──────────────────────────────────────────
+let animId   = null;
+let path     = [];
+let curPos   = null;
+let curE     = null;
+let stepN    = 0;
+let curT     = 1;
+let schedule = null;
+let running  = false;
+
+const SCHEDULES = {
+  slow: {
+    label: 'Slow Cool',
+    T0: 2.0, decay: 0.985, steps: 800,
+    stepSize: 0.18,
+    color: '#67e8f9',
+    statusDone: '✓ Nirvana reached — global minimum found.'
+  },
+  fast: {
+    label: 'Fast Cool',
+    T0: 2.0, decay: 0.945, steps: 500,
+    stepSize: 0.18,
+    color: '#c9a84c',
+    statusDone: '⚠ Cooled too fast — may be in local minimum.'
+  },
+  quench: {
+    label: 'Instant Quench',
+    T0: 0.05, decay: 0.99, steps: 600,
+    stepSize: 0.12,
+    color: '#f87171',
+    statusDone: '✗ Quenched — trapped in local minimum.'
+  }
+};
+
+function startAnneal(key) {
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
+  schedule = key;
+  const s  = SCHEDULES[key];
+  // Random start position far from global min
+  curPos = { x: -0.7 + Math.random()*0.3, y: 0.6 + Math.random()*0.3 };
+  curE   = energy(curPos.x, curPos.y);
+  curT   = s.T0;
+  stepN  = 0;
+  path   = [{ ...curPos }];
+  running = true;
+
+  document.getElementById('sched-label').textContent = s.label;
+  document.getElementById('sched-label').style.color = s.color;
+  document.getElementById('status-display').textContent = 'Running…';
+  document.getElementById('status-display').style.color = s.color;
+
+  tick();
+}
+
+function tick() {
+  const s = SCHEDULES[schedule];
+  if (!running || stepN >= s.steps) {
+    drawFrame();
+    const done = s.statusDone;
+    document.getElementById('simStatus').textContent = done;
+    document.getElementById('status-display').textContent =
+      done.startsWith('✓') ? 'NIRVANA' : done.startsWith('⚠') ? 'LOCAL MIN' : 'TRAPPED';
+    document.getElementById('status-display').style.color = s.color;
+    return;
+  }
+
+  // Metropolis step
+  const batchSize = 6;
+  for (let b = 0; b < batchSize && stepN < s.steps; b++) {
+    const dx = (Math.random() - 0.5) * s.stepSize;
+    const dy = (Math.random() - 0.5) * s.stepSize;
+    const nx = Math.max(-1, Math.min(1, curPos.x + dx));
+    const ny = Math.max(-1, Math.min(1, curPos.y + dy));
+    const ne = energy(nx, ny);
+    const dE = ne - curE;
+    if (dE < 0 || Math.random() < Math.exp(-dE / curT)) {
+      curPos = { x: nx, y: ny };
+      curE   = ne;
+    }
+    curT   *= s.decay;
+    stepN++;
+  }
+  path.push({ ...curPos });
+
+  updateDisplays(s);
+  drawFrame();
+  animId = requestAnimationFrame(tick);
+}
+
+function updateDisplays(s) {
+  document.getElementById('T-display').textContent   = curT.toFixed(4);
+  document.getElementById('E-display').textContent   = curE.toFixed(4);
+  document.getElementById('step-display').textContent = stepN;
+  const simMsg = `T = ${curT.toFixed(3)} · E = ${curE.toFixed(3)} · β = ${(1/curT).toFixed(1)}`;
+  document.getElementById('simStatus').textContent = simMsg;
+}
+
+function drawFrame() {
+  const PAD   = 10;
+  const plotW = W - 2*PAD;
+  const plotH = H - 2*PAD;
+
+  // Heatmap
+  drawHeatmap(PAD, plotW, plotH);
+
+  if (!schedule) return;
+  const s = SCHEDULES[schedule];
+
+  // Global minimum marker
+  const { cx: gx, cy: gy } = domToCanvas(GM_X, GM_Y, PAD, plotW, plotH);
+  ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(gx, gy, 10, 0, Math.PI*2); ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(gx, gy,  3, 0, Math.PI*2);
+  ctx.fillStyle = '#ffffff'; ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.font = '10px Courier New';
+  ctx.textAlign = 'left';
+  ctx.fillText('x*', gx + 13, gy + 4);
+
+  // Path
+  if (path.length >= 2) {
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([]);
+    // Fade older path
+    const show = Math.min(path.length, 180);
+    for (let i = path.length - show; i < path.length - 1; i++) {
+      const alpha = (i - (path.length - show)) / show;
+      ctx.strokeStyle = s.color.replace(')', `, ${(alpha * 0.7).toFixed(2)})`).replace('rgb', 'rgba');
+      ctx.beginPath();
+      const a = domToCanvas(path[i].x,   path[i].y,   PAD, plotW, plotH);
+      const b = domToCanvas(path[i+1].x, path[i+1].y, PAD, plotW, plotH);
+      ctx.moveTo(a.cx, a.cy); ctx.lineTo(b.cx, b.cy); ctx.stroke();
+    }
+  }
+
+  // Start marker
+  if (path.length >= 1) {
+    const { cx: sx, cy: sy } = domToCanvas(path[0].x, path[0].y, PAD, plotW, plotH);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.beginPath(); ctx.arc(sx, sy, 5, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Current position
+  if (curPos) {
+    const { cx, cy } = domToCanvas(curPos.x, curPos.y, PAD, plotW, plotH);
+    ctx.fillStyle = s.color;
+    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(cx, cy, 6, 0, Math.PI*2); ctx.stroke();
+  }
+
+  // Temperature readout
+  if (curT !== null) {
+    const beta = 1 / Math.max(curT, 0.0001);
+    ctx.fillStyle = 'rgba(103,232,249,0.85)';
+    ctx.font = 'bold 12px Courier New';
+    ctx.textAlign = 'left';
+    ctx.fillText(`T = ${curT.toFixed(3)}  β = ${beta.toFixed(1)}`, PAD + 8, PAD + 18);
+  }
+}
+
+function resetSim() {
+  if (animId) { cancelAnimationFrame(animId); animId = null; }
+  running  = false;
+  schedule = null;
+  path     = [];
+  curPos   = null;
+  curT     = null;
+  curE     = null;
+  stepN    = 0;
+  ['sched-label','T-display','E-display','status-display'].forEach(id => {
+    const el = document.getElementById(id);
+    el.textContent = '—'; el.style.color = '';
+  });
+  document.getElementById('step-display').textContent = '0';
+  document.getElementById('simStatus').textContent = 'Click a schedule to watch the paper descend toward x*.';
+  drawFrame();
+}
+
+/* ── Copy prompts ─────────────────────────────────────────────── */
+const PROMPT_TEXT = {
+  p72: `ANNEALING TRIAGE — Prompt 7.2
+
+List all reviewer comments from your most recent review round. For each comment, estimate the energy change ΔE if the comment is addressed:
+  Large ΔE (> 0.5) = high-temperature structural revision (argument restructuring, new framing)
+  Medium ΔE (0.1–0.5) = paragraph-level rewrite (clarify claims, reorganise sections)
+  Small ΔE (< 0.1) = sentence-level polish (style, hedging, word choice)
+
+Sort the list from largest ΔE to smallest. This is your annealing schedule — address them in this order. Flag any comment where implementing it would increase E (move away from x*), and draft a scoped dissent response: state what x* the argument converges to and why the proposed change would move away from it.`,
+
+  p73: `NIRVANA CHECK — Prompt 7.3
+
+Apply all four nirvana tests to your current draft:
+
+Test 1 — Fixed point (Ch12): Read your Conclusion. Apply your paper's argument to it one more time. Does the Conclusion change? If yes: FAIL — identify the missing C1–C5 move.
+
+Test 2 — Spectral (Ch11): Run Prompt 5.2. Is ρ(cᵢ) ≤ 1 for every Discussion claim? If any ρ > 1: FAIL — revise flagged claims.
+
+Test 3 — Lyapunov (Ch10): Remove each key piece of evidence one at a time. Does the core claim survive? If any removal collapses it: FAIL — add redundancy or reduce claim scope.
+
+Test 4 — Annealing (Ch13): Can you propose a concrete revision that would reduce E (improve the paper)? If yes: FAIL — make that revision, then re-test. If no: PASS.
+
+Report: Test 1: PASS/FAIL · Test 2: PASS/FAIL · Test 3: PASS/FAIL · Test 4: PASS/FAIL.
+All four PASS = nirvana = submit.`,
+
+  ext: `LOCAL MINIMUM DIAGNOSIS — Extension
+
+If your paper passes internal review but is repeatedly rejected externally, you may be in a local minimum — a configuration that is locally optimal but not the global x*.
+
+Diagnose:
+(a) Do all rejection letters share a common theme or concern? This theme identifies the energy ridge separating you from x*.
+
+(b) What is the highest-temperature revision you have not yet tried? (Restructuring the argument order, changing the primary claim, targeting a different journal scope, reframing the contribution for a different audience.)
+
+(c) Who is your "chaperone" — a senior colleague who can inject energy into the revision process by identifying your local trap from outside? What specific question would you ask them?
+
+Describe the local minimum your paper may be in, name the energy ridge keeping you there, and propose one high-temperature revision that could escape it.`
+};
+
+function copyPrompt(id, btn) {
+  navigator.clipboard.writeText(PROMPT_TEXT[id]).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = orig; }, 2000);
+  });
+}
+
+// ── Init ──
+drawFrame();
+</script>
+</body>
+</html>
