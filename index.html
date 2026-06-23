@@ -3,6 +3,511 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G6 LLC · Services · Pablo Nogueira Grossi</title>
+<meta name="description" content="G6 LLC — full-service research, development, and consulting. Webmaster to Master of Disaster. Newark, NJ. Pablo Nogueira Grossi.">
+<style>
+:root{
+  --navy:#1a2744;--gold:#c9a84c;--cream:#faf7f0;--smoke:#f0ece4;
+  --mid:#3a4f7a;--rule:#8a7340;--text:#1c1c1c;--green:#2d5a27;
+  --light:#e8e2d4;--teal:#1a6b5a;--red:#8b1a1a;
+  --ebay-blue:#0064d2;--ebay-red:#e53238;--ebay-yellow:#f5af02;--ebay-green:#86b817;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Arial,sans-serif;color:var(--text);background:#f3f3f3}
+
+/* ── STORE HEADER ── */
+.store-header{background:var(--navy);padding:0}
+.store-top{display:flex;align-items:center;justify-content:space-between;padding:.6rem 2rem;border-bottom:1px solid rgba(255,255,255,.1);flex-wrap:wrap;gap:.5rem}
+.store-logo-block{display:flex;align-items:center;gap:1rem}
+.store-logo-text{color:var(--gold);font-size:1.4rem;font-weight:bold;letter-spacing:.08em;font-family:'Georgia',serif}
+.store-logo-sub{color:#aaa;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;font-family:sans-serif;margin-top:2px}
+.store-contact-bar{display:flex;gap:1.2rem;align-items:center}
+.store-contact-bar a{color:#ccc;font-size:.8rem;text-decoration:none;font-family:sans-serif}
+.store-contact-bar a:hover{color:var(--gold)}
+.store-nav{background:#253568;padding:.5rem 2rem;display:flex;gap:1.5rem;flex-wrap:wrap}
+.store-nav a{color:#ccc;font-size:.82rem;text-decoration:none;font-family:sans-serif;padding:.3rem 0;border-bottom:2px solid transparent;transition:all .2s}
+.store-nav a:hover,.store-nav a.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ── SELLER BANNER ── */
+.seller-banner{background:white;border-bottom:3px solid var(--gold);padding:1.2rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.seller-info{display:flex;align-items:center;gap:1.2rem}
+.seller-avatar{width:56px;height:56px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:1.4rem;font-weight:bold;font-family:'Georgia',serif;flex-shrink:0}
+.seller-name{font-size:1.1rem;font-weight:bold;color:var(--navy)}
+.seller-tagline{font-size:.82rem;color:#555;margin-top:2px;font-family:sans-serif}
+.seller-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.stat-pill{text-align:center;font-family:sans-serif}
+.stat-pill .val{font-size:1.1rem;font-weight:bold;color:var(--navy)}
+.stat-pill .lbl{font-size:.65rem;color:#888;text-transform:uppercase;letter-spacing:.08em}
+.feedback-score{display:flex;align-items:center;gap:.4rem;font-family:sans-serif;font-size:.82rem;color:#444}
+.stars{color:var(--gold);letter-spacing:1px}
+.positive-pct{color:var(--green);font-weight:bold}
+
+/* ── SEARCH + FILTER BAR ── */
+.listing-bar{background:white;border-bottom:1px solid #ddd;padding:.7rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.listing-count{font-size:.88rem;color:#555;font-family:sans-serif}
+.listing-count strong{color:var(--navy)}
+.category-pills{display:flex;gap:.5rem;flex-wrap:wrap}
+.cat-pill{font-family:sans-serif;font-size:.75rem;padding:.3rem .8rem;border:1px solid #ccc;border-radius:20px;cursor:pointer;background:white;color:#444;transition:all .2s}
+.cat-pill:hover,.cat-pill.active{background:var(--navy);color:white;border-color:var(--navy)}
+
+/* ── LISTINGS GRID ── */
+.listings-wrap{max-width:1100px;margin:1.5rem auto;padding:0 1.5rem}
+.listings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+
+/* ── LISTING CARD ── */
+.listing-card{background:white;border:1px solid #ddd;transition:box-shadow .2s;display:flex;flex-direction:column}
+.listing-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.12);border-color:#999}
+.listing-img{height:140px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:var(--smoke);position:relative}
+.listing-badge{position:absolute;top:8px;left:8px;font-family:sans-serif;font-size:.62rem;font-weight:bold;padding:2px 8px;border-radius:2px;text-transform:uppercase;letter-spacing:.06em}
+.badge-featured{background:var(--gold);color:var(--navy)}
+.badge-new{background:var(--ebay-green);color:white}
+.badge-hot{background:var(--ebay-red);color:white}
+.listing-body{padding:1rem;flex:1;display:flex;flex-direction:column}
+.listing-cat{font-family:sans-serif;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);font-weight:bold;margin-bottom:.3rem}
+.listing-title{font-size:.95rem;font-weight:bold;color:var(--navy);margin-bottom:.4rem;line-height:1.4}
+.listing-desc{font-size:.82rem;color:#555;line-height:1.6;margin-bottom:.7rem;flex:1}
+.listing-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:.7rem}
+.listing-tag{font-family:sans-serif;font-size:.65rem;padding:2px 7px;background:#eef2f8;border:1px solid #ccd4e8;color:#3a4f7a;border-radius:2px}
+.listing-footer{border-top:1px solid #f0f0f0;padding-top:.7rem;display:flex;align-items:center;justify-content:space-between}
+.listing-price{font-size:1.1rem;font-weight:bold;color:var(--ebay-blue);font-family:sans-serif}
+.listing-price small{font-size:.7rem;font-weight:normal;color:#888;display:block;margin-top:1px}
+.listing-cta{font-family:sans-serif;font-size:.78rem;font-weight:bold;padding:.45rem 1rem;background:var(--ebay-blue);color:white;text-decoration:none;border:none;cursor:pointer;transition:background .2s}
+.listing-cta:hover{background:#004fa3}
+.listing-cta.secondary{background:white;color:var(--ebay-blue);border:1.5px solid var(--ebay-blue)}
+.listing-cta.secondary:hover{background:#eef4ff}
+
+/* ── SECTION HEADERS ── */
+.section-head{font-family:sans-serif;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--rule);font-weight:bold;padding:.5rem 0 .7rem;border-bottom:2px solid var(--gold);margin:2rem 0 1rem}
+
+/* ── ABOUT SELLER SIDEBAR LAYOUT ── */
+.store-body{max-width:1100px;margin:0 auto;padding:1.5rem;display:grid;grid-template-columns:1fr 240px;gap:1.5rem;align-items:start}
+@media(max-width:768px){.store-body{grid-template-columns:1fr}.sidebar{display:none}}
+.sidebar{background:white;border:1px solid #ddd;padding:1.2rem;font-family:sans-serif;font-size:.82rem}
+.sidebar h4{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--rule);margin-bottom:.8rem;padding-bottom:.4rem;border-bottom:1px solid var(--light)}
+.sidebar p{color:#444;line-height:1.7;margin-bottom:.6rem}
+.sidebar ul{list-style:none;padding:0}
+.sidebar ul li{color:#444;padding:.25rem 0;border-bottom:1px solid #f0f0f0;display:flex;gap:.4rem}
+.sidebar ul li::before{content:"✓";color:var(--green);font-weight:bold;flex-shrink:0}
+.sidebar ul li:last-child{border-bottom:none}
+.sidebar .contact-block{margin-top:1rem;padding:.8rem;background:#f8f5ef;border:1px solid var(--light)}
+.sidebar .contact-block a{color:var(--ebay-blue);text-decoration:none;display:block;margin-bottom:.3rem;font-weight:bold}
+.sidebar .contact-block a:hover{text-decoration:underline}
+.sidebar .medal-row{display:flex;gap:.4rem;margin:.6rem 0;font-size:1rem}
+
+/* ── FOOTER ── */
+.store-footer{background:var(--navy);color:#888;padding:2rem;font-family:sans-serif;font-size:.78rem;text-align:center;margin-top:2rem}
+.store-footer a{color:#aaa;text-decoration:none}
+.store-footer a:hover{color:var(--gold)}
+.store-footer .footer-links{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:.8rem}
+</style>
+</head>
+<body>
+
+<!-- STORE HEADER -->
+<div class="store-header">
+  <div class="store-top">
+    <div class="store-logo-block">
+      <div>
+        <div class="store-logo-text">G6 LLC</div>
+        <div class="store-logo-sub">Newark, NJ &middot; UEI: CHGKT9317LY3 &middot; EIN: 33-2880433</div>
+      </div>
+    </div>
+    <div class="store-contact-bar">
+      <a href="mailto:g6llc@proton.me">&#x2709; g6llc@proton.me</a>
+      <a href="tel:+16463423751">&#x1F4DE; +1 (646) 342-3751</a>
+      <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a>
+      <a href="https://g6llc.gumroad.com" target="_blank">Gumroad</a>
+    </div>
+  </div>
+  <div class="store-nav">
+    <a href="#services" class="active">All Services</a>
+    <a href="#web">Web &amp; Code</a>
+    <a href="#research">Research</a>
+    <a href="#teaching">Teaching</a>
+    <a href="#publishing">Publishing</a>
+    <a href="#quant">Quant</a>
+    <a href="#ops">Operations</a>
+    <a href="#about">About Seller</a>
+  </div>
+</div>
+
+<!-- SELLER BANNER -->
+<div class="seller-banner">
+  <div class="seller-info">
+    <div class="seller-avatar">G6</div>
+    <div>
+      <div class="seller-name">Pablo Nogueira Grossi &mdash; G6 LLC</div>
+      <div class="seller-tagline">Webmaster to Master of Disaster &middot; Newark, NJ &middot; Est. 2025</div>
+      <div class="feedback-score" style="margin-top:.4rem">
+        <span class="stars">★★★★★</span>
+        <span class="positive-pct">100% positive</span>
+        <span style="color:#888">&middot; IQC 2026 &#x1F949;&#x1F948; &middot; Project 1080 &#x1F947; &middot; NASA NP-2026-04-6806-HQ</span>
+      </div>
+    </div>
+  </div>
+  <div class="seller-stats">
+    <div class="stat-pill"><div class="val">1,080</div><div class="lbl">Lean Proofs</div></div>
+    <div class="stat-pill"><div class="val">10+</div><div class="lbl">Zenodo Papers</div></div>
+    <div class="stat-pill"><div class="val">5</div><div class="lbl">Books</div></div>
+    <div class="stat-pill"><div class="val">6</div><div class="lbl">Repos</div></div>
+  </div>
+</div>
+
+<!-- LISTING BAR -->
+<div class="listing-bar">
+  <div class="listing-count"><strong>18 services</strong> available &mdash; contact for custom scope &amp; pricing</div>
+  <div class="category-pills">
+    <span class="cat-pill active">All</span>
+    <span class="cat-pill">Web</span>
+    <span class="cat-pill">Research</span>
+    <span class="cat-pill">Teaching</span>
+    <span class="cat-pill">Quant</span>
+    <span class="cat-pill">Ops</span>
+  </div>
+</div>
+
+<!-- STORE BODY -->
+<div class="store-body">
+
+  <!-- MAIN LISTINGS -->
+  <div>
+
+    <div class="section-head" id="web">Web Development &amp; Technology</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F310;
+          <span class="listing-badge badge-featured">Featured</span>
+        </div>
+        <div class="listing-body">
+          <div class="listing-cat">Web &middot; Full Stack</div>
+          <div class="listing-title">Static Website — Design, Build &amp; Deploy</div>
+          <div class="listing-desc">Custom HTML/CSS/JS websites built from scratch. GitHub Pages deployment. Mobile-responsive. SEO-ready. Same stack as this page and 100+ live Principia Orthogona chapters.</div>
+          <div class="listing-tags"><span class="listing-tag">HTML</span><span class="listing-tag">CSS</span><span class="listing-tag">JavaScript</span><span class="listing-tag">GitHub Pages</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Flat rate or hourly</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Web%20Build" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4CA;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Web &middot; Data Visualization</div>
+          <div class="listing-title">Interactive HTML Dashboard or Report</div>
+          <div class="listing-desc">Data-driven HTML pages with charts, filters, search, and export. Built from CSV, JSON, or spreadsheet input. No framework required — pure JS, loads instantly.</div>
+          <div class="listing-tags"><span class="listing-tag">JavaScript</span><span class="listing-tag">CSV</span><span class="listing-tag">Charts</span><span class="listing-tag">Search</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per deliverable</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Dashboard" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4BB;
+          <span class="listing-badge badge-new">New</span>
+        </div>
+        <div class="listing-body">
+          <div class="listing-cat">Web &middot; Webmaster</div>
+          <div class="listing-title">Webmaster Retainer — Ongoing Site Maintenance</div>
+          <div class="listing-desc">Monthly retainer for content updates, link fixes, new pages, SEO tweaks, and GitHub pushes. Ideal for small businesses, researchers, or nonprofits without a dedicated dev.</div>
+          <div class="listing-tags"><span class="listing-tag">Maintenance</span><span class="listing-tag">Git</span><span class="listing-tag">Content</span><span class="listing-tag">Monthly</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Monthly retainer</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Webmaster%20Retainer" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F40D;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Code &middot; Python</div>
+          <div class="listing-title">Python Script — Simulation, Analysis, or Automation</div>
+          <div class="listing-desc">Custom Python scripts for data analysis, numerical simulation, file processing, or workflow automation. Clean, documented, reproducible. Used in 10+ Zenodo research papers.</div>
+          <div class="listing-tags"><span class="listing-tag">Python</span><span class="listing-tag">NumPy</span><span class="listing-tag">Pandas</span><span class="listing-tag">Simulation</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per project</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Python%20Script" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head" id="research">Research &amp; Formal Mathematics</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F9EE;
+          <span class="listing-badge badge-featured">Featured</span>
+        </div>
+        <div class="listing-body">
+          <div class="listing-cat">Research &middot; Lean 4</div>
+          <div class="listing-title">Lean 4 Formal Proof — Theorem Verification</div>
+          <div class="listing-desc">Formally verify mathematical theorems in Lean 4 / Mathlib4 with zero sorry. 1,080 proved theorems on record. Domains: analysis, geometry, number theory, applied math.</div>
+          <div class="listing-tags"><span class="listing-tag">Lean 4</span><span class="listing-tag">Mathlib4</span><span class="listing-tag">AXLE</span><span class="listing-tag">Zero sorry</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per theorem / batch</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Lean4%20Proofs" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4DC;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Research &middot; Writing</div>
+          <div class="listing-title">Academic Preprint — Research Paper Writing &amp; Zenodo Deposit</div>
+          <div class="listing-desc">Full research paper from concept to Zenodo deposit with DOI. Includes LaTeX or HTML typesetting, abstract, proofs, Python simulation, and open-access registration.</div>
+          <div class="listing-tags"><span class="listing-tag">Zenodo</span><span class="listing-tag">DOI</span><span class="listing-tag">Open Access</span><span class="listing-tag">CC BY 4.0</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per paper</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Preprint" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F52D;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Research &middot; Applied</div>
+          <div class="listing-title">dm³ Framework Analysis — Contact-Geometric Modeling</div>
+          <div class="listing-desc">Apply the dm³ contact-geometric operator pipeline (G = U∘F∘K∘C) to your domain — biology, physics, finance, architecture, education. Includes written analysis and optional Lean proofs.</div>
+          <div class="listing-tags"><span class="listing-tag">dm³</span><span class="listing-tag">Contact Geometry</span><span class="listing-tag">Operator Chain</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Consulting rate</small></div>
+            <a href="mailto:g6llc@proton.me?subject=dm3%20Analysis" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head" id="teaching">Teaching &amp; Curriculum</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4DA;
+          <span class="listing-badge badge-hot">Hot</span>
+        </div>
+        <div class="listing-body">
+          <div class="listing-cat">Teaching &middot; ESL</div>
+          <div class="listing-title">Online English Classes — All Levels (Hour House)</div>
+          <div class="listing-desc">Adult ESL instruction at Basic, Intermediate, and Advanced levels. CAELA Framework lesson design. Every lesson connects to real published research. Fully online, flexible schedule.</div>
+          <div class="listing-tags"><span class="listing-tag">ESL</span><span class="listing-tag">B1-C1</span><span class="listing-tag">CAELA</span><span class="listing-tag">Online</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for rates<small>Per session / monthly</small></div>
+            <a href="mailto:g6llc@proton.me?subject=English%20Classes" class="listing-cta">Enroll</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4C4;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Teaching &middot; Curriculum Design</div>
+          <div class="listing-title">Custom Lesson Plan or Curriculum Design</div>
+          <div class="listing-desc">CAELA-certified lesson design for adult learners. Research-integrated curricula connecting academic content to language development. Deliverable: full lesson pack in HTML or PDF.</div>
+          <div class="listing-tags"><span class="listing-tag">CAELA</span><span class="listing-tag">Curriculum</span><span class="listing-tag">HTML Lesson</span><span class="listing-tag">Adult Ed</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per lesson / unit</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Curriculum" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head" id="publishing">Publishing &amp; Books</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4D6;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Publishing &middot; Books</div>
+          <div class="listing-title">Principia Orthogona Series — Print &amp; Digital</div>
+          <div class="listing-desc">Five-volume academic series on the dm³ framework. Available in print (eBay) and digital (Gumroad). Covers mathematics, biology, space architecture, and formal verification.</div>
+          <div class="listing-tags"><span class="listing-tag">ISBN 979-8-9954416-6-3</span><span class="listing-tag">5 Volumes</span><span class="listing-tag">PDF + Print</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">From $25<small>Gumroad membership</small></div>
+            <a href="https://g6llc.gumroad.com" target="_blank" class="listing-cta">Buy Now</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4E6;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Publishing &middot; Consulting</div>
+          <div class="listing-title">Self-Publishing Consultation — From Manuscript to ISBN</div>
+          <div class="listing-desc">End-to-end guidance on self-publishing: ISBN registration, Zenodo open-access deposit, eBay store setup, Gumroad digital distribution, and cover/formatting advice.</div>
+          <div class="listing-tags"><span class="listing-tag">ISBN</span><span class="listing-tag">Zenodo</span><span class="listing-tag">eBay</span><span class="listing-tag">Gumroad</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per engagement</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Publishing%20Consult" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head" id="quant">Quantitative Finance &amp; Data</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4C8;
+          <span class="listing-badge badge-featured">Featured</span>
+        </div>
+        <div class="listing-body">
+          <div class="listing-cat">Quant &middot; Finance</div>
+          <div class="listing-title">Alpha Development — WorldQuant Brain / IQC Strategy</div>
+          <div class="listing-desc">Research and build passing alphas for WorldQuant Brain. IQC Gold-level participant. Background in JPMorgan and Banco do Brasil. Strategies: momentum, mean-reversion, fundamentals.</div>
+          <div class="listing-tags"><span class="listing-tag">WorldQuant</span><span class="listing-tag">IQC 2026</span><span class="listing-tag">Alpha</span><span class="listing-tag">Finance</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per strategy</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Alpha%20Development" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F3E6;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Quant &middot; Research</div>
+          <div class="listing-title">Financial Data Analysis — Custom Research Report</div>
+          <div class="listing-desc">Quantitative analysis of financial data with Python. Statistical modeling, backtesting, and written report. Baruch College finance/economics background. Former JPMorgan, Banco do Brasil.</div>
+          <div class="listing-tags"><span class="listing-tag">Python</span><span class="listing-tag">Statistics</span><span class="listing-tag">Backtesting</span><span class="listing-tag">Report</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per report</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Financial%20Analysis" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-head" id="ops">Business Operations &amp; Setup</div>
+    <div class="listings-grid">
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F5C2;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Ops &middot; Federal Contracting</div>
+          <div class="listing-title">SAM Registration &amp; CAGE Code — Federal Contractor Setup</div>
+          <div class="listing-desc">Guidance on SAM.gov registration, CAGE code application, UEI assignment, and DLA CAGE verification responses. G6 LLC is SAM-registered (UEI: CHGKT9317LY3).</div>
+          <div class="listing-tags"><span class="listing-tag">SAM.gov</span><span class="listing-tag">CAGE</span><span class="listing-tag">UEI</span><span class="listing-tag">Federal</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Flat rate</small></div>
+            <a href="mailto:g6llc@proton.me?subject=SAM%20Registration" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F6D2;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Ops &middot; eBay</div>
+          <div class="listing-title">eBay Store Setup &amp; Management</div>
+          <div class="listing-desc">Set up and manage an eBay store for physical or digital products. Listing optimization, pricing strategy, store branding, and fulfillment workflow. G6 LLC runs the Principia Orthogona store.</div>
+          <div class="listing-tags"><span class="listing-tag">eBay</span><span class="listing-tag">Listings</span><span class="listing-tag">Store SEO</span><span class="listing-tag">Fulfillment</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Setup + retainer</small></div>
+            <a href="mailto:g6llc@proton.me?subject=eBay%20Store" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F4F1;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Ops &middot; Digital</div>
+          <div class="listing-title">Social Media Content &amp; Digital Storefront</div>
+          <div class="listing-desc">Instagram Reels strategy, Gemini-assisted content creation, Shopee affiliate setup, Gumroad digital product publishing. Full digital entrepreneur stack from content to checkout.</div>
+          <div class="listing-tags"><span class="listing-tag">Instagram</span><span class="listing-tag">Reels</span><span class="listing-tag">Shopee</span><span class="listing-tag">Gumroad</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Per campaign</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Social%20Media" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="listing-card">
+        <div class="listing-img">&#x1F91D;</div>
+        <div class="listing-body">
+          <div class="listing-cat">Ops &middot; Consulting</div>
+          <div class="listing-title">General Business Consulting — Sole Proprietor &amp; LLC Setup</div>
+          <div class="listing-desc">NJ LLC formation, EIN registration, bank account setup, SAM registration, and operational structure for solo founders and small businesses. Bilingual (English/Portuguese).</div>
+          <div class="listing-tags"><span class="listing-tag">LLC</span><span class="listing-tag">EIN</span><span class="listing-tag">NJ</span><span class="listing-tag">Bilingual</span></div>
+          <div class="listing-footer">
+            <div class="listing-price">Contact for quote<small>Hourly or flat</small></div>
+            <a href="mailto:g6llc@proton.me?subject=Business%20Consulting" class="listing-cta">Contact</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- end main -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="about">
+    <h4>About the Seller</h4>
+    <p><strong>Pablo Nogueira Grossi</strong><br>Sole Member, G6 LLC<br>Newark, NJ 07104</p>
+    <div class="medal-row">&#x1F949;&#x1F948; IQC 2026 &nbsp; &#x1F947; Project 1080</div>
+    <ul>
+      <li>1,080 Lean 4 theorems proved</li>
+      <li>NASA Moon Base contribution</li>
+      <li>10+ Zenodo open-access papers</li>
+      <li>Baruch College — Finance &amp; Economics</li>
+      <li>JPMorgan &amp; Banco do Brasil alumni</li>
+      <li>CAELA Framework certified</li>
+      <li>Bilingual English / Portuguese</li>
+      <li>ORCID 0009-0000-6496-2186</li>
+    </ul>
+    <div class="contact-block">
+      <h4 style="margin-bottom:.6rem">Contact</h4>
+      <a href="mailto:g6llc@proton.me">&#x2709; g6llc@proton.me</a>
+      <a href="tel:+16463423751">&#x1F4DE; +1 (646) 342-3751</a>
+      <a href="https://github.com/TOTOGT/AXLE" target="_blank">&#x1F4BB; GitHub — TOTOGT/AXLE</a>
+      <a href="https://g6llc.gumroad.com" target="_blank">&#x1F4D6; Gumroad Store</a>
+      <a href="https://www.ebay.com/str/principiaorthogona" target="_blank">&#x1F6D2; eBay Store</a>
+    </div>
+    <div style="margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--light)">
+      <h4>SAM / Federal</h4>
+      <p style="margin-top:.4rem;font-family:monospace;font-size:.74rem;color:#555;line-height:1.8">
+        UEI: CHGKT9317LY3<br>
+        EIN: 33-2880433<br>
+        NJ LLC · Entity 0600484861<br>
+        CAGE: pending
+      </p>
+    </div>
+  </div>
+
+</div><!-- end store-body -->
+
+<!-- FOOTER -->
+<div class="store-footer">
+  <div class="footer-links">
+    <a href="mailto:g6llc@proton.me">Contact</a>
+    <a href="https://g6llc.gumroad.com" target="_blank">Gumroad</a>
+    <a href="https://www.ebay.com/str/principiaorthogona" target="_blank">eBay Store</a>
+    <a href="https://github.com/TOTOGT/AXLE" target="_blank">GitHub</a>
+    <a href="https://zenodo.org/search?q=pablo+nogueira+grossi" target="_blank">Zenodo</a>
+    <a href="https://orcid.org/0009-0000-6496-2186" target="_blank">ORCID</a>
+  </div>
+  <div>&copy; 2026 Pablo Nogueira Grossi / G6 LLC &middot; Newark, NJ &middot; CC BY-NC-ND 4.0 &middot; SAM-registered &middot; UEI CHGKT9317LY3</div>
+</div>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Principia Orthogona — G¹–G⁵ Complete Completeness</title>
 <meta name="description" content="The complete G-series in Generative Temporal Contact Theory. G6 LLC · Newark NJ · 2026.">
 <style>
